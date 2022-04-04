@@ -15,6 +15,7 @@
     "@polkadot/util": "^8.7.1",
     "@polkadot/util-crypto": "^8.7.1",
     "@polkadot/wasm-crypto": "^5.1.1",
+    "@polkadot/x-randomvalues": "^8.7.1",
     "pinia": "^2.0.13",
     "vue": "^3.2.25",
     "vue-i18n": "9",

@@ -8,6 +8,7 @@ specifiers:
   '@polkadot/util': ^8.7.1
   '@polkadot/util-crypto': ^8.7.1
   '@polkadot/wasm-crypto': ^5.1.1
+  '@polkadot/x-randomvalues': ^8.7.1
   '@vitejs/plugin-vue': ^2.3.0
   pinia: ^2.0.13
   typescript: ^4.5.4
@@ -25,7 +26,8 @@ dependencies:
   '@polkadot/keyring': 8.7.1
   '@polkadot/util': 8.7.1
   '@polkadot/util-crypto': 8.7.1
-  '@polkadot/wasm-crypto': 5.1.1_@polkadot+util@8.7.1
+  '@polkadot/wasm-crypto': 5.1.1_bcb68f4f9e01d9a6ed6e9a23aa97c6d9
+  '@polkadot/x-randomvalues': 8.7.1
   pinia: 2.0.13_typescript@4.6.3+vue@3.2.31
   vue: 3.2.31
   vue-i18n: 9.1.9_vue@3.2.31
@@ -608,19 +610,6 @@ packages:
     dependencies:
       '@babel/runtime': 7.17.8
       '@polkadot/util': 8.7.1
-    dev: false
-
-  /@polkadot/wasm-crypto/5.1.1_@polkadot+util@8.7.1:
-    resolution: {integrity: sha512-JCcAVfH8DhYuEyd4oX1ouByxhou0TvpErKn8kHjtzt7+tRoFi0nzWlmK4z49vszsV3JJgXxV81i10C0BYlwTcQ==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      '@polkadot/util': '*'
-      '@polkadot/x-randomvalues': '*'
-    dependencies:
-      '@babel/runtime': 7.17.8
-      '@polkadot/util': 8.7.1
-      '@polkadot/wasm-crypto-asmjs': 5.1.1_@polkadot+util@8.7.1
-      '@polkadot/wasm-crypto-wasm': 5.1.1_@polkadot+util@8.7.1
     dev: false
 
   /@polkadot/wasm-crypto/5.1.1_bcb68f4f9e01d9a6ed6e9a23aa97c6d9:
