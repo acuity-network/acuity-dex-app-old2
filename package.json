@@ -8,6 +8,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@polkadot/api": "^7.15.1",
+    "@polkadot/extension-dapp": "^0.42.9",
+    "@polkadot/keyring": "^8.7.1",
+    "@polkadot/util": "^8.7.1",
+    "@polkadot/util-crypto": "^8.7.1",
+    "@polkadot/wasm-crypto": "^5.1.1",
     "pinia": "^2.0.13",
     "vue": "^3.2.25",
     "vue-i18n": "9",
