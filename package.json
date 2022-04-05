@@ -8,24 +8,35 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mdi/font": "5.9.55",
     "@metamask/detect-provider": "^1.2.0",
     "@polkadot/api": "^7.15.1",
-    "@polkadot/extension-dapp": "^0.42.9",
+    "@polkadot/extension-dapp": "^0.42.10",
     "@polkadot/keyring": "^8.7.1",
     "@polkadot/util": "^8.7.1",
     "@polkadot/util-crypto": "^8.7.1",
     "@polkadot/wasm-crypto": "^5.1.1",
     "@polkadot/x-randomvalues": "^8.7.1",
     "pinia": "^2.0.13",
+    "roboto-fontface": "^0.10.0",
     "vue": "^3.2.31",
     "vue-i18n": "^9.1.9",
     "vue-router": "^4.0.14",
-    "web3": "^1.7.1"
+    "vuetify": "^3.0.0-beta.0",
+    "web3": "^1.7.1",
+    "webfontloader": "^1.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.1",
+    "@vue/compiler-sfc": "^3.2.31",
+    "@vuetify/vite-plugin": "^1.0.0-alpha.10",
+    "sass": "^1.49.11",
+    "sass-loader": "^12.6.0",
     "typescript": "^4.6.3",
     "vite": "^2.9.1",
-    "vue-tsc": "^0.29.8"
+    "vue-cli-plugin-vuetify": "^2.4.8",
+    "vue-tsc": "^0.29.8",
+    "vuetify-loader": "^2.0.0-alpha.9",
+    "webpack": "^5.71.0"
   }
 }
