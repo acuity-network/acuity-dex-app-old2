@@ -1,89 +1,119 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import HelloWorld from './components/HelloWorld.vue'
+import { ref, inject, onMounted } from 'vue'
+import {
+  web3Accounts,
+  web3Enable,
+  web3FromAddress,
+  web3ListRpcProviders,
+  web3UseRpcProvider
+} from '@polkadot/extension-dapp';
+
+const drawer = ref(false);
 
 const menu = ref([
   {
     to: '/about',
     icon: 'mdi-information',
-    title: 'About',
+    test: 'About',
   },
   {
     to: '/features',
     icon: 'mdi-feature-search',
-    title: 'Features',
+    text: 'Features',
   },
   {
     to: '/parachains',
     icon: 'mdi-expansion-card-variant',
-    title: 'Parachains',
+    text: 'Parachains',
   },
   {
     to: '/regenesis',
     icon: 'mdi-rocket-launch',
-    title: 'Regenesis',
+    text: 'Regenesis',
   },
   {
     to: '/acu',
     icon: 'mdi-cash-usd',
-    title: 'ACU',
+    text: 'ACU',
   },
   {
     to: '/atomic-swap',
     icon: 'mdi-atom-variant',
-    title: 'Atomic Swap',
+    text: 'Atomic Swap',
   },
   {
     to: '/roadmap',
     icon: 'mdi-timeline-text',
-    title: 'Roadmap',
+    text: 'Roadmap',
   },
   {
     to: '/tech-stack',
     icon: 'mdi-server-network',
-    title: 'Tech Stack',
+    text: 'Tech Stack',
   },
   {
     to: '/blog',
     icon: 'mdi-format-quote-open',
-    title: 'Blog',
+    text: 'Blog',
   },
 ]);
+
+let $acuityClient;
+let $ethClient;
+
+const blockNumber = ref(0)
+
+
+onMounted(async () => {
+  $acuityClient = inject('$acuityClient');
+  $ethClient = inject('$ethClient');
+  const allInjected = await web3Enable('Acuity Browser');
+  await $acuityClient.init();
+  $acuityClient.api.rpc.chain.subscribeNewHeads((lastHeader: any) => {
+    blockNumber.value = lastHeader.number.toString();
+  });
+
+  await $ethClient.init();
+})
 
 </script>
 
 <template>
-  <v-app id="inspire">
+  <v-app id="inspire"       theme="dark">
     <v-navigation-drawer
+      v-model="drawer"
       app
+
     >
-      <v-list dense>
+      <v-list density="compact">
         <v-list-item
-          v-for="menuItem in menu"
-          :key="menuItem.icon"
-          :to="menuItem.to"
+          v-for="(item, i) in menu"
+          :key="i"
+          :value="item"
         >
+          <v-list-item-avatar start>
+            <v-icon :icon="item.icon"></v-icon>
+          </v-list-item-avatar>
+          <v-list-item-title v-text="item.text"></v-list-item-title>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
 
     <v-app-bar
-      app
-      dark
+      density="compact"
     >
-      <v-toolbar-title>ACUITY</v-toolbar-title>
+      <template v-slot:prepend>
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      </template>
+
+      <v-app-bar-title>Acuity DEX {{ blockNumber }}</v-app-bar-title>
+
+      <template v-slot:append>
+        <v-btn icon="mdi-dots-vertical"></v-btn>
+      </template>
     </v-app-bar>
-
     <v-main>
-<!--
-      <v-btn v-if="showFab" fixed dark fab bottom right color="#E6007A" to="/support">
-        <v-icon>mdi-gift</v-icon>
-      </v-btn>
--->
-
-      <v-text-field label="Regular"></v-text-field>
+      <router-view></router-view>
     </v-main>
   </v-app>
 </template>
