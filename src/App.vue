@@ -14,12 +14,12 @@ const menu = ref([
   {
     to: '/about',
     icon: 'mdi-information',
-    test: 'About',
+    text: 'Trusted Accounts',
   },
   {
-    to: '/features',
+    to: '/orders',
     icon: 'mdi-feature-search',
-    text: 'Features',
+    text: 'Orders',
   },
   {
     to: '/parachains',
@@ -123,7 +123,6 @@ onMounted(async () => {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin-top: 60px;
 }
