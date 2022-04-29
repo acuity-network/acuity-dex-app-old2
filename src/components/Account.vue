@@ -8,6 +8,7 @@ import {
   web3ListRpcProviders,
   web3UseRpcProvider
 } from '@polkadot/extension-dapp';
+import { encodeAddress } from '@polkadot/keyring';
 
 let $acuityClient;
 let $ethClient;
@@ -15,6 +16,8 @@ let route, router;
 
 const name = ref("");
 const trusted = ref(false);
+const trusts = ref([]);
+const trustedThatTrust = ref([]);
 
 async function trust(event) {
   let address = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
@@ -36,14 +39,38 @@ async function untrust(event) {
     });
 }
 
-async function load() {
-
+async function loadName(address) {
   let result = await $acuityClient.api.query.identity.identityOf(route.params.id);
   let json = result.unwrap().info.display.toString();
   let display = JSON.parse(json);
-  name.value = $ethClient.web3.utils.hexToAscii(display.raw);
+  return $ethClient.web3.utils.hexToAscii(display.raw);
+}
+
+async function load() {
+
+  name.value = await loadName(route.params.id);
 
   trusted.value = await $acuityClient.api.rpc.trustedAccounts.isTrusted("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY", route.params.id);
+
+  let result = await $acuityClient.api.rpc.trustedAccounts.trustedBy(route.params.id);
+
+  for (let account of result) {
+    let address = encodeAddress(account);
+    trusts.value.push({
+      text: await loadName(address),
+      to: address,
+    })
+  }
+
+  result = await $acuityClient.api.rpc.trustedAccounts.trustedByThatTrust("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY", route.params.id);
+
+  for (let account of result) {
+    let address = encodeAddress(account);
+    trustedThatTrust.value.push({
+      text: await loadName(address),
+      address: address,
+    })
+  }
 }
 
 onMounted(async () => {
@@ -99,8 +126,33 @@ onMounted(async () => {
         <div class="text-h6">Address</div>
         <p>{{ $route.params.id }}</p>
 
-        <div class="text-h6">Trusted</div>
+        <div class="text-h6">Trusted by me</div>
         <p>{{ trusted }}</p>
+
+        <div class="text-h6">Trusts</div>
+
+        <v-list density="compact">
+          <v-list-item
+            v-for="(item, i) in trusts"
+            :key="i"
+            :value="item"
+            :to="item.to"
+          >
+            <v-list-item-title v-text="item.text"></v-list-item-title>
+          </v-list-item>
+        </v-list>
+
+        <div class="text-h6">Trusted that trust</div>
+
+        <v-list density="compact">
+          <v-list-item
+            v-for="(item, i) in trustedThatTrust"
+            :key="i"
+            :value="item"
+          >
+            <v-list-item-title v-text="item.text"></v-list-item-title>
+          </v-list-item>
+        </v-list>
 
         <v-btn v-if="trusted == true" @click="untrust">Untrust</v-btn>
         <v-btn v-else @click="trust">Trust</v-btn>
