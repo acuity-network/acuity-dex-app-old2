@@ -39,6 +39,78 @@ export default class MixClient {
 						],
 						type: 'bool',
 					},
+					isTrustedOnlyDeep: {
+						description: '',
+						params: [
+							{
+								name: 'account',
+								type: 'AccountId',
+							},
+							{
+								name: 'trustee',
+								type: 'AccountId',
+							},
+							{
+								 name: 'at',
+								 type: 'Hash',
+								 isOptional: true
+							 },
+						],
+						type: 'bool',
+					},
+					isTrustedDeep: {
+						description: '',
+						params: [
+							{
+								name: 'account',
+								type: 'AccountId',
+							},
+							{
+								name: 'trustee',
+								type: 'AccountId',
+							},
+							{
+								 name: 'at',
+								 type: 'Hash',
+								 isOptional: true
+							 },
+						],
+						type: 'bool',
+					},
+					trustedBy: {
+						description: '',
+						params: [
+							{
+								name: 'account',
+								type: 'AccountId',
+							},
+							{
+								 name: 'at',
+								 type: 'Hash',
+								 isOptional: true
+							 },
+						],
+						type: 'Vec<AccountId>',
+					},
+					trustedByThatTrust: {
+						description: '',
+						params: [
+							{
+								name: 'account',
+								type: 'AccountId',
+							},
+							{
+								name: 'account_is_trusted_by_trusted',
+								type: 'AccountId',
+							},
+							{
+								 name: 'at',
+								 type: 'Hash',
+								 isOptional: true
+							 },
+						],
+						type: 'Vec<AccountId>',
+					},
 				},
 			},
     }).then(async api => {
