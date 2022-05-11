@@ -1,9 +1,30 @@
+import {
+  web3Accounts,
+  web3Enable,
+  web3FromAddress,
+  web3ListRpcProviders,
+  web3UseRpcProvider
+} from '@polkadot/extension-dapp';
 import { ApiPromise, WsProvider } from '@polkadot/api'
+import { main } from '@/stores/index.ts'
 
 export default class MixClient {
 	api: any
 
-	async init(vue: any) {
+	async init() {
+
+		const allInjected = await web3Enable('Acuity DEX');
+
+	  let accountsAcu = await web3Accounts();
+
+		/*
+		  web3AccountsSubscribe(injectedAccounts => {
+		    vue.$store.commit('accountsAcuSet', injectedAccounts);
+		  });
+		*/
+
+		let store = main();
+		store.accountsAcuSet(accountsAcu);
 
     let acuityEndpoint = import.meta.env.DEV ? 'ws://127.0.0.1:9946' : 'wss://acuity.social:9961';
     let wsProvider = new WsProvider(acuityEndpoint);
@@ -117,5 +138,7 @@ export default class MixClient {
       this.api = api;
       await this.api.isReady
     });
+
+		return this;
   }
 }

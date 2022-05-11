@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, inject, onMounted } from 'vue'
+import { ref, inject, onMounted, computed} from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import {
   web3Accounts,
@@ -9,32 +9,36 @@ import {
   web3UseRpcProvider
 } from '@polkadot/extension-dapp';
 import { encodeAddress } from '@polkadot/keyring';
+import { main } from '@/stores/index.ts'
 
-let $acuityClient;
-let $ethClient;
+let $acuityClient = inject('$acuityClient');
+let $ethClient = inject('$ethClient');
 let route, router;
 
+const store = main();
+const accountsAcu = computed(() => store.accountsAcu);
+const addressesAcu = computed(() => store.addressesAcu);
+
+const activeAccount = ref("");
 const name = ref("");
 const trusted = ref(false);
 const trusts = ref([]);
 const trustedThatTrust = ref([]);
 
 async function trust(event) {
-  let address = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
-  const injector = await web3FromAddress(address);
+  const injector = await web3FromAddress(activeAccount.value);
   $acuityClient.api.tx.trustedAccounts
     .trustAccount(route.params.id)
-    .signAndSend(address, { signer: injector.signer }, (status: any) => {
+    .signAndSend(activeAccount.value, { signer: injector.signer }, (status: any) => {
       console.log(status)
     });
 }
 
 async function untrust(event) {
-  let address = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
-  const injector = await web3FromAddress(address);
+  const injector = await web3FromAddress(activeAccount.value);
   $acuityClient.api.tx.trustedAccounts
     .untrustAccount(route.params.id)
-    .signAndSend(address, { signer: injector.signer }, (status: any) => {
+    .signAndSend(activeAccount.value, { signer: injector.signer }, (status: any) => {
       console.log(status)
     });
 }
@@ -50,10 +54,12 @@ async function load() {
 
   name.value = await loadName(route.params.id);
 
-  trusted.value = await $acuityClient.api.rpc.trustedAccounts.isTrusted("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY", route.params.id);
+  console.log(activeAccount.value);
+
+  trusted.value = await $acuityClient.api.rpc.trustedAccounts.isTrusted(activeAccount.value, route.params.id);
 
   let result = await $acuityClient.api.rpc.trustedAccounts.trustedBy(route.params.id);
-
+  trusts.value = [];
   for (let account of result) {
     let address = encodeAddress(account);
     trusts.value.push({
@@ -62,8 +68,8 @@ async function load() {
     })
   }
 
-  result = await $acuityClient.api.rpc.trustedAccounts.trustedByThatTrust("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY", route.params.id);
-
+  result = await $acuityClient.api.rpc.trustedAccounts.trustedByThatTrust(activeAccount.value, route.params.id);
+  trustedThatTrust.value = [];
   for (let account of result) {
     let address = encodeAddress(account);
     trustedThatTrust.value.push({
@@ -74,12 +80,8 @@ async function load() {
 }
 
 onMounted(async () => {
-  $acuityClient = inject('$acuityClient');
-  $ethClient = inject('$ethClient');
   router = useRouter();
   route = useRoute();
-  const allInjected = await web3Enable('Acuity Browser');
-  await $acuityClient.init();
 
   load();
 
@@ -161,21 +163,3 @@ onMounted(async () => {
     </v-row>
   </v-container>
 </template>
-
-<style scoped>
-a {
-  color: #42b983;
-}
-
-label {
-  margin: 0 0.5em;
-  font-weight: bold;
-}
-
-code {
-  background-color: #eee;
-  padding: 2px 4px;
-  border-radius: 4px;
-  color: #304455;
-}
-</style>

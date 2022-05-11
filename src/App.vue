@@ -12,68 +12,26 @@ const drawer = ref(false);
 
 const menu = ref([
   {
-    to: '/about',
-    icon: 'mdi-information',
-    text: 'Trusted Accounts',
+    to: '/goto',
+    icon: 'mdi-feature-search',
+    text: 'Goto',
   },
   {
     to: '/orders',
     icon: 'mdi-feature-search',
     text: 'Orders',
   },
-  {
-    to: '/parachains',
-    icon: 'mdi-expansion-card-variant',
-    text: 'Parachains',
-  },
-  {
-    to: '/regenesis',
-    icon: 'mdi-rocket-launch',
-    text: 'Regenesis',
-  },
-  {
-    to: '/acu',
-    icon: 'mdi-cash-usd',
-    text: 'ACU',
-  },
-  {
-    to: '/atomic-swap',
-    icon: 'mdi-atom-variant',
-    text: 'Atomic Swap',
-  },
-  {
-    to: '/roadmap',
-    icon: 'mdi-timeline-text',
-    text: 'Roadmap',
-  },
-  {
-    to: '/tech-stack',
-    icon: 'mdi-server-network',
-    text: 'Tech Stack',
-  },
-  {
-    to: '/blog',
-    icon: 'mdi-format-quote-open',
-    text: 'Blog',
-  },
 ]);
 
-let $acuityClient;
-let $ethClient;
+let $acuityClient = inject('$acuityClient');
+let $ethClient = inject('$ethClient');
 
 const blockNumber = ref(0)
 
-
 onMounted(async () => {
-  $acuityClient = inject('$acuityClient');
-  $ethClient = inject('$ethClient');
-  const allInjected = await web3Enable('Acuity Browser');
-  await $acuityClient.init();
   $acuityClient.api.rpc.chain.subscribeNewHeads((lastHeader: any) => {
     blockNumber.value = lastHeader.number.toString();
   });
-
-  await $ethClient.init();
 })
 
 </script>
@@ -90,6 +48,7 @@ onMounted(async () => {
           v-for="(item, i) in menu"
           :key="i"
           :value="item"
+          :to="item.to"
         >
           <v-list-item-avatar start>
             <v-icon :icon="item.icon"></v-icon>

@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+import { createPinia } from 'pinia'
 import vuetify from './plugins/vuetify'
 import { loadFonts } from './plugins/webfontloader'
 
@@ -9,7 +10,7 @@ loadFonts()
 import AcuityClient from './lib/AcuityClient'
 import EthClient from './lib/EthClient'
 
-const app = createApp(App).use(router).use(vuetify)
-app.provide('$acuityClient', new AcuityClient())
-app.provide('$ethClient', new EthClient())
+const app = createApp(App).use(router).use(createPinia()).use(vuetify)
+app.provide('$acuityClient', await (new AcuityClient()).init())
+app.provide('$ethClient', await (new EthClient()).init())
 app.mount('#app')

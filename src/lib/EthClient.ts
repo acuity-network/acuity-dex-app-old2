@@ -29,5 +29,7 @@ export default class EthClient {
     } else {
       console.log('Please install MetaMask!');
     }
+
+		return this;
   }
 }

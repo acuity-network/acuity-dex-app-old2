@@ -1,7 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 // 1. Define route components.
-import HelloWorld from '../components/HelloWorld.vue'
+import Goto from '../components/Goto.vue'
+import ActiveAccount from '../components/ActiveAccount.vue'
 import Account from '../components/Account.vue'
 import Orders from '../components/Orders.vue'
 
@@ -9,7 +10,8 @@ import Orders from '../components/Orders.vue'
 // Each route should map to a component.
 // We'll talk about nested routes later.
 const routes = [
-  { path: '/', component: HelloWorld },
+  { path: '/', component: ActiveAccount },
+  { path: '/goto', component: Goto },
   { path: '/orders', component: Orders },
   { path: '/account/:id', component: Account },
 ]
