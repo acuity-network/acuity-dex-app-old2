@@ -19,26 +19,25 @@ const store = main();
 const accountsAcu = computed(() => store.accountsAcu);
 const addressesAcu = computed(() => store.addressesAcu);
 
-const activeAccount = ref("");
 const name = ref("");
 const trusted = ref(false);
 const trusts = ref([]);
 const trustedThatTrust = ref([]);
 
 async function trust(event) {
-  const injector = await web3FromAddress(activeAccount.value);
+  const injector = await web3FromAddress(store.activeAcu);
   $acuityClient.api.tx.trustedAccounts
     .trustAccount(route.params.id)
-    .signAndSend(activeAccount.value, { signer: injector.signer }, (status: any) => {
+    .signAndSend(store.activeAcu, { signer: injector.signer }, (status: any) => {
       console.log(status)
     });
 }
 
 async function untrust(event) {
-  const injector = await web3FromAddress(activeAccount.value);
+  const injector = await web3FromAddress(store.activeAcu);
   $acuityClient.api.tx.trustedAccounts
     .untrustAccount(route.params.id)
-    .signAndSend(activeAccount.value, { signer: injector.signer }, (status: any) => {
+    .signAndSend(store.activeAcu, { signer: injector.signer }, (status: any) => {
       console.log(status)
     });
 }
@@ -54,9 +53,7 @@ async function load() {
 
   name.value = await loadName(route.params.id);
 
-  console.log(activeAccount.value);
-
-  trusted.value = await $acuityClient.api.rpc.trustedAccounts.isTrusted(activeAccount.value, route.params.id);
+  trusted.value = await $acuityClient.api.rpc.trustedAccounts.isTrusted(store.activeAcu, route.params.id);
 
   let result = await $acuityClient.api.rpc.trustedAccounts.trustedBy(route.params.id);
   trusts.value = [];
@@ -68,7 +65,7 @@ async function load() {
     })
   }
 
-  result = await $acuityClient.api.rpc.trustedAccounts.trustedByThatTrust(activeAccount.value, route.params.id);
+  result = await $acuityClient.api.rpc.trustedAccounts.trustedByThatTrust(store.activeAcu, route.params.id);
   trustedThatTrust.value = [];
   for (let account of result) {
     let address = encodeAddress(account);
