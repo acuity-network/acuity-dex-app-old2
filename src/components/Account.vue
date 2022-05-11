@@ -21,6 +21,7 @@ const addressesAcu = computed(() => store.addressesAcu);
 
 const name = ref("");
 const trusted = ref(false);
+const trustsMe = ref(false);
 const trusts = ref([]);
 const trustedThatTrust = ref([]);
 
@@ -54,6 +55,8 @@ async function load() {
   name.value = await loadName(route.params.id);
 
   trusted.value = await $acuityClient.api.rpc.trustedAccounts.isTrusted(store.activeAcu, route.params.id);
+
+  trustsMe.value = await $acuityClient.api.rpc.trustedAccounts.isTrusted(route.params.id, store.activeAcu);
 
   let result = await $acuityClient.api.rpc.trustedAccounts.trustedBy(route.params.id);
   trusts.value = [];
@@ -127,6 +130,9 @@ onMounted(async () => {
 
         <div class="text-h6">Trusted by me</div>
         <p>{{ trusted }}</p>
+
+        <div class="text-h6">Trusts me</div>
+        <p>{{ trustsMe }}</p>
 
         <div class="text-h6">Trusts</div>
 
