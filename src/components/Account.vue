@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, inject, onMounted, computed} from 'vue'
+import { ref, inject, onMounted, computed, watch} from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import {
   web3Accounts,
@@ -13,7 +13,8 @@ import { main } from '@/stores/index.ts'
 
 let $acuityClient = inject('$acuityClient');
 let $ethClient = inject('$ethClient');
-let route, router;
+let route = useRoute();
+let router = useRouter();
 
 const store = main();
 const accountsAcu = computed(() => store.accountsAcu);
@@ -44,11 +45,15 @@ async function untrust(event) {
 }
 
 async function loadName(address) {
-  let result = await $acuityClient.api.query.identity.identityOf(route.params.id);
+  let result = await $acuityClient.api.query.identity.identityOf(address);
   let json = result.unwrap().info.display.toString();
   let display = JSON.parse(json);
   return $ethClient.web3.utils.hexToAscii(display.raw);
 }
+
+watch(() => route.params.id, async (newValue, oldValue) => {
+  load();
+});
 
 async function load() {
 
@@ -80,8 +85,6 @@ async function load() {
 }
 
 onMounted(async () => {
-  router = useRouter();
-  route = useRoute();
 
   load();
 
@@ -159,8 +162,8 @@ onMounted(async () => {
           </v-list-item>
         </v-list>
 
-        <v-btn v-if="trusted == true" @click="untrust">Untrust</v-btn>
-        <v-btn v-else @click="trust">Trust</v-btn>
+        <v-btn class="mt-10" v-if="trusted == true" @click="untrust">Untrust</v-btn>
+        <v-btn class="mt-10" v-else @click="trust">Trust</v-btn>
 
       </v-col>
     </v-row>
