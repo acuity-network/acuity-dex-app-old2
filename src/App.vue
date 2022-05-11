@@ -12,13 +12,18 @@ const drawer = ref(false);
 
 const menu = ref([
   {
+    to: '/',
+    icon: 'mdi-account',
+    text: 'Home',
+  },
+  {
     to: '/goto',
-    icon: 'mdi-feature-search',
+    icon: 'mdi-account-arrow-right',
     text: 'Goto',
   },
   {
     to: '/orders',
-    icon: 'mdi-feature-search',
+    icon: 'mdi-book-open-page-variant',
     text: 'Orders',
   },
 ]);
