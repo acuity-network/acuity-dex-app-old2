@@ -22,6 +22,11 @@ const menu = ref([
     text: 'Goto',
   },
   {
+    to: '/deposits',
+    icon: 'mdi-swap-horizontal',
+    text: 'Deposits',
+  },
+  {
     to: '/orders',
     icon: 'mdi-book-open-page-variant',
     text: 'Orders',
