@@ -5,6 +5,7 @@ export const main = defineStore('main', {
 		activeAcu: "",
 		accountsAcu: [],
     addressesAcu: [],
+    activeEth: "",
   }),
   getters: {
   },
@@ -21,5 +22,8 @@ export const main = defineStore('main', {
           this.addressesAcu.push(account.address);
       }
     },
+    activeEthSet(account: String) {
+			this.activeEth = account;
+		},
   },
 })

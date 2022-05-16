@@ -1,6 +1,6 @@
 import detectEthereumProvider from '@metamask/detect-provider';
 import Web3 from 'web3'
-declare let window: any;
+import { main } from '@/stores/index.ts'
 
 export default class EthClient {
 	web3: any;
@@ -11,6 +11,7 @@ export default class EthClient {
 	async init() {
     // This function detects most providers injected at window.ethereum
     const provider: any = await detectEthereumProvider();
+		let store = main();
 
     if (provider) {
       this.web3 = new Web3(provider);
@@ -20,12 +21,14 @@ export default class EthClient {
 /*
       this.atomicSwapSell = new this.web3.eth.Contract(require('./contracts/AcuityAtomicSwapSell.abi.json'), '0xd05647dd9D7B17aBEBa953fbF2dc8D8e87c19cb3');
   		this.atomicSwapBuy = new this.web3.eth.Contract(require('./contracts/AcuityAtomicSwapBuy.abi.json'), '0x744Ac7bbcFDDA8fdb41cF55c020d62f2109887A5');
-      window.ethereum.on('accountsChanged', (accounts: any) => {
-        vue.$store.commit('addressEthSet', accounts[0]);
-      });
-      let accounts = await this.web3.eth.requestAccounts();
-      vue.$store.commit('addressEthSet', accounts[0]);
 */
+
+      window.ethereum.on('accountsChanged', (accounts: any) => {
+				store.activeEthSet(accounts[0]);
+      });
+
+      let accounts = await this.web3.eth.requestAccounts();
+				store.activeEthSet(accounts[0]);
     } else {
       console.log('Please install MetaMask!');
     }
