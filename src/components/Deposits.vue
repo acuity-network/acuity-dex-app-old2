@@ -24,13 +24,18 @@ const ethToWithdraw = ref("");
 
 let emitter;
 
-onMounted(async () => {
+async function load() {
   eth.value = $ethClient.formatWei(await $ethClient.atomicSwapSell.methods.getDepositValue("0x0000000000000000000000000000000", store.activeEth).call());
+}
 
-  emitter = $ethClient.atomicSwapSell.events.Deposit()
+onMounted(async () => {
+
+  emitter = $ethClient.testnet1.atomicSwapSell.events.allEvents()
 	.on('data', async (log: any) => {
-    console.log(log);
+    load();
   });
+
+  load();
 })
 
 async function deposit(event) {
