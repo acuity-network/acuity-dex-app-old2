@@ -24,7 +24,7 @@ const menu = ref([
   {
     to: '/deposits',
     icon: 'mdi-swap-horizontal',
-    text: 'Deposits',
+    text: 'Stashes',
   },
   {
     to: '/orders',

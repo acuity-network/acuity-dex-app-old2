@@ -4,7 +4,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Goto from '../components/Goto.vue'
 import ActiveAccount from '../components/ActiveAccount.vue'
 import Account from '../components/Account.vue'
-import Deposits from '../components/Deposits.vue'
+import Stashes from '../components/Stashes.vue'
 import Orders from '../components/Orders.vue'
 
 // 2. Define some routes
@@ -13,7 +13,7 @@ import Orders from '../components/Orders.vue'
 const routes = [
   { path: '/', component: ActiveAccount },
   { path: '/goto', component: Goto },
-  { path: '/deposits', component: Deposits },
+  { path: '/deposits', component: Stashes },
   { path: '/orders', component: Orders },
   { path: '/account/:id', component: Account },
 ]
