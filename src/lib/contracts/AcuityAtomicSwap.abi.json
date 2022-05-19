@@ -1,10 +1,5 @@
 [
   {
-    "inputs": [],
-    "name": "DepositNotBigEnough",
-    "type": "error"
-  },
-  {
     "inputs": [
       {
         "internalType": "bytes32",
@@ -27,6 +22,11 @@
   },
   {
     "inputs": [],
+    "name": "StashNotBigEnough",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "ZeroValue",
     "type": "error"
   },
@@ -36,23 +36,41 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "account",
+        "name": "from",
         "type": "address"
       },
       {
         "indexed": false,
-        "internalType": "bytes16",
-        "name": "chainIdAdapterIdAssetId",
-        "type": "bytes16"
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "hashedSecret",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timeout",
+        "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
         "name": "value",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "sellAssetIdPrice",
+        "type": "bytes32"
       }
     ],
-    "name": "Deposit",
+    "name": "Lock",
     "type": "event"
   },
   {
@@ -60,9 +78,15 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "bytes16",
-        "name": "orderId",
-        "type": "bytes16"
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
       },
       {
         "indexed": false,
@@ -83,45 +107,7 @@
         "type": "uint256"
       }
     ],
-    "name": "LockSell",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "bytes16",
-        "name": "orderId",
-        "type": "bytes16"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "hashedSecret",
-        "type": "bytes32"
-      }
-    ],
-    "name": "TimeoutSell",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "bytes16",
-        "name": "orderId",
-        "type": "bytes16"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "secret",
-        "type": "bytes32"
-      }
-    ],
-    "name": "UnlockSell",
+    "name": "Lock",
     "type": "event"
   },
   {
@@ -136,7 +122,7 @@
       {
         "indexed": false,
         "internalType": "bytes16",
-        "name": "chainIdAdapterIdAssetId",
+        "name": "assetId",
         "type": "bytes16"
       },
       {
@@ -146,92 +132,77 @@
         "type": "uint256"
       }
     ],
-    "name": "Withdraw",
+    "name": "StashAdd",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes16",
+        "name": "assetId",
+        "type": "bytes16"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "StashRemove",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "hashedSecret",
+        "type": "bytes32"
+      }
+    ],
+    "name": "Timeout",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "lockId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "secret",
+        "type": "bytes32"
+      }
+    ],
+    "name": "Unlock",
     "type": "event"
   },
   {
     "inputs": [
       {
         "internalType": "bytes16",
-        "name": "chainIdAdapterIdAssetId",
+        "name": "assetId",
         "type": "bytes16"
       }
     ],
-    "name": "deposit",
+    "name": "depositStash",
     "outputs": [],
     "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "seller",
-        "type": "address"
-      }
-    ],
-    "name": "getAcuAddress",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "acuAddress",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes16",
-        "name": "chainIdAdapterIdAssetId",
-        "type": "bytes16"
-      },
-      {
-        "internalType": "address",
-        "name": "seller",
-        "type": "address"
-      }
-    ],
-    "name": "getDepositValue",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "value",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes16",
-        "name": "chainIdAdapterIdAssetId",
-        "type": "bytes16"
-      },
-      {
-        "internalType": "uint256",
-        "name": "limit",
-        "type": "uint256"
-      }
-    ],
-    "name": "getDeposits",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "accounts",
-        "type": "address[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "values",
-        "type": "uint256[]"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -257,18 +228,18 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "seller",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
         "type": "address"
       },
       {
         "internalType": "bytes32",
         "name": "hashedSecret",
         "type": "bytes32"
-      },
-      {
-        "internalType": "address",
-        "name": "buyer",
-        "type": "address"
       },
       {
         "internalType": "uint256",
@@ -291,8 +262,61 @@
     "inputs": [
       {
         "internalType": "bytes16",
-        "name": "chainIdAdapterIdAssetId",
+        "name": "assetId",
         "type": "bytes16"
+      },
+      {
+        "internalType": "address",
+        "name": "seller",
+        "type": "address"
+      }
+    ],
+    "name": "getStashValue",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes16",
+        "name": "assetId",
+        "type": "bytes16"
+      },
+      {
+        "internalType": "uint256",
+        "name": "limit",
+        "type": "uint256"
+      }
+    ],
+    "name": "getStashes",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "accounts",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "values",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
       },
       {
         "internalType": "bytes32",
@@ -300,14 +324,14 @@
         "type": "bytes32"
       },
       {
-        "internalType": "address",
-        "name": "buyer",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "timeout",
         "type": "uint256"
+      },
+      {
+        "internalType": "bytes16",
+        "name": "stashAssetId",
+        "type": "bytes16"
       },
       {
         "internalType": "uint256",
@@ -315,7 +339,7 @@
         "type": "uint256"
       }
     ],
-    "name": "lockSell",
+    "name": "lockStash",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -323,22 +347,9 @@
   {
     "inputs": [
       {
-        "internalType": "bytes32",
-        "name": "acuAddress",
-        "type": "bytes32"
-      }
-    ],
-    "name": "setAcuAddress",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes16",
-        "name": "chainIdAdapterIdAssetId",
-        "type": "bytes16"
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
       },
       {
         "internalType": "bytes32",
@@ -346,17 +357,40 @@
         "type": "bytes32"
       },
       {
-        "internalType": "address",
-        "name": "buyer",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "timeout",
         "type": "uint256"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "sellAssetIdPrice",
+        "type": "bytes32"
       }
     ],
-    "name": "timeoutSell",
+    "name": "lockValue",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes16",
+        "name": "assetIdFrom",
+        "type": "bytes16"
+      },
+      {
+        "internalType": "bytes16",
+        "name": "assetIdTo",
+        "type": "bytes16"
+      },
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "moveStash",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -365,7 +399,58 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "seller",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "hashedSecret",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timeout",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes16",
+        "name": "stashAssetId",
+        "type": "bytes16"
+      }
+    ],
+    "name": "timeoutStash",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "hashedSecret",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timeout",
+        "type": "uint256"
+      }
+    ],
+    "name": "timeoutValue",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from",
         "type": "address"
       },
       {
@@ -379,7 +464,7 @@
         "type": "uint256"
       }
     ],
-    "name": "unlockSell",
+    "name": "unlockValue",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -388,7 +473,20 @@
     "inputs": [
       {
         "internalType": "bytes16",
-        "name": "chainIdAdapterIdAssetId",
+        "name": "assetId",
+        "type": "bytes16"
+      }
+    ],
+    "name": "withdrawStash",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes16",
+        "name": "assetId",
         "type": "bytes16"
       },
       {
@@ -397,7 +495,7 @@
         "type": "uint256"
       }
     ],
-    "name": "withdraw",
+    "name": "withdrawStash",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

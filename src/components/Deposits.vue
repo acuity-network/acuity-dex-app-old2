@@ -25,12 +25,12 @@ const ethToWithdraw = ref("");
 let emitter;
 
 async function load() {
-  eth.value = $ethClient.formatWei(await $ethClient.atomicSwapSell.methods.getDepositValue("0x0000000000000000000000000000000", store.activeEth).call());
+  eth.value = $ethClient.formatWei(await $ethClient.atomicSwap.methods.getStashValue("0x0000000000000000000000000000000", store.activeEth).call());
 }
 
 onMounted(async () => {
 
-  emitter = $ethClient.testnet1.atomicSwapSell.events.allEvents()
+  emitter = $ethClient.testnet1.atomicSwap.events.allEvents()
 	.on('data', async (log: any) => {
     load();
   });
@@ -39,14 +39,14 @@ onMounted(async () => {
 })
 
 async function deposit(event) {
-  $ethClient.atomicSwapSell.methods
-    .deposit("0x0000000000000000000000000000000")
+  $ethClient.atomicSwap.methods
+    .depositStash("0x0000000000000000000000000000000")
     .send({from: store.activeEth, value: $ethClient.web3.utils.toWei(ethToDeposit.value)});
 }
 
 async function withdraw(event) {
-  $ethClient.atomicSwapSell.methods
-    .withdraw("0x0000000000000000000000000000000", $ethClient.web3.utils.toWei(ethToWithdraw.value))
+  $ethClient.atomicSwap.methods
+    .withdrawStash("0x0000000000000000000000000000000", $ethClient.web3.utils.toWei(ethToWithdraw.value))
     .send({from: store.activeEth});
 }
 
