@@ -1,0 +1,506 @@
+{
+	"1": {
+		"label": "Ethereum",
+		"symbol": "ETH",
+		"rpcs": [
+			"https://mainnet.infura.io/v3/",
+			"https://api.mycryptoapi.com/eth",
+			"https://rpc.flashbots.net/",
+			"https://eth-mainnet.gateway.pokt.network/v1/5f3453978e354ab992c4da79",
+			"https://cloudflare-eth.com/",
+			"https://mainnet-nethermind.blockscout.com/",
+			"https://nodes.mewapi.io/rpc/eth",
+			"https://main-rpc.linkpool.io/",
+			"https://mainnet.eth.cloud.ava.do/",
+			"https://ethereumnodelight.app.runonflux.io",
+			"https://rpc.ankr.com/eth",
+			"https://eth-rpc.gateway.pokt.network",
+			"https://main-light.eth.linkpool.io",
+			"https://eth-mainnet.public.blastapi.io"
+		],
+		"explorers": [
+		]
+	},
+	"2": {
+		"label": "Expanse",
+		"symbol": "EXP",
+		"rpcs": [
+			"https://node.expanse.tech"
+		],
+		"explorers": [
+		]
+	},
+	"10": {
+		"label": "Optimism",
+		"symbol": "ETH",
+		"rpcs": [
+			"https://mainnet.optimism.io"
+		],
+		"explorers": [
+			"https://optimistic.ethereum.io"
+		]
+	},
+	"19": {
+		"label": "Songbird",
+		"symbol": "SGB",
+		"rpcs": [
+			"https://songbird.towolabs.com/rpc"
+		],
+		"explorers": [
+			"https://optimistic.ethereum.io"
+		]
+	},
+	"20": {
+		"label": "Elastos",
+		"symbol": "ELA",
+		"rpcs": [
+			"https://api.elastos.io/eth",
+			"https://api.trinity-tech.cn/eth"
+		],
+		"explorers": [
+		]
+	},
+	"25": {
+		"label": "Cronos",
+		"symbol": "CRO",
+		"rpcs": [
+			"https://cronos-rpc.heavenswail.one/",
+			"https://evm-cronos.crypto.org",
+			"https://cronosrpc-1.xstaking.sg/",
+			"https://cronos-rpc.elk.finance/"
+		],
+		"explorers": [
+		]
+	},
+	"30": {
+		"label": "RSK",
+		"symbol": "RBTC",
+		"rpcs": [
+			"https://public-node.rsk.co"
+		],
+		"explorers": [
+		]
+	},
+	"40": {
+		"label": "Telos",
+		"symbol": "TLOS",
+		"rpcs": [
+			"https://mainnet.telos.net/evm",
+			"https://rpc1.eu.telos.net/evm",
+			"https://rpc1.us.telos.net/evm",
+			"https://rpc2.us.telos.net/evm",
+			"https://api.kainosbp.com/evm",
+			"https://rpc2.eu.telos.net/evm",
+			"https://evm.teloskorea.com/evm",
+			"https://rpc2.teloskorea.com/evm",
+			"https://rpc01.us.telosunlimited.io/evm",
+			"https://rpc02.us.telosunlimited.io/evm",
+			"https://rpc.telosarabia.net/evm"
+		],
+		"explorers": [
+		]
+	},
+	"52": {
+		"label": "CoinEx Smart Chain",
+		"symbol": "CET",
+		"rpcs": [
+			"https://rpc.coinex.net/",
+			"https://rpc1.coinex.net/",
+			"https://rpc2.coinex.net/",
+			"https://rpc3.coinex.net/",
+			"https://rpc4.coinex.net/"
+		],
+		"explorers": [
+		]
+	},
+	"56": {
+		"label": "Binance Smart Chain",
+		"symbol": "BNB",
+		"rpcs": [
+			"https://bsc-dataseed.binance.org/",
+			"https://bsc-dataseed1.defibit.io/",
+			"https://bsc-dataseed1.ninicoin.io/",
+			"https://bsc-dataseed2.defibit.io/",
+			"https://bsc-dataseed3.defibit.io/",
+			"https://bsc-dataseed4.defibit.io/",
+			"https://bsc-dataseed2.ninicoin.io/",
+			"https://bsc-dataseed3.ninicoin.io/",
+			"https://bsc-dataseed4.ninicoin.io/",
+			"https://bsc-dataseed1.binance.org/",
+			"https://bsc-dataseed2.binance.org/",
+			"https://bsc-dataseed3.binance.org/",
+			"https://bsc-dataseed4.binance.org/",
+			"https://rpc.ankr.com/bsc",
+			"https://bscrpc.com",
+			"https://bsc.mytokenpocket.vip",
+			"https://binance.nodereal.io",
+			"https://rpc-bsc.bnb48.club"
+		],
+		"explorers": [
+		]
+	},
+	"57": {
+		"label": "Syscoin",
+		"symbol": "SYS",
+		"rpcs": [
+			"https://rpc.syscoin.org"
+		],
+		"explorers": [
+		]
+	},
+	"59": {
+		"label": "EOS",
+		"symbol": "EOS",
+		"rpcs": [
+			"https://api.eosargentina.io"
+		],
+		"explorers": [
+		]
+	},
+	"61": {
+		"label": "Ethereum Classic",
+		"symbol": "ETC",
+		"rpcs": [
+			"https://blockscout.com/etc/mainnet/api/eth-rpc",
+			"https://www.ethercluster.com/etc"
+		],
+		"explorers": [
+			"https://blockscout.com/etc/mainnet/"
+		]
+	},
+	"66": {
+		"label": "OKC (OKX)",
+		"symbol": "OKC",
+		"rpcs": [
+			"https://exchainrpc.okex.org"
+		],
+		"explorers": [
+		]
+	},
+	"70": {
+		"label": "Hoo Smart Chain",
+		"symbol": "HOO",
+		"rpcs": [
+			"https://http-mainnet.hoosmartchain.com"
+		],
+		"explorers": [
+		]
+	},
+	"88": {
+		"label": "TomoChain",
+		"symbol": "TOMO",
+		"rpcs": [
+			"https://rpc.tomochain.com"
+		],
+		"explorers": [
+		]
+	},
+	"100": {
+		"label": "Gnosis Chain (formerly xDai)",
+		"symbol": "xDAI",
+		"rpcs": [
+			"https://rpc.gnosischain.com",
+			"https://rpc.xdaichain.com",
+			"https://xdai.poanetwork.dev",
+			"https://xdai-rpc.gateway.pokt.network",
+			"https://dai.poa.network",
+			"https://xdai-archive.blockscout.com",
+			"https://rpc-df.xdaichain.com/",
+			"https://gnosis-mainnet.public.blastapi.io"
+		],
+		"explorers": [
+		]
+	},
+	"106": {
+		"label": "Velas",
+		"symbol": "VLX",
+		"rpcs": [
+			"https://evmexplorer.velas.com/rpc"
+		],
+		"explorers": [
+		]
+	},
+	"108": {
+		"label": "ThunderCore",
+		"symbol": "TT",
+		"rpcs": [
+			"https://mainnet-rpc.thundercore.com"
+		],
+		"explorers": [
+		]
+	},
+	"122": {
+		"label": "Fuse",
+		"symbol": "FUSE",
+		"rpcs": [
+			"https://fuse-rpc.gateway.pokt.network/",
+			"https://rpc.fuse.io"
+		],
+		"explorers": [
+		]
+	},
+	"128": {
+		"label": "Huobi",
+		"symbol": "HT",
+		"rpcs": [
+			"https://http-mainnet-node.huobichain.com",
+			"https://http-mainnet.hecochain.com",
+			"https://pub001.hg.network/rpc"
+		],
+		"explorers": [
+		]
+	},
+	"137": {
+		"label": "Polygon",
+		"symbol": "MATIC",
+		"rpcs": [
+			"https://polygon-rpc.com",
+			"https://rpc-mainnet.matic.network",
+			"https://rpc-mainnet.maticvigil.com",
+			"https://rpc-mainnet.matic.quiknode.pro",
+			"https://matic-mainnet.chainstacklabs.com",
+			"https://matic-mainnet-full-rpc.bwarelabs.com",
+			"https://matic-mainnet-archive-rpc.bwarelabs.com",
+			"https://poly-rpc.gateway.pokt.network/",
+			"https://rpc.ankr.com/polygon",
+			"https://rpc-mainnet.maticvigil.com/",
+			"https://polygon-mainnet.public.blastapi.io"
+		],
+		"explorers": [
+		]
+	},
+	"200": {
+		"label": "Arbitrum on xDai",
+		"symbol": "xDAI",
+		"rpcs": [
+			"https://arbitrum.xdaichain.com"
+		],
+		"explorers": [
+		]
+	},
+	"250": {
+		"label": "Fantom",
+		"symbol": "FTM",
+		"rpcs": [
+			"https://fantom-mainnet.gateway.pokt.network/v1/lb/62759259ea1b320039c9e7ac",
+			"https://rpc.ftm.tools/",
+			"https://rpc.ankr.com/fantom",
+			"https://rpc.fantom.network",
+			"https://rpc2.fantom.network",
+			"https://rpc3.fantom.network",
+			"https://rpcapi.fantom.network",
+			"https://fantom-mainnet.public.blastapi.io"
+		],
+		"explorers": [
+		]
+	},
+	"288": {
+		"label": "Boba Network",
+		"symbol": "ETH",
+		"rpcs": [
+			"https://mainnet.boba.network/",
+			"https://boba-mainnet.gateway.pokt.network/v1/lb/623ad21b20354900396fed7f",
+			"https://lightning-replica.boba.network/"
+		],
+		"explorers": [
+		]
+	},
+	"321": {
+		"label": "Kucoin Community Chain",
+		"symbol": "KCS",
+		"rpcs": [
+			"https://rpc-mainnet.kcc.network/"
+		],
+		"explorers": [
+		]
+	},
+	"361": {
+		"label": "Theta",
+		"symbol": "TFUEL",
+		"rpcs": [
+			"https://eth-rpc-api.thetatoken.org/rpc"
+		],
+		"explorers": [
+		]
+	},
+	"592": {
+		"label": "Astar",
+		"symbol": "ASTR",
+		"rpcs": [
+			"https://rpc.astar.network:8545",
+			"https://astar.public.blastapi.io"
+		],
+		"explorers": [
+		]
+	},
+	"820": {
+		"label": "Callisto",
+		"symbol": "CLO",
+		"rpcs": [
+			"https://clo-geth.0xinfra.com/"
+		],
+		"explorers": [
+		]
+	},
+	"888": {
+		"label": "Wanchain",
+		"symbol": "WAN",
+		"rpcs": [
+			"https://gwan-ssl.wandevs.org:56891"
+		],
+		"explorers": [
+		]
+	},
+	"1088": {
+		"label": "Metis",
+		"symbol": "METIS",
+		"rpcs": [
+			"https://andromeda.metis.io/?owner=1088"
+		],
+		"explorers": [
+		]
+	},
+	"1284": {
+		"label": "Moonbeam",
+		"symbol": "GLMR",
+		"rpcs": [
+			"https://rpc.api.moonbeam.network",
+			"https://moonbeam.public.blastapi.io"
+		],
+		"explorers": [
+			"https://moonscan.io"
+		]
+	},
+	"1285": {
+		"label": "Moonriver",
+		"symbol": "MOVR",
+		"rpcs": [
+			"https://rpc.api.moonriver.moonbeam.network",
+			"https://moonriver.api.onfinality.io/public",
+			"https://moonriver.public.blastapi.io"
+		],
+		"explorers": [
+			"https://moonriver.moonscan.io/"
+		]
+	},
+	"4689": {
+		"label": "IoTeX",
+		"symbol": "IOTX",
+		"rpcs": [
+			"https://iotex-mainnet.gateway.pokt.network/v1/lb/6176f902e19001003499f492",
+			"https://rpc.ankr.com/iotex",
+			"https://babel-api.mainnet.iotex.io",
+			"https://babel-api.mainnet.iotex.one",
+			"https://pokt-api.iotex.io"
+		],
+		"explorers": [
+		]
+	},
+	"5551": {
+		"label": "Nahmii",
+		"symbol": "ETH",
+		"rpcs": [
+			"https://l2.nahmii.io/"
+		],
+		"explorers": [
+		]
+	},
+	"8217": {
+		"label": "Klaytn",
+		"symbol": "KLAY",
+		"rpcs": [
+			"http://175.209.78.135:8551",
+			"https://public-node-api.klaytnapi.com/v1/cypress"
+		],
+		"explorers": [
+		]
+	},
+	"10000": {
+		"label": "smartBCH",
+		"symbol": "BCH",
+		"rpcs": [
+			"https://smartbch.fountainhead.cash/mainnet",
+			"https://smartbch.greyh.at",
+			"https://global.uat.cash",
+			"https://rpc.uatvo.com"
+		],
+		"explorers": [
+			"https://www.smartscan.cash/"
+		]
+	},
+	"32659": {
+		"label": "Fusion",
+		"symbol": "FSN",
+		"rpcs": [
+			"https://mainnet.anyswap.exchange",
+			"https://mainway.freemoon.xyz/gate",
+			"https://fsn.dev/api"
+		],
+		"explorers": [
+		]
+	},
+	"42161": {
+		"label": "Arbitrum One",
+		"symbol": "ETH",
+		"rpcs": [
+			"https://arb1.arbitrum.io/rpc",
+			"https://rpc.ankr.com/arbitrum"
+		],
+		"explorers": [
+			"https://arbiscan.io/"
+		]
+	},
+	"42220": {
+		"label": "Celo",
+		"symbol": "CELO",
+		"rpcs": [
+			"https://forno.celo.org",
+			"https://rpc.ankr.com/celo"
+		],
+		"explorers": [
+		]
+	},
+	"42262": {
+		"label": "Emerald ParaTime (Oasis)",
+		"symbol": "ROSE",
+		"rpcs": [
+			"https://emerald.oasis.dev/"
+		],
+		"explorers": [
+		]
+	},
+	"43114": {
+		"label": "Avalanche",
+		"symbol": "AVAX",
+		"rpcs": [
+			"https://api.avax.network/ext/bc/C/rpc"
+		],
+		"explorers": [
+			"https://snowtrace.io/"
+		]
+	},
+	"1313161554": {
+		"label": "Aurora",
+		"symbol": "AURORA",
+		"rpcs": [
+			"https://mainnet.aurora.dev"
+		],
+		"explorers": [
+		]
+	},
+	"1666600000": {
+		"label": "Harmony",
+		"symbol": "ONE",
+		"rpcs": [
+			"https://harmony-0-rpc.gateway.pokt.network",
+			"https://api.harmony.one",
+			"https://a.api.s0.t.hmny.io",
+			"https://api.s0.t.hmny.io",
+			"https://rpc.heavenswail.one/",
+			"https://api.fuzz.fi/",
+			"https://rpc.hermesdefi.io/"
+		],
+		"explorers": [
+		]
+	}
+}
