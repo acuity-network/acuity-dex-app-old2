@@ -18,6 +18,7 @@
     "@polkadot/wasm-crypto": "^5.1.1",
     "@polkadot/x-randomvalues": "^8.7.1",
     "buffer": "^6.0.3",
+    "level": "^8.0.0",
     "pinia": "^2.0.14",
     "process": "^0.11.10",
     "roboto-fontface": "^0.10.0",
