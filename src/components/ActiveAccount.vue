@@ -13,7 +13,8 @@ import { main } from '@/stores/index.ts'
 
 let $acuityClient = inject('$acuityClient');
 let $ethClient = inject('$ethClient');
-let route, router;
+let route = useRoute();
+let router = useRouter();
 
 const store = main();
 const accountsAcu = computed(() => store.accountsAcu);
@@ -21,6 +22,8 @@ const addressesAcu = computed(() => store.addressesAcu);
 
 const activeAccount = ref(store.activeAcu);
 const name = ref("");
+const testnet1 = ref("");
+const testnet2 = ref("");
 
 async function loadName(address) {
   let result = await $acuityClient.api.query.identity.identityOf(address);
@@ -34,14 +37,10 @@ async function load() {
 };
 
 onMounted(async () => {
-  router = useRouter();
-  route = useRoute();
-
   load();
-
 });
 
-watch(activeAccount, async (newa, olda) => {
+watch(activeAccount, async (newValue, oldValue) => {
   store.activeAcuSet(activeAccount.value);
   load();
 });
@@ -57,6 +56,12 @@ watch(activeAccount, async (newa, olda) => {
 
         <div class="text-h6">Name</div>
         <p>{{ name }}</p>
+
+        <div class="text-h6">Testnet 1 account</div>
+        <p>{{ testnet1 }}</p>
+
+        <div class="text-h6">Testnet 2 account</div>
+        <p>{{ testnet2 }}</p>
 
       </v-col>
     </v-row>

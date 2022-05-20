@@ -22,7 +22,7 @@ const menu = ref([
     text: 'Goto',
   },
   {
-    to: '/deposits',
+    to: '/stashes',
     icon: 'mdi-swap-horizontal',
     text: 'Stashes',
   },
@@ -30,6 +30,11 @@ const menu = ref([
     to: '/orders',
     icon: 'mdi-book-open-page-variant',
     text: 'Orders',
+  },
+  {
+    to: '/chains',
+    icon: 'mdi-transit-connection-horizontal',
+    text: 'Chains',
   },
 ]);
 

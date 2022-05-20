@@ -25,7 +25,7 @@ const ethToWithdraw = ref("");
 let emitter;
 
 async function load() {
-  eth.value = $ethClient.formatWei(await $ethClient.atomicSwap.methods.getStashValue("0x0000000000000000000000000000000", store.activeEth).call());
+  eth.value = $ethClient.formatWei(await $ethClient.testnet1.atomicSwap.methods.getStashValue("0x0000000000000000000000000000000", store.activeEth).call());
 }
 
 onMounted(async () => {
@@ -56,7 +56,7 @@ async function withdraw(event) {
   <v-container>
     <v-row>
       <v-col cols="12" md="10">
-        <div class="text-h6">ETH Stashes</div>
+        <div class="text-h6">ETH Stashed</div>
         <p class="mb-10">{{ eth }}</p>
         <v-text-field v-model="ethToStash" label="ETH to deposit"></v-text-field>
         <v-btn class="mb-10" @click="deposit">Stashes</v-btn>

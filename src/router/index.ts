@@ -6,6 +6,7 @@ import ActiveAccount from '../components/ActiveAccount.vue'
 import Account from '../components/Account.vue'
 import Stashes from '../components/Stashes.vue'
 import Orders from '../components/Orders.vue'
+import Chains from '../components/Chains.vue'
 
 // 2. Define some routes
 // Each route should map to a component.
@@ -13,8 +14,9 @@ import Orders from '../components/Orders.vue'
 const routes = [
   { path: '/', component: ActiveAccount },
   { path: '/goto', component: Goto },
-  { path: '/deposits', component: Stashes },
+  { path: '/stashes', component: Stashes },
   { path: '/orders', component: Orders },
+  { path: '/chains', component: Chains },
   { path: '/account/:id', component: Account },
 ]
 
