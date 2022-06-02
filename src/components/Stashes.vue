@@ -58,8 +58,8 @@ async function withdraw(event) {
       <v-col cols="12" md="10">
         <div class="text-h6">ETH Stashed</div>
         <p class="mb-10">{{ eth }}</p>
-        <v-text-field v-model="ethToStash" label="ETH to deposit"></v-text-field>
-        <v-btn class="mb-10" @click="deposit">Stashes</v-btn>
+        <v-text-field v-model="ethToStash" label="ETH to stash"></v-text-field>
+        <v-btn class="mb-10" @click="deposit">Stash</v-btn>
         <v-text-field v-model="ethToWithdraw" label="ETH to withdraw"></v-text-field>
         <v-btn class="mb-10" @click="withdraw">Withdraw</v-btn>
       </v-col>
