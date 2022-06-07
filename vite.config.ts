@@ -18,10 +18,13 @@ export default defineConfig({
   resolve: {
     alias: {
       process: "process/browser",
+      stream: "stream-browserify",
+      zlib: "browserify-zlib",
+      util: 'util',
+      https: 'agent-base',
       '@': path.resolve(__dirname, 'src'),
     },
   },
-
   /* remove the need to specify .vue files https://vitejs.dev/config/#resolve-extensions
   resolve: {
     extensions: [

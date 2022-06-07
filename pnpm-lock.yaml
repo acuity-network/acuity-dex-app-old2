@@ -13,7 +13,10 @@ specifiers:
   '@vitejs/plugin-vue': ^2.3.3
   '@vue/compiler-sfc': ^3.2.37
   '@vuetify/vite-plugin': ^1.0.0-alpha.11
+  agent-base: ^6.0.2
+  browserify-zlib: ^0.2.0
   buffer: ^6.0.3
+  events: ^3.3.0
   level: ^8.0.0
   pinia: ^2.0.14
   process: ^0.11.10
@@ -22,7 +25,9 @@ specifiers:
   rollup-plugin-polyfill-node: ^0.9.0
   sass: ^1.52.2
   sass-loader: ^12.6.0
+  stream-browserify: ^3.0.0
   typescript: ^4.7.3
+  util: ^0.12.4
   vite: ^2.9.10
   vue: ^3.2.37
   vue-cli-plugin-vuetify: ^2.5.1
@@ -45,11 +50,15 @@ dependencies:
   '@polkadot/util-crypto': 8.7.1
   '@polkadot/wasm-crypto': 5.1.1_xs3i6t46ahm2n3lotir2vf6g3e
   '@polkadot/x-randomvalues': 8.7.1
-  buffer: 6.0.3
+  agent-base: 6.0.2
+  browserify-zlib: 0.2.0
+  events: 3.3.0
   level: 8.0.0
   pinia: 2.0.14_vcmyupim4cga7k7f5hngmth5py
   process: 0.11.10
   roboto-fontface: 0.10.0
+  stream-browserify: 3.0.0
+  util: 0.12.4
   vue: 3.2.37
   vue-i18n: 9.1.10_vue@3.2.37
   vue-router: 4.0.15_vue@3.2.37
@@ -61,6 +70,7 @@ devDependencies:
   '@vitejs/plugin-vue': 2.3.3_vite@2.9.10+vue@3.2.37
   '@vue/compiler-sfc': 3.2.37
   '@vuetify/vite-plugin': 1.0.0-alpha.11_zneqfptdig5tskqtl7bcxr3ayy
+  buffer: 6.0.3
   rollup: 2.75.5
   rollup-plugin-polyfill-node: 0.9.0_rollup@2.75.5
   sass: 1.52.2
@@ -566,7 +576,7 @@ packages:
       '@polkadot/x-ws': 8.7.1
       '@substrate/connect': 0.7.0-alpha.0
       eventemitter3: 4.0.7
-      mock-socket: 9.1.4
+      mock-socket: 9.1.5
       nock: 13.2.6
     transitivePeerDependencies:
       - encoding
@@ -1243,6 +1253,15 @@ packages:
     hasBin: true
     dev: true
 
+  /agent-base/6.0.2:
+    resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
+    engines: {node: '>= 6.0.0'}
+    dependencies:
+      debug: 4.3.4
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /ajv-keywords/3.5.2_ajv@6.12.6:
     resolution: {integrity: sha512-5p6WTN0DdTGVQk6VjcEju19IgaHudalcfabD7yhDGeA6bcQnmL+CpveLJq/3hvfwd1aof6L386Ougkx6RfyMIQ==}
     peerDependencies:
@@ -1339,7 +1358,6 @@ packages:
 
   /base64-js/1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
-    dev: false
 
   /bcrypt-pbkdf/1.0.2:
     resolution: {integrity: sha512-qeFIXtP4MSoi6NLqO12WfqARWWuCKi2Rn/9hJLEmtB5yTNr9DqFWkJRCf2qShWzPeAMRnOgCrq0sg/KLv5ES9w==}
@@ -1476,8 +1494,14 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
-  /browserslist/4.20.3:
-    resolution: {integrity: sha512-NBhymBQl1zM0Y5dQT/O+xiLP9/rzOIQdKM/eMJBAq7yBgaB6krIYLGejrwVYnSHZdqjscB1SPuAjHwxjvN6Wdg==}
+  /browserify-zlib/0.2.0:
+    resolution: {integrity: sha512-Z942RysHXmJrhqk88FmKBVq/v5tqmSkDz7p54G/MGyjMnCFFnC79XWNbg+Vta8W6Wb2qtSZTSxIGkJrRpCFEiA==}
+    dependencies:
+      pako: 1.0.11
+    dev: false
+
+  /browserslist/4.20.4:
+    resolution: {integrity: sha512-ok1d+1WpnU24XYN7oC3QWgTyMhY/avPJ/r9T00xxvUOIparA/gc+UPUMaod3i+G6s+nI2nUb9xZ5k794uIwShw==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
@@ -1526,7 +1550,6 @@ packages:
     dependencies:
       base64-js: 1.5.1
       ieee754: 1.2.1
-    dev: false
 
   /bufferutil/4.0.6:
     resolution: {integrity: sha512-jduaYOYtnio4aIAyc6UbvPCVcgq7nYpVnucyxr6eCYg/Woad9Hf/oxxBRDnGGjPfjUm6j5O/uBWhIu4iLebFaw==}
@@ -2388,7 +2411,6 @@ packages:
   /events/3.3.0:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
     engines: {node: '>=0.8.x'}
-    dev: true
 
   /evp_bytestokey/1.0.3:
     resolution: {integrity: sha512-/f2Go4TognH/KvCISP7OUsHn85hT9nUkxxA9BEWxFn+Oj9o8ZNLm/40hdlgSLyuOimsrTKLUMEorQexp/aPQeA==}
@@ -2833,7 +2855,6 @@ packages:
 
   /ieee754/1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
-    dev: false
 
   /immutable/4.1.0:
     resolution: {integrity: sha512-oNkuqVTA8jqG1Q6c+UglTOD1xhC1BtjKI7XkCXRkZHrN5m18/XsnUp8Q89GkQO/z+0WjonSvl0FLhDYftp46nQ==}
@@ -3354,8 +3375,8 @@ packages:
     resolution: {integrity: sha512-qYvlv/exQ4+svI3UOvPUpLDF0OMX5euvUH0Ny4N5QyRyhNdgAgUrVH3iUINSzEPLvx0kbo/Bp28GJKIqvE7URw==}
     dev: false
 
-  /mock-socket/9.1.4:
-    resolution: {integrity: sha512-zc7jF8FId8pD9ojxWLcXrv4c2nEFOb6o8giPb45yQ6BfQX1tWuUktHNFSiy+KBt0VhYtHNt5MFIzclt0LIynEA==}
+  /mock-socket/9.1.5:
+    resolution: {integrity: sha512-3DeNIcsQixWHHKk6NdoBhWI4t1VMj5/HzfnI1rE/pLl5qKx7+gd4DNA07ehTaZ6MoUU053si6Hd+YtiM/tQZfg==}
     engines: {node: '>= 8'}
     dev: false
 
@@ -3591,6 +3612,10 @@ packages:
     resolution: {integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==}
     engines: {node: '>=6'}
     dev: true
+
+  /pako/1.0.11:
+    resolution: {integrity: sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==}
+    dev: false
 
   /pako/2.0.4:
     resolution: {integrity: sha512-v8tweI900AUkZN6heMU/4Uy4cXRc2AYNRggVmTR+dEncawDJgCdLMximOVA2p4qO57WMynangsfGRb5WD6L1Bg==}
@@ -3980,7 +4005,7 @@ packages:
     dev: true
 
   /responselike/1.0.2:
-    resolution: {integrity: sha1-kYcg7ztjHFZCvgaPFa3lpG9Loec=}
+    resolution: {integrity: sha512-/Fpe5guzJk1gPqdJLJR5u7eG/gNY4nImjbRDaVWVMRhne55TCmj2i9Q+54PBRfatRC8v/rIiv9BN0pMd9OV5EQ==}
     dependencies:
       lowercase-keys: 1.0.1
     dev: false
@@ -4249,6 +4274,13 @@ packages:
   /statuses/2.0.1:
     resolution: {integrity: sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ==}
     engines: {node: '>= 0.8'}
+    dev: false
+
+  /stream-browserify/3.0.0:
+    resolution: {integrity: sha512-H73RAHsVBapbim0tU2JwwOiXUj+fikfiaoYAKHF3VJfA0pe2BCzkhAHBlLG6REzE+2WNZcxOXjK7lkso+9euLA==}
+    dependencies:
+      inherits: 2.0.4
+      readable-stream: 3.6.0
     dev: false
 
   /strict-uri-encode/1.1.0:
@@ -5135,7 +5167,7 @@ packages:
       '@webassemblyjs/wasm-parser': 1.11.1
       acorn: 8.7.1
       acorn-import-assertions: 1.8.0_acorn@8.7.1
-      browserslist: 4.20.3
+      browserslist: 4.20.4
       chrome-trace-event: 1.0.3
       enhanced-resolve: 5.9.3
       es-module-lexer: 0.9.3

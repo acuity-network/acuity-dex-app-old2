@@ -52,6 +52,7 @@
 	"19": {
 		"label": "Songbird",
 		"symbol": "SGB",
+		"genesis": "0x703ccf62df9fa51265d239a6bb8afb6f2fff2831dac0c2df6208dd254a57585b",
 		"rpcs": [
 			"https://songbird.towolabs.com/rpc"
 		],
@@ -62,6 +63,7 @@
 	"20": {
 		"label": "Elastos",
 		"symbol": "ELA",
+		"genesis": "0x6afc2eb01956dfe192dc4cd065efdf6c3c80448776ca367a7246d279e228ff0a",
 		"rpcs": [
 			"https://api.elastos.io/eth",
 			"https://api.trinity-tech.cn/eth"
@@ -72,8 +74,8 @@
 	"25": {
 		"label": "Cronos",
 		"symbol": "CRO",
+		"genesis": "0xa7f4e603aa51239a15e0a3fafb15c6e4c6d6f2c39c55770330efd2fa5afc12a9",
 		"rpcs": [
-			"https://cronos-rpc.heavenswail.one/",
 			"https://evm-cronos.crypto.org",
 			"https://cronosrpc-1.xstaking.sg/",
 			"https://cronos-rpc.elk.finance/"
@@ -84,6 +86,7 @@
 	"30": {
 		"label": "RSK",
 		"symbol": "RBTC",
+		"genesis": "0xf88529d4ab262c0f4d042e9d8d3f2472848eaafe1a9b7213f57617eb40a9f9e0",
 		"rpcs": [
 			"https://public-node.rsk.co"
 		],
@@ -93,6 +96,7 @@
 	"40": {
 		"label": "Telos",
 		"symbol": "TLOS",
+		"genesis": "0x044852b2a670ade5407e78fb2863c51de9fcb96542a07186fe3aeda6bb8a116d",
 		"rpcs": [
 			"https://mainnet.telos.net/evm",
 			"https://rpc1.eu.telos.net/evm",
@@ -112,6 +116,7 @@
 	"52": {
 		"label": "CoinEx Smart Chain",
 		"symbol": "CET",
+		"genesis": "0xc74aefd3e2a21f39e44bd840f4a125a4c2439d2623985c67d80766d899c9af72",
 		"rpcs": [
 			"https://rpc.coinex.net/",
 			"https://rpc1.coinex.net/",
@@ -165,6 +170,7 @@
 	"59": {
 		"label": "EOS",
 		"symbol": "EOS",
+		"genesis": "0x0000000000000000000000000000000000000000000000000000000000000000",
 		"rpcs": [
 			"https://api.eosargentina.io"
 		],
@@ -174,9 +180,10 @@
 	"61": {
 		"label": "Ethereum Classic",
 		"symbol": "ETC",
+		"genesis": "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3",
 		"rpcs": [
-			"https://blockscout.com/etc/mainnet/api/eth-rpc",
-			"https://www.ethercluster.com/etc"
+			"https://www.ethercluster.com/etc",
+			"https://blockscout.com/etc/mainnet/api/eth-rpc"
 		],
 		"explorers": [
 			"https://blockscout.com/etc/mainnet/"
@@ -185,6 +192,7 @@
 	"66": {
 		"label": "OKC (OKX)",
 		"symbol": "OKC",
+		"genesis": "0x30cbd6fb908537c789e78a366ea3871b99d6af869c13c9b310fc487ec82635e1",
 		"rpcs": [
 			"https://exchainrpc.okex.org"
 		],
@@ -194,17 +202,9 @@
 	"70": {
 		"label": "Hoo Smart Chain",
 		"symbol": "HOO",
+		"genesis": "0x7eb442ecda3db6ae27376de2b34dfae802d3ab13ebba7544eba103ca619e32ed",
 		"rpcs": [
 			"https://http-mainnet.hoosmartchain.com"
-		],
-		"explorers": [
-		]
-	},
-	"88": {
-		"label": "TomoChain",
-		"symbol": "TOMO",
-		"rpcs": [
-			"https://rpc.tomochain.com"
 		],
 		"explorers": [
 		]
@@ -229,18 +229,10 @@
 		"explorers": [
 		]
 	},
-	"106": {
-		"label": "Velas",
-		"symbol": "VLX",
-		"rpcs": [
-			"https://evmexplorer.velas.com/rpc"
-		],
-		"explorers": [
-		]
-	},
 	"108": {
 		"label": "ThunderCore",
 		"symbol": "TT",
+		"genesis": "0xfb3c2d5d6a223d4e0d712408cc90c31604d7781d9518698301c82be66b81a7e0",
 		"rpcs": [
 			"https://mainnet-rpc.thundercore.com"
 		],
@@ -250,6 +242,7 @@
 	"122": {
 		"label": "Fuse",
 		"symbol": "FUSE",
+		"genesis": "0x6e778e9491576a28bd06fac93844d8494be1f153e60ba7d29b4b51d991d4f830",
 		"rpcs": [
 			"https://fuse-rpc.gateway.pokt.network/",
 			"https://rpc.fuse.io"
@@ -260,10 +253,11 @@
 	"128": {
 		"label": "Huobi",
 		"symbol": "HT",
+		"genesis": "0x5751d1772ebc82d52d19d96157bb3f13ca8417217e3c0913adf15f04eb4cb144",
 		"rpcs": [
-			"https://http-mainnet-node.huobichain.com",
 			"https://http-mainnet.hecochain.com",
-			"https://pub001.hg.network/rpc"
+			"https://pub001.hg.network/rpc",
+			"https://http-mainnet-node.huobichain.com"
 		],
 		"explorers": [
 		]
@@ -333,6 +327,7 @@
 	"321": {
 		"label": "Kucoin Community Chain",
 		"symbol": "KCS",
+		"genesis": "0xd179bc170ecd216166ba440a2cff697ba1ed4e203ddcb51214e52773906ca3fc",
 		"rpcs": [
 			"https://rpc-mainnet.kcc.network/"
 		],
@@ -355,6 +350,7 @@
 	"361": {
 		"label": "Theta",
 		"symbol": "TFUEL",
+		"genesis": "0xd8836c6cf3c3ccea0b015b4ed0f9efb0ffe6254db793a515843c9d0f68cbab65",
 		"rpcs": [
 			"https://eth-rpc-api.thetatoken.org/rpc"
 		],
@@ -376,6 +372,7 @@
 	"820": {
 		"label": "Callisto",
 		"symbol": "CLO",
+		"genesis": "0x82270b80fc90beb005505a9ef95039639968a0e81b2904ad30128c93d713d2c4",
 		"rpcs": [
 			"https://clo-geth.0xinfra.com/"
 		],
@@ -385,6 +382,7 @@
 	"888": {
 		"label": "Wanchain",
 		"symbol": "WAN",
+		"genesis": "0x0376899c001618fc7d5ab4f31cfd7f57ca3a896ccc1581a57d8f129ecf40b840",
 		"rpcs": [
 			"https://gwan-ssl.wandevs.org:56891"
 		],
@@ -394,6 +392,7 @@
 	"1088": {
 		"label": "Metis",
 		"symbol": "METIS",
+		"genesis": "0x9e3354e081a54a57190bdb8948a597c840ea5dd496b0322864d4585f4a716892",
 		"rpcs": [
 			"https://andromeda.metis.io/?owner=1088"
 		],
@@ -433,6 +432,7 @@
 	"4689": {
 		"label": "IoTeX",
 		"symbol": "IOTX",
+		"genesis": "0xb337983730981c2d50f114eed5da9dd20b83c8c5e130beefdb3001dc858cfe8b",
 		"rpcs": [
 			"https://iotex-mainnet.gateway.pokt.network/v1/lb/6176f902e19001003499f492",
 			"https://rpc.ankr.com/iotex",
@@ -446,6 +446,7 @@
 	"5551": {
 		"label": "Nahmii",
 		"symbol": "ETH",
+		"genesis": "0xfed46abde4cd498e15a510de5eeaf69770cafa78646fbf72bae52d647c82a4c8",
 		"rpcs": [
 			"https://l2.nahmii.io/"
 		],
@@ -455,8 +456,8 @@
 	"8217": {
 		"label": "Klaytn",
 		"symbol": "KLAY",
+		"genesis": "0xc72e5293c3c3ba38ed8ae910f780e4caaa9fb95e79784f7ab74c3c262ea7137e",
 		"rpcs": [
-			"http://175.209.78.135:8551",
 			"https://public-node-api.klaytnapi.com/v1/cypress"
 		],
 		"explorers": [
@@ -481,6 +482,7 @@
 	"32659": {
 		"label": "Fusion",
 		"symbol": "FSN",
+		"genesis": "0xc2422b1d9d16331be2a5b207c0783027d4419498003f729f4b9e9c5c1838623a",
 		"rpcs": [
 			"https://mainnet.anyswap.exchange",
 			"https://mainway.freemoon.xyz/gate",
@@ -492,6 +494,7 @@
 	"42161": {
 		"label": "Arbitrum One",
 		"symbol": "ETH",
+		"genesis": "0x7ee576b35482195fc49205cec9af72ce14f003b9ae69f6ba0faef4514be8b442",
 		"rpcs": [
 			"https://arb1.arbitrum.io/rpc",
 			"https://rpc.ankr.com/arbitrum"
@@ -503,6 +506,7 @@
 	"42220": {
 		"label": "Celo",
 		"symbol": "CELO",
+		"genesis": "0x19ea3339d3c8cda97235bc8293240d5b9dadcdfbb5d4b0b90ee731cac1bd11c3",
 		"rpcs": [
 			"https://forno.celo.org",
 			"https://rpc.ankr.com/celo"
@@ -513,6 +517,7 @@
 	"42262": {
 		"label": "Emerald ParaTime (Oasis)",
 		"symbol": "ROSE",
+		"genesis": "0x5a8686e9694a4ffb2b1648ec6ff9b181e547658abeea6ad9781e459a3cdfedd5",
 		"rpcs": [
 			"https://emerald.oasis.dev/"
 		],
@@ -536,6 +541,7 @@
 	"1313161554": {
 		"label": "Aurora",
 		"symbol": "AURORA",
+		"genesis": "0x8058d7fe544fdcac6836faa5f84c68291da1773594216957374708a7109a6336",
 		"rpcs": [
 			"https://mainnet.aurora.dev"
 		],
@@ -545,6 +551,7 @@
 	"1666600000": {
 		"label": "Harmony",
 		"symbol": "ONE",
+		"genesis": "0xb4d158b82ac8a653c42b78697ab1cd0c6a0d9a15ab3bc34130f0b719fb174d2a",
 		"rpcs": [
 			"https://harmony-0-rpc.gateway.pokt.network",
 			"https://api.harmony.one",
