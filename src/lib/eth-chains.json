@@ -2,7 +2,10 @@
 	"1": {
 		"label": "Ethereum",
 		"symbol": "ETH",
+		"genesis": "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3",
 		"rpcs": [
+			"wss://eth-mainnet.public.blastapi.io",
+			"wss://mainnet.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161",
 			"https://mainnet.infura.io/v3/",
 			"https://api.mycryptoapi.com/eth",
 			"https://rpc.flashbots.net/",
@@ -24,7 +27,9 @@
 	"2": {
 		"label": "Expanse",
 		"symbol": "EXP",
+		"genesis": "0x2fe75cf9ba10cb1105e1750d872911e75365ba24fdd5db7f099445c901fea895",
 		"rpcs": [
+			"wss://node.expanse.tech/ws",
 			"https://node.expanse.tech"
 		],
 		"explorers": [
@@ -33,7 +38,11 @@
 	"10": {
 		"label": "Optimism",
 		"symbol": "ETH",
+		"genesis": "0x7ca38a1916c42007829c55e69d3e9a73265554b586a499015373241b8a3fa48b",
 		"rpcs": [
+			"wss://optimism-mainnet.public.blastapi.io",
+			"https://optimism-mainnet.public.blastapi.io",
+			"wss://ws-mainnet.optimism.io",
 			"https://mainnet.optimism.io"
 		],
 		"explorers": [
@@ -116,7 +125,10 @@
 	"56": {
 		"label": "Binance Smart Chain",
 		"symbol": "BNB",
+		"genesis": "0x6d3c66c5357ec91d5c43af47e234a939b22557cbb552dc45bebbceeed90fbe34",
 		"rpcs": [
+			"wss://bsc-testnet.public.blastapi.io",
+			"https://bsc-testnet.public.blastapi.io",
 			"https://bsc-dataseed.binance.org/",
 			"https://bsc-dataseed1.defibit.io/",
 			"https://bsc-dataseed1.ninicoin.io/",
@@ -142,7 +154,9 @@
 	"57": {
 		"label": "Syscoin",
 		"symbol": "SYS",
+		"genesis": "0x2112327cad6deec6ada8bd7e5d33d263b57742a8495f3b641faa326b55b1c666",
 		"rpcs": [
+			"wss://rpc.syscoin.org/wss",
 			"https://rpc.syscoin.org"
 		],
 		"explorers": [
@@ -198,7 +212,11 @@
 	"100": {
 		"label": "Gnosis Chain (formerly xDai)",
 		"symbol": "xDAI",
+		"genesis": "0x4f1dd23188aab3a76b463e4af801b52b1248ef073c648cbdc4c9333d3da79756",
 		"rpcs": [
+			"wss://gnosis-mainnet.public.blastapi.io",
+			"wss://rpc.gnosischain.com/wss",
+			"wss://rpc.xdaichain.com/wss",
 			"https://rpc.gnosischain.com",
 			"https://rpc.xdaichain.com",
 			"https://xdai.poanetwork.dev",
@@ -253,7 +271,9 @@
 	"137": {
 		"label": "Polygon",
 		"symbol": "MATIC",
+		"genesis": "0xa9c28ce2141b56c474f1dc504bee9b01eb1bd7d1a507580d5519d4437a97de1b",
 		"rpcs": [
+			"wss://polygon-mainnet.public.blastapi.io",
 			"https://polygon-rpc.com",
 			"https://rpc-mainnet.matic.network",
 			"https://rpc-mainnet.maticvigil.com",
@@ -273,6 +293,7 @@
 		"label": "Arbitrum on xDai",
 		"symbol": "xDAI",
 		"rpcs": [
+			"wss://arbitrum.xdaichain.com/wss",
 			"https://arbitrum.xdaichain.com"
 		],
 		"explorers": [
@@ -281,7 +302,10 @@
 	"250": {
 		"label": "Fantom",
 		"symbol": "FTM",
+		"genesis": "0x00000000000003e83fddf1e9330f0a8691d9f0b2af57b38c3bb85488488a40df",
 		"rpcs": [
+			"wss://fantom-mainnet.public.blastapi.io",
+			"wss://wsapi.fantom.network/",
 			"https://fantom-mainnet.gateway.pokt.network/v1/lb/62759259ea1b320039c9e7ac",
 			"https://rpc.ftm.tools/",
 			"https://rpc.ankr.com/fantom",
@@ -298,6 +322,7 @@
 		"label": "Boba Network",
 		"symbol": "ETH",
 		"rpcs": [
+			"wss://wss.mainnet.boba.network/",
 			"https://mainnet.boba.network/",
 			"https://boba-mainnet.gateway.pokt.network/v1/lb/623ad21b20354900396fed7f",
 			"https://lightning-replica.boba.network/"
@@ -314,6 +339,19 @@
 		"explorers": [
 		]
 	},
+	"336": {
+		"label": "Shiden",
+		"symbol": "SDN",
+		"genesis": "0x63144bd58eb8304c8316dfeede3bc69700edf97b3f167a9cf3767262e50fc38e",
+		"rpcs": [
+			"wss://shiden.public.blastapi.io",
+			"https://shiden.public.blastapi.io",
+			"wss://shiden.api.onfinality.io/public-ws",
+			"https://rpc.shiden.astar.network:8545"
+		],
+		"explorers": [
+		]
+	},
 	"361": {
 		"label": "Theta",
 		"symbol": "TFUEL",
@@ -326,7 +364,9 @@
 	"592": {
 		"label": "Astar",
 		"symbol": "ASTR",
+		"genesis": "0x0d28a86ac0fe37871285bd1dac45d83a4b3833e01a37571a1ac4f0a44c64cdc2",
 		"rpcs": [
+			"wss://astar.public.blastapi.io",
 			"https://rpc.astar.network:8545",
 			"https://astar.public.blastapi.io"
 		],
@@ -363,9 +403,13 @@
 	"1284": {
 		"label": "Moonbeam",
 		"symbol": "GLMR",
+		"genesis": "0x7e6b3bbed86828a558271c9c9f62354b1d8b5aa15ff85fd6f1e7cbe9af9dde7e",
 		"rpcs": [
+			"wss://moonbeam.public.blastapi.io",
+			"wss://moonbeam.api.onfinality.io/public-ws",
 			"https://rpc.api.moonbeam.network",
-			"https://moonbeam.public.blastapi.io"
+			"https://moonbeam.public.blastapi.io",
+			"https://moonbeam.api.onfinality.io/public"
 		],
 		"explorers": [
 			"https://moonscan.io"
@@ -374,10 +418,13 @@
 	"1285": {
 		"label": "Moonriver",
 		"symbol": "MOVR",
+		"genesis": "0xce24348303f7a60c4d2d3c82adddf55ca57af89cd9e2cd4b863906ef53b89b3c",
 		"rpcs": [
+			"wss://moonriver.public.blastapi.io",
+			"wss://moonriver.api.onfinality.io/public-ws",
 			"https://rpc.api.moonriver.moonbeam.network",
-			"https://moonriver.api.onfinality.io/public",
-			"https://moonriver.public.blastapi.io"
+			"https://moonriver.public.blastapi.io",
+			"https://moonriver.api.onfinality.io/public"
 		],
 		"explorers": [
 			"https://moonriver.moonscan.io/"
@@ -418,8 +465,11 @@
 	"10000": {
 		"label": "smartBCH",
 		"symbol": "BCH",
+		"genesis": "0x0000000000000000000000000000000000000000000000000000000000000000",
 		"rpcs": [
+			"wss://smartbch.fountainhead.cash/ws/mainnet",
 			"https://smartbch.fountainhead.cash/mainnet",
+			"wss://smartbch-wss.greyh.at",
 			"https://smartbch.greyh.at",
 			"https://global.uat.cash",
 			"https://rpc.uatvo.com"
@@ -472,7 +522,11 @@
 	"43114": {
 		"label": "Avalanche",
 		"symbol": "AVAX",
+		"genesis": "0x31ced5b9beb7f8782b014660da0cb18cc409f121f408186886e1ca3e8eeca96b",
 		"rpcs": [
+			"wss://ava-mainnet.public.blastapi.io/ext/bc/C/ws",
+			"https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc",
+			"wss://api.avax.network/ext/bc/C/ws",
 			"https://api.avax.network/ext/bc/C/rpc"
 		],
 		"explorers": [
