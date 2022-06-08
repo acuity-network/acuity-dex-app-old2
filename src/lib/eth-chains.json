@@ -1,4 +1,24 @@
 {
+	"-1": {
+		"label": "Testnet 1",
+		"symbol": "TEST1",
+		"rpcs": [
+			"ws://localhost:8546",
+			"http://localhost:8545"
+		],
+		"explorers": [
+		]
+	},
+	"-2": {
+		"label": "Testnet 2",
+		"symbol": "TEST2",
+		"rpcs": [
+			"ws://localhost:8548",
+			"http://localhost:8547"
+		],
+		"explorers": [
+		]
+	},
 	"1": {
 		"label": "Ethereum",
 		"symbol": "ETH",
@@ -6,7 +26,6 @@
 		"rpcs": [
 			"wss://eth-mainnet.public.blastapi.io",
 			"wss://mainnet.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-			"https://mainnet.infura.io/v3/",
 			"https://api.mycryptoapi.com/eth",
 			"https://rpc.flashbots.net/",
 			"https://eth-mainnet.gateway.pokt.network/v1/5f3453978e354ab992c4da79",
