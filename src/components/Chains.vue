@@ -15,6 +15,7 @@ import { main } from '@/stores/index.ts'
 
 let $acuityClient = inject('$acuityClient');
 let $ethClient = inject('$ethClient');
+let $db = inject('$db');
 let route = useRoute();
 let router = useRouter();
 
@@ -30,18 +31,27 @@ let emitter;
 import ethChainsData from '@/lib/eth-chains.json'
 
 const ethChains = ref([]);
-
-const chain = ref(null);
+const chainId = ref(null);
+const uri = ref("");
+const chains = ref([]);
 
 async function load() {
+  chains.value = [];
+  for await (const [key, uri] of $db.iterator({
+    gt: '/chains/'
+  })) {
+    let chainId = parseInt(key.slice(8));
+    if (Number.isInteger(chainId)) {
+      chains.value.push({
+        label: ethChainsData[chainId].label,
+        uri: uri
+      });
+    }
+  }
 }
 
-/*
-let endpoints = [];
-let endpointsTable = ref([]);
-*/
-
 onMounted(async () => {
+  load();
 
   for (let chainId in ethChainsData) {
     ethChains.value.push({
@@ -49,8 +59,6 @@ onMounted(async () => {
       title: ethChainsData[chainId].label,
     });
   }
-
-  load();
 })
 
 let endpointsWeb3 = {}
@@ -73,7 +81,7 @@ function newEndpoint(uri) {
   return web3;
 }
 
-watch(chain, async (newValue, oldValue) => {
+watch(chainId, async (newValue, oldValue) => {
   store.endpointsSet(ethChainsData[newValue].rpcs);
 
   for (let web3 of Object.entries(endpointsWeb3)) {
@@ -96,6 +104,10 @@ watch(chain, async (newValue, oldValue) => {
 
 });
 
+async function add(event) {
+  $db.put('/chains/' + chainId.value, uri.value);
+  load();
+}
 
 </script>
 
@@ -103,32 +115,56 @@ watch(chain, async (newValue, oldValue) => {
   <v-container>
     <v-row>
       <v-col cols="12" md="10">
-        <v-select
-          v-model="chain"
-          :items="ethChains"
-          label="Chain to add"
-        ></v-select>
-        <v-table>
+        <v-table class="mb-10">
           <thead>
             <tr>
               <th class="text-left">
-                URI
+                Chain
               </th>
               <th class="text-left">
-                Height
+                URI
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="(value, endpoint) in endpoints"
-              :key="endpoint"
-            >
-              <td>{{ endpoint }}</td>
-              <td>{{ value.height }}</td>
+            <tr v-for="chain in chains">
+              <td>{{ chain.label }}</td>
+              <td>{{ chain.uri }}</td>
             </tr>
           </tbody>
         </v-table>
+        <v-select
+          v-model="chainId"
+          :items="ethChains"
+          label="Chain to add"
+        ></v-select>
+        <v-radio-group v-model="uri">
+          <v-table>
+            <thead>
+              <tr>
+                <th>
+                </th>
+                <th class="text-left">
+                  URI
+                </th>
+                <th class="text-left">
+                  Height
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="(value, endpoint) in endpoints"
+                :key="endpoint"
+              >
+                <td><v-radio :key="endpoint" :value="endpoint"></v-radio></td>
+                <td>{{ endpoint }}</td>
+                <td>{{ value.height }}</td>
+              </tr>
+            </tbody>
+          </v-table>
+        </v-radio-group>
+        <v-btn class="mb-10" @click="add">Add chain</v-btn>
       </v-col>
     </v-row>
   </v-container>
