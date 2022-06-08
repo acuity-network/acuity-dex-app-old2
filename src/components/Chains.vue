@@ -9,6 +9,8 @@ import {
   web3UseRpcProvider
 } from '@polkadot/extension-dapp';
 import { encodeAddress } from '@polkadot/keyring';
+import Web3 from 'web3'
+
 import { main } from '@/stores/index.ts'
 
 let $acuityClient = inject('$acuityClient');
@@ -17,6 +19,7 @@ let route = useRoute();
 let router = useRouter();
 
 const store = main();
+const endpoints = computed(() => store.endpoints);
 
 const eth = ref("");
 const ethToStash = ref("");
@@ -28,12 +31,15 @@ import ethChainsData from '@/lib/eth-chains.json'
 
 const ethChains = ref([]);
 
-const chain = ref(0);
-
-const rpcs = ref([]);
+const chain = ref(null);
 
 async function load() {
 }
+
+/*
+let endpoints = [];
+let endpointsTable = ref([]);
+*/
 
 onMounted(async () => {
 
@@ -47,9 +53,47 @@ onMounted(async () => {
   load();
 })
 
+let endpointsWeb3 = {}
+
+function newEndpoint(uri) {
+  let web3 = new Web3(uri);
+
+  web3.eth.getBlockNumber()
+    .then(height => {
+      store.endpointHeightSet(uri, height);
+    })
+    .catch(() => {});
+
+  web3.eth.subscribe('newBlockHeaders')
+    .on('data', data => {
+      store.endpointHeightSet(uri, data.number);
+    })
+    .on('error', () => {});
+
+  return web3;
+}
+
 watch(chain, async (newValue, oldValue) => {
-  rpcs.value = ethChainsData[newValue].rpcs;
-  console.log(rpcs.value);
+  store.endpointsSet(ethChainsData[newValue].rpcs);
+
+  for (let web3 of Object.entries(endpointsWeb3)) {
+    try {
+      web3.currentProvider.connection.close();
+    }
+    catch (error) {};
+  }
+
+  endpointsWeb3 = {};
+
+  for (let i in ethChainsData[newValue].rpcs) {
+    endpointsWeb3[ethChainsData[newValue].rpcs[i]] = newEndpoint(ethChainsData[newValue].rpcs[i]);
+  }
+
+/*
+  let block = await web3.eth.getBlock(0);
+  console.log(block.hash);
+*/
+
 });
 
 
@@ -68,19 +112,20 @@ watch(chain, async (newValue, oldValue) => {
           <thead>
             <tr>
               <th class="text-left">
-                RPC
+                URI
               </th>
               <th class="text-left">
-                Active
+                Height
               </th>
             </tr>
           </thead>
           <tbody>
             <tr
-              v-for="rpc in rpcs"
-              :key="rpc"
+              v-for="(value, endpoint) in endpoints"
+              :key="endpoint"
             >
-              <td>{{ rpc }}</td>
+              <td>{{ endpoint }}</td>
+              <td>{{ value.height }}</td>
             </tr>
           </tbody>
         </v-table>

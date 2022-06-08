@@ -6,6 +6,7 @@ export const main = defineStore('main', {
 		accountsAcu: [],
     addressesAcu: [],
     activeEth: "",
+    endpoints: {},
   }),
   getters: {
   },
@@ -25,5 +26,15 @@ export const main = defineStore('main', {
     activeEthSet(account: String) {
 			this.activeEth = account;
 		},
+    endpointsSet(endpoints) {
+      this.endpoints = {};
+
+      for (let endpoint of endpoints) {
+        this.endpoints[endpoint] = {};
+      }
+    },
+    endpointHeightSet(endpoint, height) {
+      this.endpoints[endpoint].height = height;
+    },
   },
 })
