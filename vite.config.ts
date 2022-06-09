@@ -22,6 +22,7 @@ export default defineConfig({
       zlib: "browserify-zlib",
       util: 'util',
       https: 'agent-base',
+      http: 'agent-base',
       '@': path.resolve(__dirname, 'src'),
     },
   },
