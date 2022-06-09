@@ -41,7 +41,11 @@ export const main = defineStore('main', {
       this.chains[chainId] = {
         label: label,
         uri: uri,
+        height: null,
       }
+    },
+    chainHeightSet(chainId, height) {
+      this.chains[chainId].height = height;
     }
   },
 })

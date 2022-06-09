@@ -36,7 +36,6 @@ const chainId = ref(null);
 const uri = ref("");
 
 async function load() {
-  chains.value = [];
   for await (const [key, uri] of $db.iterator({
     gt: '/chains/'
   })) {
@@ -121,12 +120,16 @@ async function add(event) {
               <th class="text-left">
                 URI
               </th>
+              <th class="text-right">
+                Height
+              </th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="chain in chains">
               <td>{{ chain.label }}</td>
               <td>{{ chain.uri }}</td>
+              <td class="text-right">{{ chain.height }}</td>
             </tr>
           </tbody>
         </v-table>
@@ -144,7 +147,7 @@ async function add(event) {
                 <th class="text-left">
                   URI
                 </th>
-                <th class="text-left">
+                <th class="text-right">
                   Height
                 </th>
               </tr>
@@ -156,7 +159,7 @@ async function add(event) {
               >
                 <td><v-radio :key="endpoint" :value="endpoint"></v-radio></td>
                 <td>{{ endpoint }}</td>
-                <td>{{ value.height }}</td>
+                <td class="text-right">{{ value.height }}</td>
               </tr>
             </tbody>
           </v-table>
