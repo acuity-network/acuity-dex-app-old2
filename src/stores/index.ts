@@ -7,6 +7,7 @@ export const main = defineStore('main', {
     addressesAcu: [],
     activeEth: "",
     endpoints: {},
+    chains: {},
   }),
   getters: {
   },
@@ -36,5 +37,11 @@ export const main = defineStore('main', {
     endpointHeightSet(endpoint, height) {
       this.endpoints[endpoint].height = height;
     },
+    chainSet(chainId, label, uri) {
+      this.chains[chainId] = {
+        label: label,
+        uri: uri,
+      }
+    }
   },
 })

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, inject, onMounted, computed, watch} from 'vue'
+import { ref, inject, onMounted, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import {
   web3Accounts,
@@ -21,6 +21,7 @@ let router = useRouter();
 
 const store = main();
 const endpoints = computed(() => store.endpoints);
+const chains = computed(() => store.chains);
 
 const eth = ref("");
 const ethToStash = ref("");
@@ -33,7 +34,6 @@ import ethChainsData from '@/lib/eth-chains.json'
 const ethChains = ref([]);
 const chainId = ref(null);
 const uri = ref("");
-const chains = ref([]);
 
 async function load() {
   chains.value = [];
@@ -42,10 +42,7 @@ async function load() {
   })) {
     let chainId = parseInt(key.slice(8));
     if (Number.isInteger(chainId)) {
-      chains.value.push({
-        label: ethChainsData[chainId].label,
-        uri: uri
-      });
+      store.chainSet(chainId, ethChainsData[chainId].label, uri);
     }
   }
 }
