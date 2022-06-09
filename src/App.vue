@@ -38,15 +38,18 @@ const menu = ref([
   },
 ]);
 
+let $db = inject('$db');
 let $acuityClient = inject('$acuityClient');
 let $ethClient = inject('$ethClient');
 
 const blockNumber = ref(0)
 
 onMounted(async () => {
+  await $acuityClient.init();
   $acuityClient.api.rpc.chain.subscribeNewHeads((lastHeader: any) => {
     blockNumber.value = lastHeader.number.toString();
   });
+  await $ethClient.init($db);
 })
 
 </script>

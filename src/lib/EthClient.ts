@@ -59,6 +59,7 @@ export default class EthClient {
 		    let chainId = parseInt(key.slice(8));
 
 				if (Number.isInteger(chainId)) {
+					store.chainSet(chainId, ethChainsData[chainId].label, uri);
 					let web3 = newEndpoint(chainId, uri);
 					this.chains[chainId] = {};
 					this.chains[chainId].web3 = web3;
