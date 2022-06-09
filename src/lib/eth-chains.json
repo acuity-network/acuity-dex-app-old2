@@ -2,6 +2,11 @@
 	"-1": {
 		"label": "Testnet 1",
 		"symbol": "TEST1",
+		"contracts": {
+			"account": "0xd05647dd9D7B17aBEBa953fbF2dc8D8e87c19cb3",
+			"atomicSwap": "0x744Ac7bbcFDDA8fdb41cF55c020d62f2109887A5",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"ws://localhost:8546",
 			"http://localhost:8545"
@@ -12,6 +17,11 @@
 	"-2": {
 		"label": "Testnet 2",
 		"symbol": "TEST2",
+		"contracts": {
+			"account": "0xd05647dd9D7B17aBEBa953fbF2dc8D8e87c19cb3",
+			"atomicSwap": "0x744Ac7bbcFDDA8fdb41cF55c020d62f2109887A5",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"ws://localhost:8548",
 			"http://localhost:8547"
@@ -23,6 +33,11 @@
 		"label": "Ethereum",
 		"symbol": "ETH",
 		"genesis": "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"wss://eth-mainnet.public.blastapi.io",
 			"wss://mainnet.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161",
@@ -47,6 +62,11 @@
 		"label": "Expanse",
 		"symbol": "EXP",
 		"genesis": "0x2fe75cf9ba10cb1105e1750d872911e75365ba24fdd5db7f099445c901fea895",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"wss://node.expanse.tech/ws",
 			"https://node.expanse.tech"
@@ -58,6 +78,11 @@
 		"label": "Optimism",
 		"symbol": "ETH",
 		"genesis": "0x7ca38a1916c42007829c55e69d3e9a73265554b586a499015373241b8a3fa48b",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"wss://optimism-mainnet.public.blastapi.io",
 			"https://optimism-mainnet.public.blastapi.io",
@@ -72,6 +97,11 @@
 		"label": "Songbird",
 		"symbol": "SGB",
 		"genesis": "0x703ccf62df9fa51265d239a6bb8afb6f2fff2831dac0c2df6208dd254a57585b",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://songbird.towolabs.com/rpc"
 		],
@@ -83,6 +113,11 @@
 		"label": "Elastos",
 		"symbol": "ELA",
 		"genesis": "0x6afc2eb01956dfe192dc4cd065efdf6c3c80448776ca367a7246d279e228ff0a",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://api.elastos.io/eth",
 			"https://api.trinity-tech.cn/eth"
@@ -94,6 +129,11 @@
 		"label": "Cronos",
 		"symbol": "CRO",
 		"genesis": "0xa7f4e603aa51239a15e0a3fafb15c6e4c6d6f2c39c55770330efd2fa5afc12a9",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://evm-cronos.crypto.org",
 			"https://cronosrpc-1.xstaking.sg/",
@@ -106,6 +146,11 @@
 		"label": "RSK",
 		"symbol": "RBTC",
 		"genesis": "0xf88529d4ab262c0f4d042e9d8d3f2472848eaafe1a9b7213f57617eb40a9f9e0",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://public-node.rsk.co"
 		],
@@ -116,6 +161,11 @@
 		"label": "Telos",
 		"symbol": "TLOS",
 		"genesis": "0x044852b2a670ade5407e78fb2863c51de9fcb96542a07186fe3aeda6bb8a116d",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://mainnet.telos.net/evm",
 			"https://rpc1.eu.telos.net/evm",
@@ -136,6 +186,11 @@
 		"label": "CoinEx Smart Chain",
 		"symbol": "CET",
 		"genesis": "0xc74aefd3e2a21f39e44bd840f4a125a4c2439d2623985c67d80766d899c9af72",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://rpc.coinex.net/",
 			"https://rpc1.coinex.net/",
@@ -150,6 +205,11 @@
 		"label": "Binance Smart Chain",
 		"symbol": "BNB",
 		"genesis": "0x6d3c66c5357ec91d5c43af47e234a939b22557cbb552dc45bebbceeed90fbe34",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"wss://bsc-testnet.public.blastapi.io",
 			"https://bsc-testnet.public.blastapi.io",
@@ -179,6 +239,11 @@
 		"label": "Syscoin",
 		"symbol": "SYS",
 		"genesis": "0x2112327cad6deec6ada8bd7e5d33d263b57742a8495f3b641faa326b55b1c666",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"wss://rpc.syscoin.org/wss",
 			"https://rpc.syscoin.org"
@@ -190,6 +255,11 @@
 		"label": "EOS",
 		"symbol": "EOS",
 		"genesis": "0x0000000000000000000000000000000000000000000000000000000000000000",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://api.eosargentina.io"
 		],
@@ -200,6 +270,11 @@
 		"label": "Ethereum Classic",
 		"symbol": "ETC",
 		"genesis": "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://www.ethercluster.com/etc",
 			"https://blockscout.com/etc/mainnet/api/eth-rpc"
@@ -212,6 +287,11 @@
 		"label": "OKC (OKX)",
 		"symbol": "OKC",
 		"genesis": "0x30cbd6fb908537c789e78a366ea3871b99d6af869c13c9b310fc487ec82635e1",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://exchainrpc.okex.org"
 		],
@@ -222,6 +302,11 @@
 		"label": "Hoo Smart Chain",
 		"symbol": "HOO",
 		"genesis": "0x7eb442ecda3db6ae27376de2b34dfae802d3ab13ebba7544eba103ca619e32ed",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://http-mainnet.hoosmartchain.com"
 		],
@@ -232,6 +317,11 @@
 		"label": "Gnosis Chain (formerly xDai)",
 		"symbol": "xDAI",
 		"genesis": "0x4f1dd23188aab3a76b463e4af801b52b1248ef073c648cbdc4c9333d3da79756",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"wss://gnosis-mainnet.public.blastapi.io",
 			"wss://rpc.gnosischain.com/wss",
@@ -252,6 +342,11 @@
 		"label": "ThunderCore",
 		"symbol": "TT",
 		"genesis": "0xfb3c2d5d6a223d4e0d712408cc90c31604d7781d9518698301c82be66b81a7e0",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://mainnet-rpc.thundercore.com"
 		],
@@ -262,6 +357,11 @@
 		"label": "Fuse",
 		"symbol": "FUSE",
 		"genesis": "0x6e778e9491576a28bd06fac93844d8494be1f153e60ba7d29b4b51d991d4f830",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://fuse-rpc.gateway.pokt.network/",
 			"https://rpc.fuse.io"
@@ -273,6 +373,11 @@
 		"label": "Huobi",
 		"symbol": "HT",
 		"genesis": "0x5751d1772ebc82d52d19d96157bb3f13ca8417217e3c0913adf15f04eb4cb144",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://http-mainnet.hecochain.com",
 			"https://pub001.hg.network/rpc",
@@ -285,6 +390,11 @@
 		"label": "Polygon",
 		"symbol": "MATIC",
 		"genesis": "0xa9c28ce2141b56c474f1dc504bee9b01eb1bd7d1a507580d5519d4437a97de1b",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"wss://polygon-mainnet.public.blastapi.io",
 			"https://polygon-rpc.com",
@@ -305,6 +415,11 @@
 	"200": {
 		"label": "Arbitrum on xDai",
 		"symbol": "xDAI",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"wss://arbitrum.xdaichain.com/wss",
 			"https://arbitrum.xdaichain.com"
@@ -316,6 +431,11 @@
 		"label": "Fantom",
 		"symbol": "FTM",
 		"genesis": "0x00000000000003e83fddf1e9330f0a8691d9f0b2af57b38c3bb85488488a40df",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"wss://fantom-mainnet.public.blastapi.io",
 			"wss://wsapi.fantom.network/",
@@ -334,6 +454,11 @@
 	"288": {
 		"label": "Boba Network",
 		"symbol": "ETH",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"wss://wss.mainnet.boba.network/",
 			"https://mainnet.boba.network/",
@@ -347,6 +472,11 @@
 		"label": "Kucoin Community Chain",
 		"symbol": "KCS",
 		"genesis": "0xd179bc170ecd216166ba440a2cff697ba1ed4e203ddcb51214e52773906ca3fc",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://rpc-mainnet.kcc.network/"
 		],
@@ -357,6 +487,11 @@
 		"label": "Shiden",
 		"symbol": "SDN",
 		"genesis": "0x63144bd58eb8304c8316dfeede3bc69700edf97b3f167a9cf3767262e50fc38e",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"wss://shiden.public.blastapi.io",
 			"https://shiden.public.blastapi.io",
@@ -370,6 +505,11 @@
 		"label": "Theta",
 		"symbol": "TFUEL",
 		"genesis": "0xd8836c6cf3c3ccea0b015b4ed0f9efb0ffe6254db793a515843c9d0f68cbab65",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://eth-rpc-api.thetatoken.org/rpc"
 		],
@@ -380,6 +520,11 @@
 		"label": "Astar",
 		"symbol": "ASTR",
 		"genesis": "0x0d28a86ac0fe37871285bd1dac45d83a4b3833e01a37571a1ac4f0a44c64cdc2",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"wss://astar.public.blastapi.io",
 			"https://rpc.astar.network:8545",
@@ -392,6 +537,11 @@
 		"label": "Callisto",
 		"symbol": "CLO",
 		"genesis": "0x82270b80fc90beb005505a9ef95039639968a0e81b2904ad30128c93d713d2c4",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://clo-geth.0xinfra.com/"
 		],
@@ -402,6 +552,11 @@
 		"label": "Wanchain",
 		"symbol": "WAN",
 		"genesis": "0x0376899c001618fc7d5ab4f31cfd7f57ca3a896ccc1581a57d8f129ecf40b840",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://gwan-ssl.wandevs.org:56891"
 		],
@@ -412,6 +567,11 @@
 		"label": "Metis",
 		"symbol": "METIS",
 		"genesis": "0x9e3354e081a54a57190bdb8948a597c840ea5dd496b0322864d4585f4a716892",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://andromeda.metis.io/?owner=1088"
 		],
@@ -422,6 +582,11 @@
 		"label": "Moonbeam",
 		"symbol": "GLMR",
 		"genesis": "0x7e6b3bbed86828a558271c9c9f62354b1d8b5aa15ff85fd6f1e7cbe9af9dde7e",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"wss://moonbeam.public.blastapi.io",
 			"wss://moonbeam.api.onfinality.io/public-ws",
@@ -437,6 +602,11 @@
 		"label": "Moonriver",
 		"symbol": "MOVR",
 		"genesis": "0xce24348303f7a60c4d2d3c82adddf55ca57af89cd9e2cd4b863906ef53b89b3c",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"wss://moonriver.public.blastapi.io",
 			"wss://moonriver.api.onfinality.io/public-ws",
@@ -452,6 +622,11 @@
 		"label": "IoTeX",
 		"symbol": "IOTX",
 		"genesis": "0xb337983730981c2d50f114eed5da9dd20b83c8c5e130beefdb3001dc858cfe8b",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://iotex-mainnet.gateway.pokt.network/v1/lb/6176f902e19001003499f492",
 			"https://rpc.ankr.com/iotex",
@@ -466,6 +641,11 @@
 		"label": "Nahmii",
 		"symbol": "ETH",
 		"genesis": "0xfed46abde4cd498e15a510de5eeaf69770cafa78646fbf72bae52d647c82a4c8",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://l2.nahmii.io/"
 		],
@@ -476,6 +656,11 @@
 		"label": "Klaytn",
 		"symbol": "KLAY",
 		"genesis": "0xc72e5293c3c3ba38ed8ae910f780e4caaa9fb95e79784f7ab74c3c262ea7137e",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://public-node-api.klaytnapi.com/v1/cypress"
 		],
@@ -486,6 +671,11 @@
 		"label": "smartBCH",
 		"symbol": "BCH",
 		"genesis": "0x0000000000000000000000000000000000000000000000000000000000000000",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"wss://smartbch.fountainhead.cash/ws/mainnet",
 			"https://smartbch.fountainhead.cash/mainnet",
@@ -502,6 +692,11 @@
 		"label": "Fusion",
 		"symbol": "FSN",
 		"genesis": "0xc2422b1d9d16331be2a5b207c0783027d4419498003f729f4b9e9c5c1838623a",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://mainnet.anyswap.exchange",
 			"https://mainway.freemoon.xyz/gate",
@@ -514,6 +709,11 @@
 		"label": "Arbitrum One",
 		"symbol": "ETH",
 		"genesis": "0x7ee576b35482195fc49205cec9af72ce14f003b9ae69f6ba0faef4514be8b442",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://arb1.arbitrum.io/rpc",
 			"https://rpc.ankr.com/arbitrum"
@@ -526,6 +726,11 @@
 		"label": "Celo",
 		"symbol": "CELO",
 		"genesis": "0x19ea3339d3c8cda97235bc8293240d5b9dadcdfbb5d4b0b90ee731cac1bd11c3",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://forno.celo.org",
 			"https://rpc.ankr.com/celo"
@@ -537,6 +742,11 @@
 		"label": "Emerald ParaTime (Oasis)",
 		"symbol": "ROSE",
 		"genesis": "0x5a8686e9694a4ffb2b1648ec6ff9b181e547658abeea6ad9781e459a3cdfedd5",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://emerald.oasis.dev/"
 		],
@@ -547,6 +757,11 @@
 		"label": "Avalanche",
 		"symbol": "AVAX",
 		"genesis": "0x31ced5b9beb7f8782b014660da0cb18cc409f121f408186886e1ca3e8eeca96b",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"wss://ava-mainnet.public.blastapi.io/ext/bc/C/ws",
 			"https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc",
@@ -561,6 +776,11 @@
 		"label": "Aurora",
 		"symbol": "AURORA",
 		"genesis": "0x8058d7fe544fdcac6836faa5f84c68291da1773594216957374708a7109a6336",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://mainnet.aurora.dev"
 		],
@@ -571,6 +791,11 @@
 		"label": "Harmony",
 		"symbol": "ONE",
 		"genesis": "0xb4d158b82ac8a653c42b78697ab1cd0c6a0d9a15ab3bc34130f0b719fb174d2a",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
 		"rpcs": [
 			"https://harmony-0-rpc.gateway.pokt.network",
 			"https://api.harmony.one",
