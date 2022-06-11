@@ -1,7 +1,7 @@
 {
-	"-1": {
-		"label": "Testnet 1",
-		"symbol": "TEST1",
+	"1337": {
+		"label": "Testnet",
+		"symbol": "TEST",
 		"contracts": {
 			"account": "0xd05647dd9D7B17aBEBa953fbF2dc8D8e87c19cb3",
 			"atomicSwap": "0x744Ac7bbcFDDA8fdb41cF55c020d62f2109887A5",
@@ -10,21 +10,6 @@
 		"rpcs": [
 			"ws://localhost:8546",
 			"http://localhost:8545"
-		],
-		"explorers": [
-		]
-	},
-	"-2": {
-		"label": "Testnet 2",
-		"symbol": "TEST2",
-		"contracts": {
-			"account": "0xd05647dd9D7B17aBEBa953fbF2dc8D8e87c19cb3",
-			"atomicSwap": "0x744Ac7bbcFDDA8fdb41cF55c020d62f2109887A5",
-			"atomicSwapERC20": ""
-		},
-		"rpcs": [
-			"ws://localhost:8548",
-			"http://localhost:8547"
 		],
 		"explorers": [
 		]
