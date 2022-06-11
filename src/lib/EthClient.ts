@@ -48,15 +48,15 @@ export default class EthClient {
 
       window.ethereum
         .on('chainChanged', (chainId: String) => {
-          store.metamaskChainIdSet(parseInt(chainId, 16));
+          store.metaMaskChainIdSet(parseInt(chainId, 16));
         })
         .on('accountsChanged', (accounts: any) => {
-  				store.metamaskAccountSet(accounts[0]);
+  				store.metaMaskAccountSet(accounts[0]);
         });
 
-      store.metamaskChainIdSet(await this.web3.eth.getChainId());
+      store.metaMaskChainIdSet(await this.web3.eth.getChainId());
       let accounts = await this.web3.eth.requestAccounts();
-			store.metamaskAccountSet(accounts[0]);
+			store.metaMaskAccountSet(accounts[0]);
 
 			for await (const [key, uri] of $db.iterator({
 		    gt: '/chains/'

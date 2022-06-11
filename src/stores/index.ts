@@ -5,10 +5,11 @@ export const main = defineStore('main', {
 		activeAcu: "",
 		accountsAcu: [],
     addressesAcu: [],
-    metamaskChainId: null,
-    metamaskAccount: null,
+    metaMaskChainId: null,
+    metaMaskAccount: null,
     endpoints: {},
     chains: {},
+    chainSelect: [],
   }),
   getters: {
   },
@@ -25,12 +26,12 @@ export const main = defineStore('main', {
           this.addressesAcu.push(account.address);
       }
     },
-    metamaskChainIdSet(chainId) {
-			this.metamaskChainId = chainId;
+    metaMaskChainIdSet(chainId) {
+			this.metaMaskChainId = chainId;
       console.log("MetaMask switched to chainId", chainId);
 		},
-    metamaskAccountSet(account: String) {
-			this.metamaskAccount = account;
+    metaMaskAccountSet(account: String) {
+			this.metaMaskAccount = account;
       console.log("MetaMask switched to account", account);
 		},
     endpointsSet(endpoints) {
@@ -44,11 +45,17 @@ export const main = defineStore('main', {
       this.endpoints[endpoint].height = height;
     },
     chainSet(chainId, label, uri) {
+      if (!(chainId in this.chains)) {
+        this.chainSelect.push({
+          value: chainId,
+          title: label,
+        });
+      }
       this.chains[chainId] = {
         label: label,
         uri: uri,
         height: null,
-      }
+      };
     },
     chainHeightSet(chainId, height) {
       this.chains[chainId].height = height;
