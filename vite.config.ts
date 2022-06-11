@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import nodePolyfills from 'rollup-plugin-polyfill-node'
 import vue from '@vitejs/plugin-vue'
-import vuetify from '@vuetify/vite-plugin'
+import vuetify from 'vite-plugin-vuetify'
 
 const path = require('path')
 
