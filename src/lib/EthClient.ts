@@ -46,12 +46,17 @@ export default class EthClient {
       this.account = new this.web3.eth.Contract(accountAbi, '0xd05647dd9D7B17aBEBa953fbF2dc8D8e87c19cb3');
   		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, '0x744Ac7bbcFDDA8fdb41cF55c020d62f2109887A5');
 
-      window.ethereum.on('accountsChanged', (accounts: any) => {
-				store.activeEthSet(accounts[0]);
-      });
+      window.ethereum
+        .on('chainChanged', (chainId: String) => {
+          store.metamaskChainIdSet(parseInt(chainId, 16));
+        })
+        .on('accountsChanged', (accounts: any) => {
+  				store.metamaskAccountSet(accounts[0]);
+        });
 
+      store.metamaskChainIdSet(await this.web3.eth.getChainId());
       let accounts = await this.web3.eth.requestAccounts();
-			store.activeEthSet(accounts[0]);
+			store.metamaskAccountSet(accounts[0]);
 
 			for await (const [key, uri] of $db.iterator({
 		    gt: '/chains/'

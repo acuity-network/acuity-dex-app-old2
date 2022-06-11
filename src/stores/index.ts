@@ -5,7 +5,8 @@ export const main = defineStore('main', {
 		activeAcu: "",
 		accountsAcu: [],
     addressesAcu: [],
-    activeEth: "",
+    metamaskChainId: null,
+    metamaskAccount: null,
     endpoints: {},
     chains: {},
   }),
@@ -24,8 +25,13 @@ export const main = defineStore('main', {
           this.addressesAcu.push(account.address);
       }
     },
-    activeEthSet(account: String) {
-			this.activeEth = account;
+    metamaskChainIdSet(chainId) {
+			this.metamaskChainId = chainId;
+      console.log("MetaMask switched to chainId", chainId);
+		},
+    metamaskAccountSet(account: String) {
+			this.metamaskAccount = account;
+      console.log("MetaMask switched to account", account);
 		},
     endpointsSet(endpoints) {
       this.endpoints = {};
