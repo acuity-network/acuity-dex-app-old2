@@ -46,7 +46,7 @@
     "vite-plugin-vuetify": "1.0.0-alpha.11",
     "vue-cli-plugin-vuetify": "^2.5.1",
     "vue-tsc": "^0.29.8",
-    "vuetify-loader": "^2.0.0-alpha.9",
-    "webpack": "^5.73.0"
+    "webpack": "^5.73.0",
+    "webpack-plugin-vuetify": "2.0.0-alpha.10"
   }
 }

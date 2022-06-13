@@ -35,10 +35,10 @@ specifiers:
   vue-router: ^4.0.16
   vue-tsc: ^0.29.8
   vuetify: ^3.0.0-beta.3
-  vuetify-loader: ^2.0.0-alpha.9
   web3: ^1.7.3
   webfontloader: ^1.6.28
   webpack: ^5.73.0
+  webpack-plugin-vuetify: 2.0.0-alpha.10
 
 dependencies:
   '@mdi/font': 5.9.55
@@ -77,10 +77,10 @@ devDependencies:
   typescript: 4.7.3
   vite: 2.9.12_sass@1.52.3
   vite-plugin-vuetify: 1.0.0-alpha.11_tn6lxaxl2pmh6mdb5gmeigizv4
-  vue-cli-plugin-vuetify: 2.5.1_fva3aer53qd3adf777aqjdzcfa
+  vue-cli-plugin-vuetify: 2.5.1_pltrfixcz62k2t3mi7utp5fz4m
   vue-tsc: 0.29.8_typescript@4.7.3
-  vuetify-loader: 2.0.0-alpha.9_rhbs5rsm5igrpyfgddwdhtj6k4
   webpack: 5.73.0
+  webpack-plugin-vuetify: 2.0.0-alpha.10_rhbs5rsm5igrpyfgddwdhtj6k4
 
 packages:
 
@@ -3863,12 +3863,6 @@ packages:
       strict-uri-encode: 1.1.0
     dev: false
 
-  /querystring/0.2.1:
-    resolution: {integrity: sha512-wkvS7mL/JMugcup3/rMitHmd9ecIGd2lhFhK9N3UUQ450h66d1r3Y9nvXzQAW1Lq+wyx61k/1pfKS5KuKiyEbg==}
-    engines: {node: '>=0.4.x'}
-    deprecated: The querystring API is considered Legacy. new code should use the URLSearchParams API instead.
-    dev: true
-
   /queue-microtask/1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
     dev: false
@@ -4739,7 +4733,7 @@ packages:
       vscode-typescript-languageservice: 0.29.8
     dev: true
 
-  /vue-cli-plugin-vuetify/2.5.1_fva3aer53qd3adf777aqjdzcfa:
+  /vue-cli-plugin-vuetify/2.5.1_pltrfixcz62k2t3mi7utp5fz4m:
     resolution: {integrity: sha512-OcZ8/bqf84yTbQN+PyRf+8Wvr8czg+u5J4JGVx+Lq5ytsBxTgIUIZ/oMO7j+bd9WCjiKid2l9gZbQYjZABw2+g==}
     peerDependencies:
       sass-loader: '*'
@@ -4755,7 +4749,6 @@ packages:
       sass-loader: 12.6.0_sass@1.52.3+webpack@5.73.0
       semver: 7.3.7
       shelljs: 0.8.5
-      vuetify-loader: 2.0.0-alpha.9_rhbs5rsm5igrpyfgddwdhtj6k4
       webpack: 5.73.0
     dev: true
 
@@ -4814,28 +4807,6 @@ packages:
       '@vue/runtime-dom': 3.2.37
       '@vue/server-renderer': 3.2.37_vue@3.2.37
       '@vue/shared': 3.2.37
-
-  /vuetify-loader/2.0.0-alpha.9_rhbs5rsm5igrpyfgddwdhtj6k4:
-    resolution: {integrity: sha512-M4u2XX9coe1U51jLKek54eJTo7wnroNfglh6sQplRTslhQRKQM3k84oh87D0VHqTzoTzlKPHP0sIWdpklwaEEQ==}
-    engines: {node: '>=12'}
-    deprecated: vuetify-loader has been renamed to webpack-plugin-vuetify for Vuetify 3
-    peerDependencies:
-      '@vue/compiler-sfc': ^3.2.6
-      vuetify: ^3.0.0-alpha.11
-      webpack: ^5.0.0
-    dependencies:
-      '@vue/compiler-sfc': 3.2.37
-      '@vuetify/loader-shared': 1.4.0_vuetify@3.0.0-beta.3
-      decache: 4.6.1
-      file-loader: 6.2.0_webpack@5.73.0
-      find-cache-dir: 3.3.2
-      loader-utils: 2.0.2
-      null-loader: 4.0.1_webpack@5.73.0
-      querystring: 0.2.1
-      upath: 2.0.1
-      vuetify: 3.0.0-beta.3_vue-i18n@9.1.10+vue@3.2.37
-      webpack: 5.73.0
-    dev: true
 
   /vuetify/3.0.0-beta.3_vue-i18n@9.1.10+vue@3.2.37:
     resolution: {integrity: sha512-as6G+6S6q4kfioc0wioJ+/DOLhIDGsA/ufaSwE8GHnxnoOmx+Usi+CLAh6UaZr1VEG7HVVtFV+gBXsk8pmljQg==}
@@ -5127,6 +5098,26 @@ packages:
   /webidl-conversions/3.0.1:
     resolution: {integrity: sha1-JFNCdeKnvGvnvIZhHMFq4KVlSHE=}
     dev: false
+
+  /webpack-plugin-vuetify/2.0.0-alpha.10_rhbs5rsm5igrpyfgddwdhtj6k4:
+    resolution: {integrity: sha512-ydIsKTuD87OCpCjh0YzvtRqQyteeNfIQIlOb4UOwCGcu4WeFXkggG0Epz7DYfoNIAPQOuGvOO5BLa9XuXMxBOQ==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      '@vue/compiler-sfc': ^3.2.6
+      vuetify: ^3.0.0-alpha.11
+      webpack: ^5.0.0
+    dependencies:
+      '@vue/compiler-sfc': 3.2.37
+      '@vuetify/loader-shared': 1.4.0_vuetify@3.0.0-beta.3
+      decache: 4.6.1
+      file-loader: 6.2.0_webpack@5.73.0
+      find-cache-dir: 3.3.2
+      loader-utils: 2.0.2
+      null-loader: 4.0.1_webpack@5.73.0
+      upath: 2.0.1
+      vuetify: 3.0.0-beta.3_vue-i18n@9.1.10+vue@3.2.37
+      webpack: 5.73.0
+    dev: true
 
   /webpack-sources/3.2.3:
     resolution: {integrity: sha512-/DyMEOrDgLKKIG0fmvtz+4dUX/3Ghozwgm6iPp8KRhvn+eQf9+Q7GWxVNMk3+uCPWfdXYC4ExGBckIXdFEfH1w==}
