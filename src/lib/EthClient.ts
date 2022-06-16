@@ -68,8 +68,12 @@ export default class EthClient {
 					let web3 = newEndpoint(chainId, uri);
 					this.chains[chainId] = {};
 					this.chains[chainId].web3 = web3;
-					this.chains[chainId].account = new web3.eth.Contract(accountAbi, ethChainsData[chainId].contracts.account);
-					this.chains[chainId].atomicSwap = new web3.eth.Contract(atomicSwapAbi, ethChainsData[chainId].contracts.atomicSwap);
+          if (ethChainsData[chainId].contracts.account) {
+				    this.chains[chainId].account = new web3.eth.Contract(accountAbi, ethChainsData[chainId].contracts.account);
+          }
+          if (ethChainsData[chainId].contracts.atomicSwap) {
+  					this.chains[chainId].atomicSwap = new web3.eth.Contract(atomicSwapAbi, ethChainsData[chainId].contracts.atomicSwap);
+          }
 	//				this.chains[chainId].atomicSwapERC20 =
 				}
 		  }

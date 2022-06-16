@@ -10,6 +10,8 @@ export const main = defineStore('main', {
     endpoints: {},
     chains: {},
     chainSelect: [],
+    foreignAccountAcuAccount: {},
+    acuAccountForeignAccount: {},
   }),
   getters: {
   },
@@ -52,6 +54,7 @@ export const main = defineStore('main', {
         });
       }
       this.chains[chainId] = {
+        chainId: chainId,
         label: label,
         uri: uri,
         height: null,
@@ -59,6 +62,14 @@ export const main = defineStore('main', {
     },
     chainHeightSet(chainId, height) {
       this.chains[chainId].height = height;
-    }
+    },
+    foreignAccountAcuAccountSet(chainId, foreignAccount, acuAccount) {
+      this.foreignAccountAcuAccount[chainId] = {};
+      this.foreignAccountAcuAccount[chainId][foreignAccount] = acuAccount;
+    },
+    acuAccountForeignAccountSet(chainId, acuAccount, foreignAccount) {
+      this.acuAccountForeignAccount[chainId] = {};
+      this.acuAccountForeignAccount[chainId][acuAccount] = foreignAccount;
+    },
   },
 })
