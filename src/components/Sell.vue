@@ -38,7 +38,6 @@ async function load() {
 }
 
 onMounted(async () => {
-
   load();
 })
 

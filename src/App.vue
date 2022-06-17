@@ -14,7 +14,7 @@ const menu = ref([
   {
     to: '/',
     icon: 'mdi-account',
-    text: 'Home',
+    text: 'Account',
   },
   {
     to: '/goto',
@@ -22,19 +22,19 @@ const menu = ref([
     text: 'Goto',
   },
   {
-    to: '/stashes',
-    icon: 'mdi-swap-horizontal',
-    text: 'Stashes',
-  },
-  {
-    to: '/orders',
-    icon: 'mdi-book-open-page-variant',
-    text: 'Orders',
-  },
-  {
     to: '/chains',
-    icon: 'mdi-transit-connection-horizontal',
+    icon: 'mdi-connection',
     text: 'Chains',
+  },
+  {
+    to: '/buy',
+    icon: 'mdi-cart-arrow-down',
+    text: 'Buy',
+  },
+  {
+    to: '/sell',
+    icon: 'mdi-cart-arrow-up',
+    text: 'Sell',
   },
 ]);
 
