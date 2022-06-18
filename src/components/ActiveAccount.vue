@@ -11,6 +11,7 @@ import {
 import { encodeAddress, decodeAddress } from '@polkadot/keyring';
 import { main } from '@/stores/index.ts'
 
+let $db = inject('$db');
 let $acuityClient = inject('$acuityClient');
 let $ethClient = inject('$ethClient');
 let route = useRoute();
@@ -75,6 +76,7 @@ onMounted(async () => {
 });
 
 watch(activeAccount, async (newValue, oldValue) => {
+  $db.put('/activeAccount', activeAccount.value);
   store.activeAcuSet(activeAccount.value);
   load();
 });

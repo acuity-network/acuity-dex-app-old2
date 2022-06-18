@@ -10,6 +10,9 @@ import {
 
 const drawer = ref(false);
 
+import { main } from '@/stores/index.ts'
+const store = main();
+
 const menu = ref([
   {
     to: '/',
@@ -45,6 +48,11 @@ let $ethClient = inject('$ethClient');
 const blockNumber = ref(0)
 
 onMounted(async () => {
+  try {
+    store.activeAcuSet(await $db.get('/activeAccount'));
+  }
+  catch (e) {}
+
   $acuityClient.api.rpc.chain.subscribeNewHeads((lastHeader: any) => {
     blockNumber.value = lastHeader.number.toString();
   });
