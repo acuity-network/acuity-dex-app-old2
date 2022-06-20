@@ -23,7 +23,10 @@ const chains = computed(() => store.chains);
 const chainSelect = computed(() => store.chainSelect);
 const metaMaskChainId = computed(() => store.metaMaskChainId);
 
-const chainIdBuy = ref(null);
+const chainIdBuy = ref(0);
+
+let sellAssetId = computed(() => $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.metaMaskChainId), 32));
+let buyAssetId = computed(() => $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(chainIdBuy.value), 32));
 
 const eth = ref(null);
 const ethToStash = ref("");
@@ -44,21 +47,22 @@ async function load() {
 
   if ($ethClient.chains[metaMaskChainId.value].atomicSwap) {
     try {
-      eth.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].atomicSwap.methods.getStashValue("0x0000000000000000000000000000000", store.metaMaskAccount).call());
+      eth.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].atomicSwap.methods.getStashValue(buyAssetId.value, store.metaMaskAccount).call());
     }
     catch (e) {};
   }
 
-  let sellAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.metaMaskChainId), 32);
-  let buyAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(chainIdBuy.value), 32);
-
-  let result = await $acuityClient.api.query.orderbook.orderbook(store.activeAcu, sellAssetId, buyAssetId);
+  let result = await $acuityClient.api.query.orderbook.orderbook(store.activeAcu, sellAssetId.value, buyAssetId.value);
 
   sellPrice.value = $ethClient.web3.utils.fromWei(result.price);
   sellValue.value = $ethClient.web3.utils.fromWei(result.value);
 }
 
 onMounted(async () => {
+  emitter = $ethClient.chains[metaMaskChainId.value].atomicSwap.events.allEvents()
+  .on('data', async (log: any) => {
+    load();
+  });
   load();
 })
 
@@ -79,25 +83,23 @@ watch(chainIdBuy, async (newValue, oldValue) => {
 
 async function deposit(event) {
   $ethClient.atomicSwap.methods
-    .depositStash("0x0000000000000000000000000000000")
+    .depositStash(buyAssetId.value)
     .send({from: store.metaMaskAccount, value: $ethClient.web3.utils.toWei(ethToStash.value)});
 }
 
 async function withdraw(event) {
   $ethClient.atomicSwap.methods
-    .withdrawStash("0x0000000000000000000000000000000", $ethClient.web3.utils.toWei(ethToWithdraw.value))
+    .withdrawStash(buyAssetId.value, $ethClient.web3.utils.toWei(ethToWithdraw.value))
     .send({from: store.metaMaskAccount});
 }
 
 async function set(event) {
   const injector = await web3FromAddress(store.activeAcu);
-  let sellAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.metaMaskChainId), 32);
-  let buyAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(chainIdBuy.value), 32);
   let price = $ethClient.web3.utils.toWei(sellPrice.value);
   let value = $ethClient.web3.utils.toWei(sellValue.value);
-  console.log({sellAssetId, buyAssetId, price, value});
+//  console.log({sellAssetId.value, buyAssetId.value, price, value});
   $acuityClient.api.tx.orderbook
-    .setOrder(sellAssetId, buyAssetId, price, value)
+    .setOrder(sellAssetId.value, buyAssetId.value, price, value)
     .signAndSend(store.activeAcu, { signer: injector.signer }, (status: any) => {
       console.log(status)
     });
