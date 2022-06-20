@@ -106,9 +106,9 @@ async function setAcuAccount(event) {
     <v-row>
       <v-col cols="12" md="10">
 
-        <v-select v-model="activeAccount" :items="addressesAcu" label="Active account"></v-select>
+        <v-select v-model="activeAccount" :items="accountsAcu" label="Active account"></v-select>
 
-        <div class="text-h6">Name</div>
+        <div class="text-h6">Public Identity</div>
         <p>{{ name }}</p>
 
         <div v-for="chain in chains">

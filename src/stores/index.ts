@@ -24,7 +24,7 @@ export const main = defineStore('main', {
       this.addressesAcu = [];
 
       for (let account of accounts) {
-          this.accountsAcu.push({text: account.meta.name, value: account.address});
+          this.accountsAcu.push({title: account.meta.name, value: account.address});
           this.addressesAcu.push(account.address);
       }
     },
