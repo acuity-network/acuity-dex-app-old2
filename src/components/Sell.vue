@@ -23,17 +23,15 @@ const chains = computed(() => store.chains);
 const chainSelect = computed(() => store.chainSelect);
 const metaMaskChainId = computed(() => store.metaMaskChainId);
 
-const chainIdBuy = ref(0);
-
 let sellAssetId = computed(() => $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.metaMaskChainId), 32));
-let buyAssetId = computed(() => $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(chainIdBuy.value), 32));
+let buyAssetId = computed(() => $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.buyChainId), 32));
 
 const eth = ref(null);
 const ethToStash = ref("");
 const ethToWithdraw = ref("");
 
 const sellSymbol = computed(() => ethChainsData[metaMaskChainId.value].symbol);
-const buySymbol = computed(() => chainIdBuy.value ? ethChainsData[chainIdBuy.value].symbol : '');
+const buySymbol = computed(() => store.buyChainId ? ethChainsData[store.buyChainId].symbol : '');
 
 const sellValue = ref(null);
 const sellPrice = ref(null);
@@ -77,7 +75,7 @@ watch(metaMaskChainId, async (newValue, oldValue) => {
   load();
 });
 
-watch(chainIdBuy, async (newValue, oldValue) => {
+watch(() => store.buyChainId, async (newValue, oldValue) => {
   load();
 });
 
@@ -97,7 +95,7 @@ async function set(event) {
   const injector = await web3FromAddress(store.activeAcu);
   let price = $ethClient.web3.utils.toWei(sellPrice.value);
   let value = $ethClient.web3.utils.toWei(sellValue.value);
-//  console.log({sellAssetId.value, buyAssetId.value, price, value});
+
   $acuityClient.api.tx.orderbook
     .setOrder(sellAssetId.value, buyAssetId.value, price, value)
     .signAndSend(store.activeAcu, { signer: injector.signer }, (status: any) => {
@@ -116,7 +114,7 @@ async function reset(event) {
     <v-row>
       <v-col cols="12" md="10">
         <v-select readonly v-model="metaMaskChainId" :items="chainSelect" label="Sell chain"></v-select>
-        <v-select v-model="chainIdBuy" :items="chainSelect" label="Buy chain"></v-select>
+        <v-select v-model="store.buyChainId" :items="chainSelect" label="Buy chain"></v-select>
         <div class="text-h6">{{ sellSymbol }} Stashed</div>
         <p class="mb-10">{{ eth }}</p>
         <v-text-field v-model="ethToStash" label="Value to stash" :suffix="sellSymbol"></v-text-field>
