@@ -7,6 +7,8 @@ export const main = defineStore('main', {
     addressesAcu: [],
     metaMaskChainId: null,
     metaMaskAccount: null,
+    sellChainId: null,
+    buyChainId: null,
     endpoints: {},
     chains: {},
     chainSelect: [],
@@ -36,6 +38,12 @@ export const main = defineStore('main', {
 			this.metaMaskAccount = account;
       console.log("MetaMask switched to account", account);
 		},
+    sellChainIdSet(chainId) {
+      this.sellChainId = chainId;
+    },
+    buyChainIdSet(chainId) {
+      this.buyChainId = chainId;
+    },
     endpointsSet(endpoints) {
       this.endpoints = {};
 
