@@ -23,6 +23,9 @@ const chains = computed(() => store.chains);
 const chainSelect = computed(() => store.chainSelect);
 const metaMaskChainId = computed(() => store.metaMaskChainId);
 
+const sellSymbol = computed(() => store.sellChainId ? ethChainsData[store.sellChainId].symbol : '');
+const buySymbol = computed(() => store.buyChainId ? ethChainsData[store.buyChainId].symbol : '');
+
 const sellOrders = ref([]);
 
 
@@ -107,16 +110,16 @@ watch(() => store.buyChainId, async (newValue, oldValue) => {
                 Account
               </th>
               <th class="text-right">
-                Stash
+                Stash ({{ sellSymbol }})
               </th>
               <th class="text-right">
-                Price
+                Price ({{ buySymbol }} / {{ sellSymbol }})
               </th>
               <th class="text-right">
-                Value
+                Value ({{ sellSymbol }})
               </th>
               <th class="text-right">
-                Total
+                Total ({{ buySymbol }})
               </th>
             </tr>
           </thead>
