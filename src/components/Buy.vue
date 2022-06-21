@@ -94,6 +94,21 @@ watch(() => store.buyChainId, async (newValue, oldValue) => {
   load();
 });
 
+async function buy(accountId, event) {
+  let sellAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.sellChainId), 32);
+  let buyAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.buyChainId), 32);
+
+  router.push({
+    name: 'sell-order',
+    params: {
+      accountId: accountId,
+      sellAssetId: sellAssetId,
+      buyAssetId: buyAssetId,
+    },
+  })
+}
+
+
 </script>
 
 <template>
@@ -121,6 +136,8 @@ watch(() => store.buyChainId, async (newValue, oldValue) => {
               <th class="text-right">
                 Total ({{ buySymbol }})
               </th>
+              <th>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -130,6 +147,11 @@ watch(() => store.buyChainId, async (newValue, oldValue) => {
               <td class="text-right">{{ sellOrder.price }}</td>
               <td class="text-right">{{ sellOrder.value }}</td>
               <td class="text-right">{{ sellOrder.total }}</td>
+              <td>
+                <v-btn icon density="comfortable" @click="buy(sellOrder.account)">
+                  <v-icon size="x-small">mdi-atom-variant</v-icon>
+                </v-btn>
+              </td>
             </tr>
           </tbody>
         </v-table>

@@ -6,14 +6,44 @@ import Account from '../components/Account.vue'
 import Chains from '../components/Chains.vue'
 import Buy from '../components/Buy.vue'
 import Sell from '../components/Sell.vue'
+import SellOrder from '../components/SellOrder.vue'
 
 const routes = [
-  { path: '/', component: ActiveAccount },
-  { path: '/goto', component: Goto },
-  { path: '/account/:id', component: Account },
-  { path: '/chains', component: Chains },
-  { path: '/buy', component: Buy },
-  { path: '/sell', component: Sell },
+  {
+    path: '/',
+    name: 'active-account',
+    component: ActiveAccount,
+  },
+  {
+    path: '/goto',
+    name: 'goto',
+    component: Goto,
+  },
+  {
+    path: '/account/:id',
+    name: 'account',
+    component: Account,
+  },
+  {
+    path: '/chains',
+    name: 'chains',
+    component: Chains,
+  },
+  {
+    path: '/buy',
+    name: 'buy',
+    component: Buy,
+  },
+  {
+    path: '/sell',
+    name: 'sell',
+    component: Sell,
+  },
+  {
+    path: '/sell-order/:accountId/:sellAssetId/:buyAssetId',
+    name: 'sell-order',
+    component: SellOrder,
+  },
 ]
 
 const router = createRouter({
