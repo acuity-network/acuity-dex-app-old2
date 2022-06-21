@@ -13,6 +13,7 @@ import { main } from '@/stores/index.ts'
 
 import ethChainsData from '@/lib/eth-chains.json'
 
+let $db = inject('$db');
 let $acuityClient = inject('$acuityClient');
 let $ethClient = inject('$ethClient');
 let route = useRoute();
@@ -33,6 +34,16 @@ const stashed = ref(null);
 const price = ref(null);
 const value = ref(null);
 const total = ref(null);
+const buyValue = ref(null);
+
+const buyCost = computed(() => {
+  if (price.value && buyValue.value) {
+    return price.value * buyValue.value;
+  }
+});
+
+let foreignAddress;
+let priceWei;
 
 const sellSymbol = computed(() => sellChainId.value ? ethChainsData[sellChainId.value].symbol : '');
 const buySymbol = computed(() => buyChainId.value ? ethChainsData[buyChainId.value].symbol : '');
@@ -54,19 +65,39 @@ onMounted(async () => {
 
   let chainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellChainId.value), 16);
   let result = await $acuityClient.api.query.orderbook.accountForeignAccount(sellerAccountId.value, chainIdHex);
-  let foreignAddress = '0x' + Buffer.from(result).toString('hex').slice(24);
+  foreignAddress = '0x' + Buffer.from(result).toString('hex').slice(24);
 
   stashed.value = $ethClient.formatWei(await $ethClient.chains[sellChainId.value].atomicSwap.methods.getStashValue(route.params.buyAssetId, foreignAddress).call());
 
   result = await $acuityClient.api.query.orderbook.orderbook(route.params.accountId, route.params.sellAssetId, route.params.buyAssetId);
 
+  priceWei = result.price;
   price.value = $ethClient.web3.utils.fromWei(result.price);
   value.value = $ethClient.web3.utils.fromWei(result.value);
   total.value = price.value * value.value;
 
+  let events = await $ethClient.chains[buyChainId.value].atomicSwap.getPastEvents('Lock', {
+    fromBlock: 0
+  });
+
+  console.log(events);
 });
 
 async function createBuyLock(event) {
+
+  let recipient = foreignAddress;
+  let secret = $ethClient.web3.utils.randomHex(32);
+  let hashedSecret = $ethClient.web3.utils.keccak256(secret);
+  $db.put('/secrets/' + hashedSecret, secret);
+  let timeout = Date.now() + 60 * 60 * 24 * 3 * 1000;
+  let sellAssetIdPrice = route.params.sellAssetId + priceWei.toHex().slice(2);
+  let value = $ethClient.web3.utils.fromWei((BigInt($ethClient.web3.utils.toWei(buyValue.value)) * BigInt(priceWei)).toString()).split('.')[0];
+
+  console.log({recipient, hashedSecret, timeout, sellAssetIdPrice, value});
+
+  $ethClient.atomicSwap.methods
+    .lockValue(recipient, hashedSecret, timeout, sellAssetIdPrice)
+    .send({from: store.metaMaskAccount, value: value});
 }
 
 </script>
@@ -117,8 +148,9 @@ async function createBuyLock(event) {
         <v-text-field readonly v-model="stashed" label="Stashed" :suffix="sellSymbol" hint="Value seller has stashed for this pair." persistent-hint></v-text-field>
         <v-text-field readonly v-model="price" label="Price" :suffix="buySymbol + ' / ' + sellSymbol" hint="Price asset is being sold for." persistent-hint></v-text-field>
         <v-text-field readonly v-model="value" label="Value" :suffix="sellSymbol" hint="How much is for sale." persistent-hint></v-text-field>
-        <v-text-field readonly v-model="total" label="Total" :suffix="buySymbol" hint="How much can be bought." persistent-hint></v-text-field>
-        <v-text-field label="Buy value" :suffix="buySymbol" hint="How much you want to buy." persistent-hint></v-text-field>
+        <v-text-field readonly v-model="total" label="Total" :suffix="buySymbol" hint="Maximum that can be paid." persistent-hint></v-text-field>
+        <v-text-field v-model="buyValue" label="Buy value" :suffix="sellSymbol" hint="How much you want to buy." persistent-hint></v-text-field>
+        <v-text-field readonly v-model="buyCost" label="Cost" :suffix="buySymbol" hint="Cost to buy." persistent-hint></v-text-field>
         <v-btn @click="createBuyLock" class="mt-4">Buy</v-btn>
       </v-col>
     </v-row>
