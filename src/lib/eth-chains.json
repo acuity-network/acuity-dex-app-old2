@@ -14,6 +14,21 @@
 		"explorers": [
 		]
 	},
+	"421611": {
+		"label": "Arbitrum Testnet",
+		"symbol": "ETH",
+		"contracts": {
+			"account": "0xdBe4e69953abc81d9C59F1aEc4F0d713Db834965",
+			"atomicSwap": "0xf92f37169F9E112BC924144b871E67C8CCb12BB2",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"https://rinkeby.arbitrum.io/rpc"
+		],
+		"explorers": [
+			"https://testnet.arbiscan.io/"
+		]
+	},
 	"1": {
 		"label": "Ethereum",
 		"symbol": "ETH",
