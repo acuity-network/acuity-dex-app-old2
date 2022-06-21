@@ -35,20 +35,7 @@ const ethChains = ref([]);
 const chainId = ref(null);
 const uri = ref("");
 
-async function load() {
-  for await (const [key, uri] of $db.iterator({
-    gt: '/chains/'
-  })) {
-    let chainId = parseInt(key.slice(8));
-    if (Number.isInteger(chainId)) {
-      store.chainSet(chainId, ethChainsData[chainId].label, uri);
-    }
-  }
-}
-
 onMounted(async () => {
-  load();
-
   for (let chainId in ethChainsData) {
     ethChains.value.push({
       value: chainId,
@@ -93,16 +80,11 @@ watch(chainId, async (newValue, oldValue) => {
     endpointsWeb3[ethChainsData[newValue].rpcs[i]] = newEndpoint(ethChainsData[newValue].rpcs[i]);
   }
 
-/*
-  let block = await web3.eth.getBlock(0);
-  console.log(block.hash);
-*/
 
 });
 
 async function add(event) {
   $db.put('/chains/' + chainId.value, uri.value);
-  load();
 }
 
 </script>
