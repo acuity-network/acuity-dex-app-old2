@@ -730,6 +730,9 @@
 			"https://rpc.testnet.moonbeam.network"
 		],
 		"explorers": [
+			"https://moonbase.moonscan.io/",
+			"https://moonbase-blockscout.testnet.moonbeam.network/",
+			"https://moonbeam-explorer.netlify.app/?network=MoonbaseAlpha"
 		]
 	},
 	"4689": {
