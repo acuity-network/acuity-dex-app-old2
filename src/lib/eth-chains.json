@@ -716,6 +716,22 @@
 			"https://moonriver.moonscan.io/"
 		]
 	},
+	"1287": {
+		"label": "Moonbase Alpha",
+		"symbol": "DEV",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"wss://wss.api.moonbase.moonbeam.network",
+			"https://rpc.api.moonbase.moonbeam.network",
+			"https://rpc.testnet.moonbeam.network"
+		],
+		"explorers": [
+		]
+	},
 	"4689": {
 		"label": "IoTeX",
 		"symbol": "IOTX",
