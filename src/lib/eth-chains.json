@@ -29,6 +29,21 @@
 			"https://testnet.arbiscan.io/"
 		]
 	},
+	"421612": {
+		"label": "Arbitrum Nitro Devnet",
+		"symbol": "ETH",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"https://nitro-devnet.arbitrum.io/rpc"
+		],
+		"explorers": [
+			"Arbitrum Nitro Devnet"
+		]
+	},
 	"1": {
 		"label": "Ethereum",
 		"symbol": "ETH",
