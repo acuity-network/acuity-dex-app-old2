@@ -720,14 +720,17 @@
 		"label": "Moonbase Alpha",
 		"symbol": "DEV",
 		"contracts": {
-			"account": "",
-			"atomicSwap": "",
+			"account": "0x0b28cc778E2A0b08e8Ed6A7Ada455bCbbf944729",
+			"atomicSwap": "0x1E335b8B56810C8E1FF90F1b84Ae246Ea333141b",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
 			"wss://wss.api.moonbase.moonbeam.network",
 			"https://rpc.api.moonbase.moonbeam.network",
-			"https://rpc.testnet.moonbeam.network"
+			"https://rpc.testnet.moonbeam.network",
+			"https://moonbase-alpha.public.blastapi.io",
+			"https://moonbeam-alpha.api.onfinality.io/public",
+			"https://rpc.api.moonbase.moonbeam.network"
 		],
 		"explorers": [
 			"https://moonbase.moonscan.io/",
