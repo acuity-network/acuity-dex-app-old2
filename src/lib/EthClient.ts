@@ -43,18 +43,22 @@ export default class EthClient {
   		this.web3.eth.transactionConfirmationBlocks = 1;
       this.formatWei = (wei: string) => Number(this.web3.utils.fromWei(this.web3.utils.toBN(wei))).toLocaleString();
 
-      this.account = new this.web3.eth.Contract(accountAbi, '0xd05647dd9D7B17aBEBa953fbF2dc8D8e87c19cb3');
-  		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, '0x744Ac7bbcFDDA8fdb41cF55c020d62f2109887A5');
-
       window.ethereum
-        .on('chainChanged', (chainId: String) => {
-          store.metaMaskChainIdSet(parseInt(chainId, 16));
+        .on('chainChanged', (chainIdHex: String) => {
+          let chainId = parseInt(chainIdHex, 16);
+          store.metaMaskChainIdSet(chainId);
+          this.account = new this.web3.eth.Contract(accountAbi, ethChainsData[chainId].contracts.account);
+      		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, ethChainsData[chainId].contracts.atomicSwap);
         })
         .on('accountsChanged', (accounts: any) => {
   				store.metaMaskAccountSet(accounts[0]);
         });
 
-      store.metaMaskChainIdSet(await this.web3.eth.getChainId());
+      let chainId = await this.web3.eth.getChainId();
+      store.metaMaskChainIdSet(chainId);
+      this.account = new this.web3.eth.Contract(accountAbi, ethChainsData[chainId].contracts.account);
+  		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, ethChainsData[chainId].contracts.atomicSwap);
+
       let accounts = await this.web3.eth.requestAccounts();
 			store.metaMaskAccountSet(accounts[0]);
 
