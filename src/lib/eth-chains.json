@@ -380,6 +380,22 @@
 		"explorers": [
 		]
 	},
+	"69": {
+		"label": "Optimism Kovan",
+		"symbol": "KOV",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"wss://ws-kovan.optimism.io",
+			"https://kovan.optimism.io"
+		],
+		"explorers": [
+			"https://kovan-optimistic.etherscan.io"
+		]
+	},
 	"70": {
 		"label": "Hoo Smart Chain",
 		"symbol": "HOO",
