@@ -56,6 +56,7 @@
 		"rpcs": [
 			"wss://eth-mainnet.public.blastapi.io",
 			"wss://mainnet.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+			"https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
 			"https://api.mycryptoapi.com/eth",
 			"https://rpc.flashbots.net/",
 			"https://eth-mainnet.gateway.pokt.network/v1/5f3453978e354ab992c4da79",
@@ -87,6 +88,55 @@
 			"https://node.expanse.tech"
 		],
 		"explorers": [
+		]
+	},
+	"3": {
+		"label": "Ropsten",
+		"symbol": "ROP",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"wss://ropsten.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+			"https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
+		],
+		"explorers": [
+			"https://ropsten.etherscan.io"
+		]
+	},
+	"4": {
+		"label": "Rinkeby",
+		"symbol": "RIN",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"wss://rinkeby.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+			"https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
+		],
+		"explorers": [
+			"https://rinkeby.etherscan.io"
+		]
+	},
+	"5": {
+		"label": "Görli",
+		"symbol": "GOR",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"https://rpc.goerli.mudit.blog/",
+			"wss://goerli.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+			"https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
+		],
+		"explorers": [
+			"https://goerli.etherscan.io"
 		]
 	},
 	"10": {
@@ -195,6 +245,23 @@
 			"https://rpc.telosarabia.net/evm"
 		],
 		"explorers": [
+		]
+	},
+	"42": {
+		"label": "Kovan",
+		"symbol": "KOV",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"https://kovan.poa.network",
+			"wss://kovan.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+			"https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
+		],
+		"explorers": [
+			"https://kovan.etherscan.io"
 		]
 	},
 	"52": {
