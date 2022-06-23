@@ -691,8 +691,8 @@
 		"label": "Moonbase Alpha",
 		"symbol": "DEV",
 		"contracts": {
-			"account": "0x0b28cc778E2A0b08e8Ed6A7Ada455bCbbf944729",
-			"atomicSwap": "0x1E335b8B56810C8E1FF90F1b84Ae246Ea333141b",
+			"account": "0xD3B8E298a59b0d60E0d112B919Ab3255780D19D7",
+			"atomicSwap": "0xdBe4e69953abc81d9C59F1aEc4F0d713Db834965",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
