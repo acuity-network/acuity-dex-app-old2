@@ -729,7 +729,7 @@
 		]
 	},
 	"5551": {
-		"label": "Nahmii",
+		"label": "Nahmii 2.0",
 		"symbol": "ETH",
 		"genesis": "0xfed46abde4cd498e15a510de5eeaf69770cafa78646fbf72bae52d647c82a4c8",
 		"contracts": {
@@ -741,6 +741,22 @@
 			"https://l2.nahmii.io/"
 		],
 		"explorers": [
+			"https://explorer.nahmii.io/"
+		]
+	},
+	"5553": {
+		"label": "Nahmii 2.0 Testnet",
+		"symbol": "ETH",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"https://l2.testnet.nahmii.io/"
+		],
+		"explorers": [
+			"https://explorer.testnet.nahmii.io/"
 		]
 	},
 	"8217": {
