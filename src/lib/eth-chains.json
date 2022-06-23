@@ -520,6 +520,21 @@
 		"explorers": [
 		]
 	},
+	"280": {
+		"label": "zkSync Alpha Testnet",
+		"symbol": "ETH",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"https://zksync2-testnet.zksync.dev"
+		],
+		"explorers": [
+			"https://zksync2-testnet.zkscan.io/"
+		]
+	},
 	"288": {
 		"label": "Boba Network",
 		"symbol": "ETH",
