@@ -873,6 +873,22 @@
 		"explorers": [
 		]
 	},
+	"43113": {
+		"label": "Avalanche Fuji Testnet",
+		"symbol": "AVAX",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"wss://api.avax-test.network/ext/bc/C/ws",
+			"https://api.avax-test.network/ext/bc/C/rpc"
+		],
+		"explorers": [
+			"https://testnet.snowtrace.io/"
+		]
+	},
 	"43114": {
 		"label": "Avalanche",
 		"symbol": "AVAX",
@@ -883,10 +899,10 @@
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
-			"wss://ava-mainnet.public.blastapi.io/ext/bc/C/ws",
-			"https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc",
 			"wss://api.avax.network/ext/bc/C/ws",
-			"https://api.avax.network/ext/bc/C/rpc"
+			"https://api.avax.network/ext/bc/C/rpc",
+			"wss://ava-mainnet.public.blastapi.io/ext/bc/C/ws",
+			"https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc"
 		],
 		"explorers": [
 			"https://snowtrace.io/"
