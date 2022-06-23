@@ -808,6 +808,22 @@
 			"https://www.smartscan.cash/"
 		]
 	},
+	"10001": {
+		"label": "smartBCH Amber",
+		"symbol": "BCH",
+		"genesis": "0x0000000000000000000000000000000000000000000000000000000000000000",
+		"contracts": {
+			"account": "0xd05647dd9D7B17aBEBa953fbF2dc8D8e87c19cb3",
+			"atomicSwap": "0x744Ac7bbcFDDA8fdb41cF55c020d62f2109887A5",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"https://moeing.tech:9545",
+			"http://35.220.203.194:8545"
+		],
+		"explorers": [
+		]
+	},
 	"32659": {
 		"label": "Fusion",
 		"symbol": "FSN",
