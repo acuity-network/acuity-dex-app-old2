@@ -508,6 +508,7 @@
 			"https://polygon-mainnet.public.blastapi.io"
 		],
 		"explorers": [
+			"https://polygonscan.com/"
 		]
 	},
 	"200": {
@@ -922,6 +923,22 @@
 		],
 		"explorers": [
 			"https://snowtrace.io/"
+		]
+	},
+	"80001": {
+		"label": "Polygon Mumbai",
+		"symbol": "MATIC",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"https://rpc-mumbai.matic.today/",
+			"wss://polygon-testnet.public.blastapi.io/"
+		],
+		"explorers": [
+			"https://mumbai.polygonscan.com/"
 		]
 	},
 	"1313161554": {
