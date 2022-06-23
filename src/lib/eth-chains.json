@@ -877,8 +877,8 @@
 		"label": "Avalanche Fuji Testnet",
 		"symbol": "AVAX",
 		"contracts": {
-			"account": "",
-			"atomicSwap": "",
+			"account": "0xd05647dd9D7B17aBEBa953fbF2dc8D8e87c19cb3",
+			"atomicSwap": "0x1E335b8B56810C8E1FF90F1b84Ae246Ea333141b",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
