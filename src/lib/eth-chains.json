@@ -129,7 +129,7 @@
 		]
 	},
 	"19": {
-		"label": "Songbird",
+		"label": "Flare Songbird",
 		"symbol": "SGB",
 		"genesis": "0x703ccf62df9fa51265d239a6bb8afb6f2fff2831dac0c2df6208dd254a57585b",
 		"contracts": {
@@ -141,7 +141,6 @@
 			"https://songbird.towolabs.com/rpc"
 		],
 		"explorers": [
-			"https://optimistic.ethereum.io"
 		]
 	},
 	"20": {
@@ -438,7 +437,7 @@
 		]
 	},
 	"128": {
-		"label": "Huobi",
+		"label": "HECO Chain",
 		"symbol": "HT",
 		"genesis": "0x5751d1772ebc82d52d19d96157bb3f13ca8417217e3c0913adf15f04eb4cb144",
 		"contracts": {
@@ -447,11 +446,11 @@
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
-			"https://http-mainnet.hecochain.com",
-			"https://pub001.hg.network/rpc",
-			"https://http-mainnet-node.huobichain.com"
+			"wss://ws-mainnet.hecochain.com",
+			"https://http-mainnet.hecochain.com"
 		],
 		"explorers": [
+			"https://hecoinfo.com"
 		]
 	},
 	"137": {
@@ -518,6 +517,22 @@
 			"https://fantom-mainnet.public.blastapi.io"
 		],
 		"explorers": [
+		]
+	},
+	"256": {
+		"label": "HECO Chain Testnet",
+		"symbol": "HT",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"wss://ws-testnet.hecochain.com",
+			"https://http-testnet.hecochain.com"
+		],
+		"explorers": [
+			"https://testnet.hecoinfo.com"
 		]
 	},
 	"280": {
@@ -598,6 +613,7 @@
 			"https://eth-rpc-api.thetatoken.org/rpc"
 		],
 		"explorers": [
+			"https://explorer.thetatoken.org/"
 		]
 	},
 	"592": {
@@ -738,7 +754,8 @@
 			"https://rpc.ankr.com/iotex",
 			"https://babel-api.mainnet.iotex.io",
 			"https://babel-api.mainnet.iotex.one",
-			"https://pokt-api.iotex.io"
+			"https://pokt-api.iotex.io",
+			"https://iotexrpc.com"
 		],
 		"explorers": [
 		]
@@ -983,6 +1000,21 @@
 		},
 		"rpcs": [
 			"https://mainnet.aurora.dev"
+		],
+		"explorers": [
+		]
+	},
+	"1313161555": {
+		"label": "Aurora Testnet",
+		"symbol": "AURORA",
+		"genesis": "0x8058d7fe544fdcac6836faa5f84c68291da1773594216957374708a7109a6336",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"https://testnet.aurora.dev/"
 		],
 		"explorers": [
 		]
