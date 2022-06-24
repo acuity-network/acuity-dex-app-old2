@@ -74,7 +74,7 @@
         "type": "address"
       },
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "bytes32",
         "name": "hashedSecret",
         "type": "bytes32"
@@ -94,11 +94,23 @@
       {
         "indexed": false,
         "internalType": "bytes32",
-        "name": "sellAssetIdPrice",
+        "name": "lockId",
         "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes16",
+        "name": "sellAssetId",
+        "type": "bytes16"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "sellPrice",
+        "type": "uint256"
       }
     ],
-    "name": "Lock",
+    "name": "BuyLock",
     "type": "event"
   },
   {
@@ -117,7 +129,7 @@
         "type": "address"
       },
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "bytes32",
         "name": "hashedSecret",
         "type": "bytes32"
@@ -133,9 +145,27 @@
         "internalType": "uint256",
         "name": "value",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "lockId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes16",
+        "name": "buyAssetId",
+        "type": "bytes16"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "buyLockId",
+        "type": "bytes32"
       }
     ],
-    "name": "Lock",
+    "name": "SellLock",
     "type": "event"
   },
   {
@@ -193,6 +223,18 @@
     "inputs": [
       {
         "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "bytes32",
         "name": "lockId",
         "type": "bytes32"
@@ -206,6 +248,18 @@
     "inputs": [
       {
         "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "bytes32",
         "name": "lockId",
         "type": "bytes32"
@@ -358,18 +412,18 @@
       },
       {
         "internalType": "bytes16",
-        "name": "stashAssetId",
+        "name": "sellAssetId",
         "type": "bytes16"
       },
       {
         "internalType": "uint256",
-        "name": "value",
+        "name": "sellPrice",
         "type": "uint256"
       }
     ],
-    "name": "lockStash",
+    "name": "lockBuy",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -390,14 +444,24 @@
         "type": "uint256"
       },
       {
+        "internalType": "bytes16",
+        "name": "stashAssetId",
+        "type": "bytes16"
+      },
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      },
+      {
         "internalType": "bytes32",
-        "name": "sellAssetIdPrice",
+        "name": "buyLockId",
         "type": "bytes32"
       }
     ],
-    "name": "lockValue",
+    "name": "lockSell",
     "outputs": [],
-    "stateMutability": "payable",
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
