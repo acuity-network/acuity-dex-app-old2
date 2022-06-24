@@ -23,6 +23,9 @@ const store = main();
 const chains = computed(() => store.chains);
 const chainSelect = computed(() => store.chainSelect);
 const metaMaskChainId = computed(() => store.metaMaskChainId);
+const metaMaskAccount = computed(() => store.metaMaskAccount);
+
+const locks = ref({});
 
 const sellerAccountId = ref(null);
 const sellerName = ref("");
@@ -47,6 +50,10 @@ let priceWei;
 
 const sellSymbol = computed(() => sellChainId.value ? ethChainsData[sellChainId.value].symbol : '');
 const buySymbol = computed(() => buyChainId.value ? ethChainsData[buyChainId.value].symbol : '');
+
+async function getAcuAddress(foreignAddress) {
+  return encodeAddress(await $ethClient.chains[buyChainId.value].account.methods.getAcuAccount(foreignAddress).call());
+}
 
 async function loadName(acuAddress) {
   let result = await $acuityClient.api.query.identity.identityOf(acuAddress);
@@ -76,11 +83,44 @@ onMounted(async () => {
   value.value = $ethClient.web3.utils.fromWei(result.value);
   total.value = price.value * value.value;
 
-  let events = await $ethClient.chains[buyChainId.value].atomicSwap.getPastEvents('Lock', {
-    fromBlock: 0
+  let height = await $ethClient.chains[buyChainId.value].web3.eth.getBlockNumber();
+
+  let events = await $ethClient.chains[buyChainId.value].atomicSwap.getPastEvents('BuyLock', {
+    fromBlock: height - 600 // (1 hour on Moonbase Alpha)
   });
 
-  console.log(events);
+  for (let event of events) {
+    console.log(event.returnValues);
+
+    let acuAddress = await getAcuAddress(event.returnValues.sender);
+
+    let sellLockValue = parseFloat(event.returnValues.value) / parseFloat(price.value);
+
+    //this.$arbitrumClient.web3.utils.fromWei((BigInt(this.$arbitrumClient.web3.utils.toWei(lock.buyLockValue.toString())) / BigInt(this.priceWei)).toString()),
+
+    locks.value[event.returnValues.lockId] = {
+      lockId: event.returnValues.lockId,
+      hashedSecret: event.returnValues.hashedSecret,
+      buyerEthAddress: event.returnValues.sender,
+      buyer: await loadName(acuAddress),
+      buyLockValue: $ethClient.formatWei(event.returnValues.value),
+      buyLockTimeout: new Date(parseInt(event.returnValues.timeout)).toLocaleString(),
+      sellLockValueWei: sellLockValue,
+      sellLockValue: $ethClient.formatWei(sellLockValue),
+      seller: event.returnValues.recipient.toLowerCase(),
+    };
+  }
+
+  events = await $ethClient.chains[sellChainId.value].atomicSwap.getPastEvents('SellLock', {
+    fromBlock: 0,
+  });
+
+  for (let event of events) {
+    console.log(event.returnValues);
+
+    locks.value[event.returnValues.buyLockId].sellLockTimeout = new Date(parseInt(event.returnValues.timeout)).toLocaleString();
+  }
+
 });
 
 async function createBuyLock(event) {
@@ -89,15 +129,32 @@ async function createBuyLock(event) {
   let secret = $ethClient.web3.utils.randomHex(32);
   let hashedSecret = $ethClient.web3.utils.keccak256(secret);
   $db.put('/secrets/' + hashedSecret, secret);
-  let timeout = Date.now() + 60 * 60 * 24 * 3 * 1000;
-  let sellAssetIdPrice = route.params.sellAssetId + priceWei.toHex().slice(2);
+  let timeout = Date.now() + 60 * 60 * 24 * 3 * 1000;   // 3 days
+  let sellAssetId = route.params.sellAssetId
+  let sellPrice = priceWei.toHex();
   let value = $ethClient.web3.utils.fromWei((BigInt($ethClient.web3.utils.toWei(buyValue.value)) * BigInt(priceWei)).toString()).split('.')[0];
 
-  console.log({recipient, hashedSecret, timeout, sellAssetIdPrice, value});
+  console.log({recipient, hashedSecret, timeout, sellAssetId, sellPrice, value});
 
   $ethClient.atomicSwap.methods
-    .lockValue(recipient, hashedSecret, timeout, sellAssetIdPrice)
+    .lockBuy(recipient, hashedSecret, timeout, sellAssetId, sellPrice)
     .send({from: store.metaMaskAccount, value: value});
+}
+
+async function createSellLock(lock, event) {
+
+  let recipient = lock.buyerEthAddress;
+  let hashedSecret = lock.hashedSecret;
+  let timeout = Date.now() + 60 * 60 * 24 * 2 * 1000;   // 2 days
+  let stashAssetId = route.params.buyAssetId;
+  let value = lock.sellLockValueWei;
+  let buyLockId = lock.lockId;
+
+  console.log({recipient, hashedSecret, timeout, stashAssetId, value, buyLockId});
+
+  $ethClient.atomicSwap.methods
+    .lockSell(recipient, hashedSecret, timeout, stashAssetId, value, buyLockId)
+    .send({from: store.metaMaskAccount});
 }
 
 </script>
@@ -114,9 +171,6 @@ async function createBuyLock(event) {
               </th>
               <th class="text-left">
                 Buy Lock ({{ buySymbol }})
-              </th>
-              <th class="text-left">
-                State
               </th>
               <th class="text-left">
                 Timeout
@@ -136,6 +190,19 @@ async function createBuyLock(event) {
             </tr>
           </thead>
           <tbody>
+            <tr v-for="(lock, lockId) in locks" :key="lockId">
+              <td>{{ lock.buyer }}</td>
+              <td>{{ lock.buyLockValue }}</td>
+              <td>{{ lock.buyLockTimeout }}</td>
+              <td></td>
+              <td style="background-color: rgb(18, 18, 18);"></td>
+              <td>{{ lock.sellLockValue }}</td>
+              <td></td>
+              <td>{{ lock.sellLockTimeout }}</td>
+              <td>
+                <v-btn v-if="metaMaskAccount == lock.seller" size="small" @click="createSellLock(lock)"><v-icon size="small">mdi-lock</v-icon></v-btn>
+              </td>
+            </tr>
           </tbody>
         </v-table>
       </v-col>
