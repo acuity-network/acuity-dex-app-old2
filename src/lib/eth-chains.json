@@ -706,8 +706,8 @@
 		"label": "Moonbase Alpha",
 		"symbol": "DEV",
 		"contracts": {
-			"account": "0xD3B8E298a59b0d60E0d112B919Ab3255780D19D7",
-			"atomicSwap": "0xdBe4e69953abc81d9C59F1aEc4F0d713Db834965",
+			"account": "0xf92f37169F9E112BC924144b871E67C8CCb12BB2",
+			"atomicSwap": "0xef754323Cb565EFD381B27e8985430eF4e00FC91",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
@@ -895,8 +895,8 @@
 		"label": "Avalanche Fuji Testnet",
 		"symbol": "AVAX",
 		"contracts": {
-			"account": "0xd05647dd9D7B17aBEBa953fbF2dc8D8e87c19cb3",
-			"atomicSwap": "0x1E335b8B56810C8E1FF90F1b84Ae246Ea333141b",
+			"account": "0xD3B8E298a59b0d60E0d112B919Ab3255780D19D7",
+			"atomicSwap": "0xdBe4e69953abc81d9C59F1aEc4F0d713Db834965",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
