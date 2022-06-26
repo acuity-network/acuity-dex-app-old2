@@ -103,7 +103,9 @@ async function setAcuAccount(event) {
       <v-col cols="12" md="10">
 
         <div class="text-h6">Public Identity</div>
-        <p>{{ name }}</p>
+        <p>
+          <router-link :to="{ name: 'account', params: { id: store.activeAcu }}">{{ name }}</router-link>
+        </p>
 
         <div v-for="chain in chains">
           <div class="text-h6">{{ chain.label }}</div>
