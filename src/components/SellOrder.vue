@@ -59,30 +59,10 @@ async function loadName(acuAddress) {
 }
 
 async function load() {
-  sellerAccountId.value = route.params.accountId;
-  sellerName.value = await loadName(route.params.accountId);
-  sellChainId.value = $ethClient.web3.utils.hexToNumber(route.params.sellAssetId);
-  sellChain.value = ethChainsData[sellChainId.value].label;
-  buyChainId.value = $ethClient.web3.utils.hexToNumber(route.params.buyAssetId);
-  buyChain.value = ethChainsData[buyChainId.value].label;
-
-  let chainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellChainId.value), 16);
-  let result = await $acuityClient.api.query.orderbook.accountForeignAccount(sellerAccountId.value, chainIdHex);
-  foreignAddress = '0x' + Buffer.from(result).toString('hex').slice(24);
-
-  stashed.value = $ethClient.formatWei(await $ethClient.chains[sellChainId.value].atomicSwap.methods.getStashValue(route.params.buyAssetId, foreignAddress).call());
-
-  result = await $acuityClient.api.query.orderbook.orderbook(route.params.accountId, route.params.sellAssetId, route.params.buyAssetId);
-
-  priceWei = result.price;
-  price.value = $ethClient.web3.utils.fromWei(result.price);
-  value.value = $ethClient.web3.utils.fromWei(result.value);
-  total.value = price.value * value.value;
-
   let buyHeight = await $ethClient.chains[buyChainId.value].web3.eth.getBlockNumber();
 
   let events = await $ethClient.chains[buyChainId.value].atomicSwap.getPastEvents('BuyLock', {
-    fromBlock: 0,
+    fromBlock: Math.max(buyHeight - 2000, 0),
   });
 
   for (let event of events) {
@@ -111,7 +91,7 @@ async function load() {
   let sellHeight = await $ethClient.chains[sellChainId.value].web3.eth.getBlockNumber();
 
   events = await $ethClient.chains[sellChainId.value].atomicSwap.getPastEvents('SellLock', {
-    fromBlock: sellHeight - 2000,
+    fromBlock: Math.max(sellHeight - 2000, 0),
   });
 
   for (let event of events) {
@@ -124,7 +104,7 @@ async function load() {
   }
 
   events = await $ethClient.chains[sellChainId.value].atomicSwap.getPastEvents('Unlock', {
-    fromBlock: sellHeight - 2000,
+    fromBlock: Math.max(sellHeight - 2000, 0),
   });
 
   for (let event of events) {
@@ -140,7 +120,7 @@ async function load() {
   }
 
   events = await $ethClient.chains[buyChainId.value].atomicSwap.getPastEvents('Unlock', {
-    fromBlock: 0,
+    fromBlock: Math.max(buyHeight - 2000, 0),
   });
 
   for (let event of events) {
@@ -152,7 +132,40 @@ async function load() {
   }
 }
 
+let buyEmitter;
+let sellEmitter;
+
 onMounted(async () => {
+  sellerAccountId.value = route.params.accountId;
+  sellerName.value = await loadName(route.params.accountId);
+  sellChainId.value = $ethClient.web3.utils.hexToNumber(route.params.sellAssetId);
+  sellChain.value = ethChainsData[sellChainId.value].label;
+  buyChainId.value = $ethClient.web3.utils.hexToNumber(route.params.buyAssetId);
+  buyChain.value = ethChainsData[buyChainId.value].label;
+
+  let chainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellChainId.value), 16);
+  let result = await $acuityClient.api.query.orderbook.accountForeignAccount(sellerAccountId.value, chainIdHex);
+  foreignAddress = '0x' + Buffer.from(result).toString('hex').slice(24);
+
+  stashed.value = $ethClient.formatWei(await $ethClient.chains[sellChainId.value].atomicSwap.methods.getStashValue(route.params.buyAssetId, foreignAddress).call());
+
+  result = await $acuityClient.api.query.orderbook.orderbook(route.params.accountId, route.params.sellAssetId, route.params.buyAssetId);
+
+  priceWei = result.price;
+  price.value = $ethClient.web3.utils.fromWei(result.price);
+  value.value = $ethClient.web3.utils.fromWei(result.value);
+  total.value = price.value * value.value;
+
+  buyEmitter = $ethClient.chains[buyChainId.value].atomicSwap.events.allEvents()
+  .on('data', function(event){
+    load();
+  });
+
+  sellEmitter = $ethClient.chains[sellChainId.value].atomicSwap.events.allEvents()
+  .on('data', function(event){
+    load();
+  });
+
   load();
 });
 
@@ -230,7 +243,7 @@ async function unlockBuyLock(lock, event) {
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" md="10">
+      <v-col cols="12" md="12">
         <v-table class="mb-10">
           <thead>
             <tr>
@@ -267,14 +280,14 @@ async function unlockBuyLock(lock, event) {
               <td>{{ lock.buyLockState }}</td>
               <td>{{ lock.buyLockTimeout }}</td>
               <td>
-                <v-btn v-if="lock.sellLockState == 'Unlocked' && store.metaMaskAccount == lock.seller" size="small" @click="unlockBuyLock(lock)"><v-icon size="small">mdi-lock-open-variant</v-icon></v-btn>
+                <v-btn v-if="lock.buyLockState == 'Locked' && lock.sellLockState == 'Unlocked' && store.metaMaskAccount == lock.seller" size="small" @click="unlockBuyLock(lock)"><v-icon size="small">mdi-lock-open-variant</v-icon></v-btn>
               </td>
               <td style="background-color: rgb(18, 18, 18);"></td>
               <td>{{ lock.sellLockValue }}</td>
               <td>{{ lock.sellLockState }}</td>
               <td>{{ lock.sellLockTimeout }}</td>
               <td>
-                <v-btn v-if="store.metaMaskAccount == lock.seller" size="small" @click="createSellLock(lock)"><v-icon size="small">mdi-lock</v-icon></v-btn>
+                <v-btn v-if="lock.sellLockState == 'Not locked' && store.metaMaskAccount == lock.seller" size="small" @click="createSellLock(lock)"><v-icon size="small">mdi-lock</v-icon></v-btn>
                 <v-btn v-if="lock.sellLockState == 'Locked' && store.metaMaskAccount == lock.buyerEthAddress" size="small" @click="unlockSellLock(lock)"><v-icon size="small">mdi-lock-open-variant</v-icon></v-btn>
               </td>
             </tr>
