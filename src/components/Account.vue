@@ -55,6 +55,10 @@ watch(() => route.params.id, async (newValue, oldValue) => {
   load();
 });
 
+watch(() => store.activeAcu, async (newValue, oldValue) => {
+  load();
+});
+
 async function load() {
 
   name.value = await loadName(route.params.id);
@@ -69,7 +73,7 @@ async function load() {
     let address = encodeAddress(account);
     trusts.value.push({
       text: await loadName(address),
-      to: address,
+      address: address,
     })
   }
 
@@ -141,10 +145,10 @@ onMounted(async () => {
 
         <v-list density="compact">
           <v-list-item
-            v-for="(item, i) in trusts"
-            :key="i"
+            v-for="item in trusts"
+            :key="item.address"
             :value="item"
-            :to="item.to"
+            :to="{ name: 'account', params: { id: item.address }}"
           >
             <v-list-item-title v-text="item.text"></v-list-item-title>
           </v-list-item>
@@ -154,9 +158,10 @@ onMounted(async () => {
 
         <v-list density="compact">
           <v-list-item
-            v-for="(item, i) in trustedThatTrust"
-            :key="i"
+            v-for="item in trustedThatTrust"
+            :key="item.address"
             :value="item"
+            :to="{ name: 'account', params: { id: item.address }}"
           >
             <v-list-item-title v-text="item.text"></v-list-item-title>
           </v-list-item>
