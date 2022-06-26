@@ -20,10 +20,6 @@ let route = useRoute();
 let router = useRouter();
 
 const store = main();
-const chains = computed(() => store.chains);
-const chainSelect = computed(() => store.chainSelect);
-const metaMaskChainId = computed(() => store.metaMaskChainId);
-const metaMaskAccount = computed(() => store.metaMaskAccount);
 
 const locks = ref({});
 
@@ -62,7 +58,7 @@ async function loadName(acuAddress) {
   return $ethClient.web3.utils.hexToAscii(display.raw);
 }
 
-onMounted(async () => {
+async function load() {
   sellerAccountId.value = route.params.accountId;
   sellerName.value = await loadName(route.params.accountId);
   sellChainId.value = $ethClient.web3.utils.hexToNumber(route.params.sellAssetId);
@@ -83,15 +79,13 @@ onMounted(async () => {
   value.value = $ethClient.web3.utils.fromWei(result.value);
   total.value = price.value * value.value;
 
-  let height = await $ethClient.chains[buyChainId.value].web3.eth.getBlockNumber();
+  let buyHeight = await $ethClient.chains[buyChainId.value].web3.eth.getBlockNumber();
 
   let events = await $ethClient.chains[buyChainId.value].atomicSwap.getPastEvents('BuyLock', {
-    fromBlock: height - 3000 // (1 hour on Moonbase Alpha)
+    fromBlock: 0,
   });
 
   for (let event of events) {
-//    console.log(event.returnValues);
-
     let acuAddress = await getAcuAddress(event.returnValues.sender);
 
     let sellLockValue = parseFloat(event.returnValues.value) / parseFloat(price.value);
@@ -114,21 +108,23 @@ onMounted(async () => {
     };
   }
 
+  let sellHeight = await $ethClient.chains[sellChainId.value].web3.eth.getBlockNumber();
+
   events = await $ethClient.chains[sellChainId.value].atomicSwap.getPastEvents('SellLock', {
-    fromBlock: 0,
+    fromBlock: sellHeight - 2000,
   });
 
   for (let event of events) {
-//    console.log(event.returnValues);
-
-    locks.value[event.returnValues.buyLockId].sellLockId = event.returnValues.lockId;
-    locks.value[event.returnValues.buyLockId].sellLockState = "Locked";
-    locks.value[event.returnValues.buyLockId].sellLockTimeoutRaw = event.returnValues.timeout;
-    locks.value[event.returnValues.buyLockId].sellLockTimeout = new Date(parseInt(event.returnValues.timeout)).toLocaleString();
+    if (locks.value[event.returnValues.buyLockId]) {
+      locks.value[event.returnValues.buyLockId].sellLockId = event.returnValues.lockId;
+      locks.value[event.returnValues.buyLockId].sellLockState = "Locked";
+      locks.value[event.returnValues.buyLockId].sellLockTimeoutRaw = event.returnValues.timeout;
+      locks.value[event.returnValues.buyLockId].sellLockTimeout = new Date(parseInt(event.returnValues.timeout)).toLocaleString();
+    }
   }
 
   events = await $ethClient.chains[sellChainId.value].atomicSwap.getPastEvents('Unlock', {
-    fromBlock: 0,
+    fromBlock: sellHeight - 2000,
   });
 
   for (let event of events) {
@@ -144,7 +140,7 @@ onMounted(async () => {
   }
 
   events = await $ethClient.chains[buyChainId.value].atomicSwap.getPastEvents('Unlock', {
-    fromBlock: height - 3000 // (1 hour on Moonbase Alpha),
+    fromBlock: 0,
   });
 
   for (let event of events) {
@@ -154,9 +150,17 @@ onMounted(async () => {
       locks.value[event.returnValues.lockId].buyLockState = "Unlocked";
     }
   }
+}
 
-
+onMounted(async () => {
+  load();
 });
+
+/*
+watch(() => store.metaMaskAccount, async (newValue, oldValue) => {
+  load();
+});
+*/
 
 async function createBuyLock(event) {
 
@@ -178,11 +182,14 @@ async function createBuyLock(event) {
 
 async function createSellLock(lock, event) {
 
+  console.log(lock);
+//  return;
+
   let recipient = lock.buyerEthAddress;
   let hashedSecret = lock.hashedSecret;
   let timeout = Date.now() + 60 * 60 * 24 * 2 * 1000;   // 2 days
   let stashAssetId = route.params.buyAssetId;
-  let value = lock.sellLockValueWei;
+  let value = $ethClient.web3.utils.numberToHex(lock.sellLockValueWei);
   let buyLockId = lock.lockId;
 
   console.log({recipient, hashedSecret, timeout, stashAssetId, value, buyLockId});
@@ -260,15 +267,15 @@ async function unlockBuyLock(lock, event) {
               <td>{{ lock.buyLockState }}</td>
               <td>{{ lock.buyLockTimeout }}</td>
               <td>
-                <v-btn v-if="metaMaskAccount == lock.seller" size="small" @click="unlockBuyLock(lock)"><v-icon size="small">mdi-lock-open-variant</v-icon></v-btn>
+                <v-btn v-if="lock.sellLockState == 'Unlocked' && store.metaMaskAccount == lock.seller" size="small" @click="unlockBuyLock(lock)"><v-icon size="small">mdi-lock-open-variant</v-icon></v-btn>
               </td>
               <td style="background-color: rgb(18, 18, 18);"></td>
               <td>{{ lock.sellLockValue }}</td>
               <td>{{ lock.sellLockState }}</td>
               <td>{{ lock.sellLockTimeout }}</td>
               <td>
-                <v-btn v-if="metaMaskAccount == lock.seller" size="small" @click="createSellLock(lock)"><v-icon size="small">mdi-lock</v-icon></v-btn>
-                <v-btn v-if="metaMaskAccount == lock.buyerEthAddress" size="small" @click="unlockSellLock(lock)"><v-icon size="small">mdi-lock-open-variant</v-icon></v-btn>
+                <v-btn v-if="store.metaMaskAccount == lock.seller" size="small" @click="createSellLock(lock)"><v-icon size="small">mdi-lock</v-icon></v-btn>
+                <v-btn v-if="lock.sellLockState == 'Locked' && store.metaMaskAccount == lock.buyerEthAddress" size="small" @click="unlockSellLock(lock)"><v-icon size="small">mdi-lock-open-variant</v-icon></v-btn>
               </td>
             </tr>
           </tbody>
