@@ -18,7 +18,6 @@ let route = useRoute();
 let router = useRouter();
 
 const store = main();
-const accountsAcu = computed(() => store.accountsAcu);
 const addressesAcu = computed(() => store.addressesAcu);
 const chains = computed(() => store.chains);
 const metaMaskChainId = computed(() => store.metaMaskChainId);
@@ -26,7 +25,6 @@ const metaMaskAccount = computed(() => store.metaMaskAccount);
 const acuAccountForeignAccount = computed(() => store.acuAccountForeignAccount);
 const foreignAccountAcuAccount = computed(() => store.foreignAccountAcuAccount);
 
-const activeAccount = ref(store.activeAcu);
 const name = ref("");
 
 async function loadName(address) {
@@ -37,7 +35,7 @@ async function loadName(address) {
 }
 
 async function load() {
-  name.value = await loadName(activeAccount.value);
+  name.value = await loadName(store.activeAcu);
 
   for (let chainId of Object.keys(store.chains)) {
     let chainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(chainId), 16);
@@ -75,9 +73,7 @@ onMounted(async () => {
   load();
 });
 
-watch(activeAccount, async (newValue, oldValue) => {
-  $db.put('/activeAccount', activeAccount.value);
-  store.activeAcuSet(activeAccount.value);
+watch(() => store.activeAcu, async (newValue, oldValue) => {
   load();
 });
 
@@ -106,16 +102,14 @@ async function setAcuAccount(event) {
     <v-row>
       <v-col cols="12" md="10">
 
-        <v-select v-model="activeAccount" :items="accountsAcu" label="Active account"></v-select>
-
         <div class="text-h6">Public Identity</div>
         <p>{{ name }}</p>
 
         <div v-for="chain in chains">
           <div class="text-h6">{{ chain.label }}</div>
           <div v-if="acuAccountForeignAccount[chain.chainId]">
-            {{ acuAccountForeignAccount[chain.chainId][activeAccount] }}
-            <span v-if="foreignAccountAcuAccount[chain.chainId] && (foreignAccountAcuAccount[chain.chainId][acuAccountForeignAccount[chain.chainId][activeAccount]] == activeAccount)"><v-icon icon="mdi-link-variant"></v-icon></span>
+            {{ acuAccountForeignAccount[chain.chainId][store.activeAcu] }}
+            <span v-if="foreignAccountAcuAccount[chain.chainId] && (foreignAccountAcuAccount[chain.chainId][acuAccountForeignAccount[chain.chainId][store.activeAcu]] == store.activeAcu)"><v-icon icon="mdi-link-variant"></v-icon></span>
           </div>
         </div>
 

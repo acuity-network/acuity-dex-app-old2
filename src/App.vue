@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, inject, onMounted } from 'vue'
+import { ref, inject, onMounted, computed, watch } from 'vue'
 import {
   web3Accounts,
   web3Enable,
@@ -58,6 +58,10 @@ onMounted(async () => {
   });
 })
 
+watch(() => store.activeAcu, async (newValue, oldValue) => {
+  $db.put('/activeAccount', newValue);
+});
+
 </script>
 
 <template>
@@ -80,6 +84,7 @@ onMounted(async () => {
           <v-list-item-title v-text="item.text"></v-list-item-title>
         </v-list-item>
       </v-list>
+      <v-select v-model="store.activeAcu" :items="store.accountsAcu" label="Active account"></v-select>
     </v-navigation-drawer>
 
     <v-app-bar
