@@ -26,7 +26,8 @@ export default class MixClient {
 		let store = main();
 		store.accountsAcuSet(accountsAcu);
 
-    let acuityEndpoint = import.meta.env.DEV ? 'ws://127.0.0.1:9946' : 'wss://acuity.social:9961';
+//    let acuityEndpoint = import.meta.env.DEV ? 'ws://127.0.0.1:9946' : 'wss://acuity.social:9961';
+    let acuityEndpoint = 'ws://127.0.0.1:9946';
     let wsProvider = new WsProvider(acuityEndpoint);
     await ApiPromise.create({
       provider: wsProvider,
