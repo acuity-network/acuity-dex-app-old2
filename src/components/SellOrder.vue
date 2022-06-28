@@ -13,9 +13,9 @@ import { main } from '../stores/index'
 
 import ethChainsData from '../lib/eth-chains.json'
 
-let $db :any = inject('$db');
-let $acuityClient :any = inject('$acuityClient');
-let $ethClient :any = inject('$ethClient');
+let $db: any = inject('$db');
+let $acuityClient: any = inject('$acuityClient');
+let $ethClient: any = inject('$ethClient');
 let route = useRoute();
 let router = useRouter();
 

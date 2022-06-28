@@ -41,9 +41,9 @@ const menu = ref([
   },
 ]);
 
-let $db :any = inject('$db');
-let $acuityClient :any = inject('$acuityClient');
-let $ethClient :any = inject('$ethClient');
+let $db: any = inject('$db');
+let $acuityClient: any = inject('$acuityClient');
+let $ethClient: any = inject('$ethClient');
 
 const blockNumber = ref(0)
 

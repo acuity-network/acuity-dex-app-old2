@@ -13,9 +13,9 @@ import Web3 from 'web3'
 
 import { main } from '../stores/index'
 
-let $acuityClient :any = inject('$acuityClient');
-let $ethClient :any = inject('$ethClient');
-let $db :any = inject('$db');
+let $acuityClient: any = inject('$acuityClient');
+let $ethClient: any = inject('$ethClient');
+let $db: any = inject('$db');
 let route = useRoute();
 let router = useRouter();
 

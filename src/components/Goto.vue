@@ -11,8 +11,8 @@ import {
 import { encodeAddress } from '@polkadot/keyring';
 import { main } from '../stores/index'
 
-let $acuityClient :any = inject('$acuityClient');
-let $ethClient :any = inject('$ethClient');
+let $acuityClient: any = inject('$acuityClient');
+let $ethClient: any = inject('$ethClient');
 let route = useRoute();
 let router = useRouter();
 
