@@ -23,7 +23,6 @@ export default defineConfig({
       util: 'util',
       https: 'agent-base',
       http: 'agent-base',
-      '@': path.resolve(__dirname, 'src'),
     },
   },
   /* remove the need to specify .vue files https://vitejs.dev/config/#resolve-extensions

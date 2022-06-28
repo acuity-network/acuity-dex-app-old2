@@ -10,7 +10,7 @@ import {
 
 const drawer = ref(false);
 
-import { main } from '@/stores/index.ts'
+import { main } from './stores/index'
 const store = main();
 
 const menu = ref([
@@ -41,9 +41,9 @@ const menu = ref([
   },
 ]);
 
-let $db = inject('$db');
-let $acuityClient = inject('$acuityClient');
-let $ethClient = inject('$ethClient');
+let $db :any = inject('$db');
+let $acuityClient :any = inject('$acuityClient');
+let $ethClient :any = inject('$ethClient');
 
 const blockNumber = ref(0)
 

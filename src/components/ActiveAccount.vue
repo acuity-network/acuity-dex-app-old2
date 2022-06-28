@@ -9,11 +9,11 @@ import {
   web3UseRpcProvider
 } from '@polkadot/extension-dapp';
 import { encodeAddress, decodeAddress } from '@polkadot/keyring';
-import { main } from '@/stores/index.ts'
+import { main } from '../stores/index'
 
-let $db = inject('$db');
-let $acuityClient = inject('$acuityClient');
-let $ethClient = inject('$ethClient');
+let $db :any = inject('$db');
+let $acuityClient :any = inject('$acuityClient');
+let $ethClient :any = inject('$ethClient');
 let route = useRoute();
 let router = useRouter();
 
@@ -82,7 +82,7 @@ watch(() => store.activeAcu, async (newValue, oldValue) => {
   load();
 });
 
-async function setForeignAccount(event) {
+async function setForeignAccount(event: any) {
   const injector = await web3FromAddress(store.activeAcu);
   let chainId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.metaMaskChainId), 16);
   let foreignAccount = $ethClient.web3.utils.padLeft(store.metaMaskAccount, 64);
@@ -93,7 +93,7 @@ async function setForeignAccount(event) {
     });
 }
 
-async function setAcuAccount(event) {
+async function setAcuAccount(event: any) {
   let acuAddress = '0x' + Buffer.from(decodeAddress(store.activeAcu)).toString('hex');
   $ethClient.account.methods
     .setAcuAccount(acuAddress)

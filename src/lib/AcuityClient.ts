@@ -6,7 +6,7 @@ import {
   web3UseRpcProvider
 } from '@polkadot/extension-dapp';
 import { ApiPromise, WsProvider } from '@polkadot/api'
-import { main } from '@/stores/index.ts'
+import { main } from '../stores/index'
 
 export default class MixClient {
 	api: any

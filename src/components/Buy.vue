@@ -9,12 +9,12 @@ import {
   web3UseRpcProvider
 } from '@polkadot/extension-dapp';
 import { encodeAddress } from '@polkadot/keyring';
-import { main } from '@/stores/index.ts'
+import { main } from '../stores/index'
 
-import ethChainsData from '@/lib/eth-chains.json'
+import ethChainsData from '../lib/eth-chains.json'
 
-let $acuityClient = inject('$acuityClient');
-let $ethClient = inject('$ethClient');
+let $acuityClient :any = inject('$acuityClient');
+let $ethClient :any = inject('$ethClient');
 let route = useRoute();
 let router = useRouter();
 
@@ -94,7 +94,7 @@ watch(() => store.buyChainId, async (newValue, oldValue) => {
   load();
 });
 
-async function buy(accountId, event) {
+async function buy(accountId, event: any) {
   let sellAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.sellChainId), 32);
   let buyAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.buyChainId), 32);
 

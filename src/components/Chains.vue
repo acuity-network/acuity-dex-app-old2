@@ -11,11 +11,11 @@ import {
 import { encodeAddress } from '@polkadot/keyring';
 import Web3 from 'web3'
 
-import { main } from '@/stores/index.ts'
+import { main } from '../stores/index'
 
-let $acuityClient = inject('$acuityClient');
-let $ethClient = inject('$ethClient');
-let $db = inject('$db');
+let $acuityClient :any = inject('$acuityClient');
+let $ethClient :any = inject('$ethClient');
+let $db :any = inject('$db');
 let route = useRoute();
 let router = useRouter();
 
@@ -29,7 +29,7 @@ const ethToWithdraw = ref("");
 
 let emitter;
 
-import ethChainsData from '@/lib/eth-chains.json'
+import ethChainsData from '../lib/eth-chains.json'
 
 const ethChains = ref([]);
 const chainId = ref(null);
@@ -83,7 +83,7 @@ watch(chainId, async (newValue, oldValue) => {
 
 });
 
-async function add(event) {
+async function add(event: any) {
   $db.put('/chains/' + chainId.value, uri.value);
 }
 

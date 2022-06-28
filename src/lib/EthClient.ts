@@ -1,11 +1,11 @@
 import detectEthereumProvider from '@metamask/detect-provider';
 import Web3 from 'web3'
-import { main } from '@/stores/index.ts'
+import { main } from '../stores/index'
 let store;
 
-import ethChainsData from '@/lib/eth-chains.json'
-import accountAbi from '@/lib/contracts/AcuityAccount.abi.json'
-import atomicSwapAbi from '@/lib/contracts/AcuityAtomicSwap.abi.json'
+import ethChainsData from '../lib/eth-chains.json'
+import accountAbi from '../lib/contracts/AcuityAccount.abi.json'
+import atomicSwapAbi from '../lib/contracts/AcuityAtomicSwap.abi.json'
 
 function newEndpoint(chainId, uri) {
   let web3 = new Web3(uri);

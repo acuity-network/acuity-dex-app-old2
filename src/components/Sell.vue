@@ -9,12 +9,12 @@ import {
   web3UseRpcProvider
 } from '@polkadot/extension-dapp';
 import { encodeAddress } from '@polkadot/keyring';
-import { main } from '@/stores/index.ts'
+import { main } from '../stores/index'
 
-import ethChainsData from '@/lib/eth-chains.json'
+import ethChainsData from '../lib/eth-chains.json'
 
-let $acuityClient = inject('$acuityClient');
-let $ethClient = inject('$ethClient');
+let $acuityClient :any = inject('$acuityClient');
+let $ethClient :any = inject('$ethClient');
 let route = useRoute();
 let router = useRouter();
 
@@ -23,7 +23,7 @@ const chains = computed(() => store.chains);
 const chainSelect = computed(() => store.chainSelect);
 const metaMaskChainId = computed(() => store.metaMaskChainId);
 
-let sellAssetId = computed(() => $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.metaMaskChainId), 32));
+let sellAssetId: any = computed(() => $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.metaMaskChainId), 32));
 let buyAssetId = computed(() => $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.buyChainId), 32));
 
 const eth = ref(null);
@@ -79,19 +79,19 @@ watch(() => store.buyChainId, async (newValue, oldValue) => {
   load();
 });
 
-async function deposit(event) {
+async function deposit(event: any) {
   $ethClient.atomicSwap.methods
     .depositStash(buyAssetId.value)
     .send({from: store.metaMaskAccount, value: $ethClient.web3.utils.toWei(ethToStash.value)});
 }
 
-async function withdraw(event) {
+async function withdraw(event: any) {
   $ethClient.atomicSwap.methods
     .withdrawStash(buyAssetId.value, $ethClient.web3.utils.toWei(ethToWithdraw.value))
     .send({from: store.metaMaskAccount});
 }
 
-async function set(event) {
+async function set(event: any) {
   const injector = await web3FromAddress(store.activeAcu);
   let price = $ethClient.web3.utils.toWei(sellPrice.value);
   let value = $ethClient.web3.utils.toWei(sellValue.value);
@@ -103,7 +103,7 @@ async function set(event) {
     });
 }
 
-async function reset(event) {
+async function reset(event: any) {
   load();
 }
 

@@ -9,10 +9,10 @@ import {
   web3UseRpcProvider
 } from '@polkadot/extension-dapp';
 import { encodeAddress } from '@polkadot/keyring';
-import { main } from '@/stores/index.ts'
+import { main } from '../stores/index'
 
-let $acuityClient = inject('$acuityClient');
-let $ethClient = inject('$ethClient');
+let $acuityClient :any = inject('$acuityClient');
+let $ethClient :any = inject('$ethClient');
 let route = useRoute();
 let router = useRouter();
 
@@ -26,7 +26,7 @@ const trustsMe = ref(false);
 const trusts = ref([]);
 const trustedThatTrust = ref([]);
 
-async function trust(event) {
+async function trust(event: any) {
   const injector = await web3FromAddress(store.activeAcu);
   $acuityClient.api.tx.trustedAccounts
     .trustAccount(route.params.id)
@@ -35,7 +35,7 @@ async function trust(event) {
     });
 }
 
-async function untrust(event) {
+async function untrust(event: any) {
   const injector = await web3FromAddress(store.activeAcu);
   $acuityClient.api.tx.trustedAccounts
     .untrustAccount(route.params.id)

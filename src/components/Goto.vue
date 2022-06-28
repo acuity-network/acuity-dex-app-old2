@@ -9,16 +9,16 @@ import {
   web3UseRpcProvider
 } from '@polkadot/extension-dapp';
 import { encodeAddress } from '@polkadot/keyring';
-import { main } from '@/stores/index.ts'
+import { main } from '../stores/index'
 
-let $acuityClient = inject('$acuityClient');
-let $ethClient = inject('$ethClient');
+let $acuityClient :any = inject('$acuityClient');
+let $ethClient :any = inject('$ethClient');
 let route = useRoute();
 let router = useRouter();
 
 const account = ref("");
 
-async function goto(event) {
+async function goto(event: any) {
   router.push('/account/' + account.value);
 }
 

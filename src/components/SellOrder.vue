@@ -9,13 +9,13 @@ import {
   web3UseRpcProvider
 } from '@polkadot/extension-dapp';
 import { encodeAddress } from '@polkadot/keyring';
-import { main } from '@/stores/index.ts'
+import { main } from '../stores/index'
 
-import ethChainsData from '@/lib/eth-chains.json'
+import ethChainsData from '../lib/eth-chains.json'
 
-let $db = inject('$db');
-let $acuityClient = inject('$acuityClient');
-let $ethClient = inject('$ethClient');
+let $db :any = inject('$db');
+let $acuityClient :any = inject('$acuityClient');
+let $ethClient :any = inject('$ethClient');
 let route = useRoute();
 let router = useRouter();
 
@@ -157,12 +157,12 @@ onMounted(async () => {
   total.value = price.value * value.value;
 
   buyEmitter = $ethClient.chains[buyChainId.value].atomicSwap.events.allEvents()
-  .on('data', function(event){
+  .on('data', function(event: any){
     load();
   });
 
   sellEmitter = $ethClient.chains[sellChainId.value].atomicSwap.events.allEvents()
-  .on('data', function(event){
+  .on('data', function(event: any){
     load();
   });
 
@@ -175,7 +175,7 @@ watch(() => store.metaMaskAccount, async (newValue, oldValue) => {
 });
 */
 
-async function createBuyLock(event) {
+async function createBuyLock(event: any) {
 
   let recipient = foreignAddress;
   let secret = $ethClient.web3.utils.randomHex(32);
@@ -193,7 +193,7 @@ async function createBuyLock(event) {
     .send({from: store.metaMaskAccount, value: value});
 }
 
-async function createSellLock(lock, event) {
+async function createSellLock(lock, event: any) {
 
   console.log(lock);
 //  return;
@@ -212,7 +212,7 @@ async function createSellLock(lock, event) {
     .send({from: store.metaMaskAccount});
 }
 
-async function unlockSellLock(lock, event) {
+async function unlockSellLock(lock, event: any) {
 
   let sender = lock.seller;
   let secret = await $db.get('/secrets/' + lock.hashedSecret);
@@ -225,7 +225,7 @@ async function unlockSellLock(lock, event) {
     .send({from: store.metaMaskAccount});
 }
 
-async function unlockBuyLock(lock, event) {
+async function unlockBuyLock(lock, event: any) {
 
   let sender = lock.buyerEthAddress;
   let secret = await $db.get('/secrets/' + lock.hashedSecret);
