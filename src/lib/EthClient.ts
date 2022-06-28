@@ -1,13 +1,18 @@
 import detectEthereumProvider from '@metamask/detect-provider';
 import Web3 from 'web3'
 import { main } from '../stores/index'
-let store;
+let store: any;
 
-import ethChainsData from '../lib/eth-chains.json'
-import accountAbi from '../lib/contracts/AcuityAccount.abi.json'
-import atomicSwapAbi from '../lib/contracts/AcuityAtomicSwap.abi.json'
+import ethChainsDataJson from '../lib/eth-chains.json'
+const ethChainsData: any = ethChainsDataJson;
 
-function newEndpoint(chainId, uri) {
+import accountAbiJson from '../lib/contracts/AcuityAccount.abi.json'
+const accountAbi: any = accountAbiJson;
+
+import atomicSwapAbiJson from '../lib/contracts/AcuityAtomicSwap.abi.json'
+const atomicSwapAbi: any = atomicSwapAbiJson;
+
+function newEndpoint(chainId: number, uri: string) {
   let web3 = new Web3(uri);
 
   web3.eth.getBlockNumber()
@@ -28,11 +33,11 @@ function newEndpoint(chainId, uri) {
 export default class EthClient {
 	web3: any;
   formatWei: any;
-  atomicSwapSell: any;
-  atomicSwapBuy: any;
+  account: any;
+  atomicSwap: any;
 	chains: { [key: number]: any; } = {};
 
-	async init($db) {
+	async init($db: any) {
     // This function detects most providers injected at window.ethereum
     const provider: any = await detectEthereumProvider();
 		store = main();
@@ -43,8 +48,8 @@ export default class EthClient {
   		this.web3.eth.transactionConfirmationBlocks = 1;
       this.formatWei = (wei: string) => Number(this.web3.utils.fromWei(this.web3.utils.toBN(wei))).toLocaleString();
 
-      window.ethereum
-        .on('chainChanged', (chainIdHex: String) => {
+      (window.ethereum as any)
+        .on('chainChanged', (chainIdHex: string) => {
           let chainId = parseInt(chainIdHex, 16);
           store.metaMaskChainIdSet(chainId);
           this.account = new this.web3.eth.Contract(accountAbi, ethChainsData[chainId].contracts.account);

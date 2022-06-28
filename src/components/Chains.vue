@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, inject, onMounted, computed, watch } from 'vue'
+import type { Ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import {
   web3Accounts,
@@ -29,24 +30,25 @@ const ethToWithdraw = ref("");
 
 let emitter;
 
-import ethChainsData from '../lib/eth-chains.json'
+import ethChainsDataJson from '../lib/eth-chains.json'
+const ethChainsData: any = ethChainsDataJson;
 
-const ethChains = ref([]);
+const ethChains: Ref<any[]> = ref([]);
 const chainId = ref(null);
 const uri = ref("");
 
 onMounted(async () => {
   for (let chainId in ethChainsData) {
     ethChains.value.push({
-      value: chainId,
-      title: ethChainsData[chainId].label,
+      value: parseInt(chainId),
+      title: ethChainsData[parseInt(chainId)].label,
     });
   }
 })
 
-let endpointsWeb3 = {}
+let endpointsWeb3: any = {};
 
-function newEndpoint(uri) {
+function newEndpoint(uri: string) {
   let web3 = new Web3(uri);
 
   web3.eth.getBlockNumber()
@@ -65,19 +67,20 @@ function newEndpoint(uri) {
 }
 
 watch(chainId, async (newValue, oldValue) => {
-  store.endpointsSet(ethChainsData[newValue].rpcs);
-
+  let chainId: number = newValue ?? 0;
+  store.endpointsSet(ethChainsData[chainId].rpcs);
+/*
   for (let web3 of Object.entries(endpointsWeb3)) {
     try {
       web3.currentProvider.connection.close();
     }
     catch (error) {};
   }
-
+*/
   endpointsWeb3 = {};
 
-  for (let i in ethChainsData[newValue].rpcs) {
-    endpointsWeb3[ethChainsData[newValue].rpcs[i]] = newEndpoint(ethChainsData[newValue].rpcs[i]);
+  for (let i in ethChainsData[chainId].rpcs) {
+    endpointsWeb3[ethChainsData[chainId].rpcs[i]] = newEndpoint(ethChainsData[chainId].rpcs[i]);
   }
 
 

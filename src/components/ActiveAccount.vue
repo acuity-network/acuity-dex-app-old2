@@ -27,7 +27,7 @@ const foreignAccountAcuAccount = computed(() => store.foreignAccountAcuAccount);
 
 const name = ref("");
 
-async function loadName(address) {
+async function loadName(address: string): Promise<string> {
   try {
     let result = await $acuityClient.api.query.identity.identityOf(address);
     let json = result.unwrap().info.display.toString();
@@ -42,7 +42,8 @@ async function loadName(address) {
 async function load() {
   name.value = await loadName(store.activeAcu);
 
-  for (let chainId of Object.keys(store.chains)) {
+  for (let chainIdKey of Object.keys(store.chains)) {
+    let chainId = parseInt(chainIdKey);
     let chainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(chainId), 16);
     let result = await $acuityClient.api.query.orderbook.accountForeignAccount(store.activeAcu, chainIdHex);
     let foreignAddress = '0x' + Buffer.from(result).toString('hex').slice(24);
@@ -56,7 +57,7 @@ async function load() {
 };
 
 onMounted(async () => {
-  $acuityClient.api.query.system.events((events) => {
+  $acuityClient.api.query.system.events((events: any[]) => {
     events.forEach((record) => {
       // Extract the phase, event and the event types
       const { event, phase } = record;

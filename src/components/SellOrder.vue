@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { ref, inject, onMounted, computed, watch} from 'vue'
+import { defineProps, ref, inject, onMounted, computed, watch} from 'vue'
+import type { Ref } from 'vue'
+
 import { useRouter, useRoute } from 'vue-router'
 import {
   web3Accounts,
@@ -11,7 +13,10 @@ import {
 import { encodeAddress } from '@polkadot/keyring';
 import { main } from '../stores/index'
 
-import ethChainsData from '../lib/eth-chains.json'
+const props = defineProps(['accountId', 'sellAssetId', 'buyAssetId']);
+
+import ethChainsDataJson from '../lib/eth-chains.json'
+const ethChainsData: any = ethChainsDataJson;
 
 let $db: any = inject('$db');
 let $acuityClient: any = inject('$acuityClient');
@@ -21,19 +26,19 @@ let router = useRouter();
 
 const store = main();
 
-const locks = ref({});
+const locks: Ref<any> = ref({});
 
-const sellerAccountId = ref(null);
+const sellerAccountId = ref("");
 const sellerName = ref("");
-const sellChainId = ref(null);
+const sellChainId = ref(0);
 const sellChain = ref("");
-const buyChainId = ref(null);
+const buyChainId = ref(0);
 const buyChain = ref("");
-const stashed = ref(null);
-const price = ref(null);
-const value = ref(null);
-const total = ref(null);
-const buyValue = ref(null);
+const stashed = ref(0);
+const price = ref(0);
+const value = ref(0);
+const total = ref(0);
+const buyValue = ref(0);
 
 const buyCost = computed(() => {
   if (price.value && buyValue.value) {
@@ -41,17 +46,17 @@ const buyCost = computed(() => {
   }
 });
 
-let foreignAddress;
-let priceWei;
+let foreignAddress: string;
+let priceWei: typeof $ethClient.web3.utils.BN;
 
 const sellSymbol = computed(() => sellChainId.value ? ethChainsData[sellChainId.value].symbol : '');
 const buySymbol = computed(() => buyChainId.value ? ethChainsData[buyChainId.value].symbol : '');
 
-async function getAcuAddress(foreignAddress) {
+async function getAcuAddress(foreignAddress: string): Promise<string> {
   return encodeAddress(await $ethClient.chains[buyChainId.value].account.methods.getAcuAccount(foreignAddress).call());
 }
 
-async function loadName(acuAddress) {
+async function loadName(acuAddress: string): Promise<string> {
   let result = await $acuityClient.api.query.identity.identityOf(acuAddress);
   let json = result.unwrap().info.display.toString();
   let display = JSON.parse(json);
@@ -68,7 +73,7 @@ async function load() {
   for (let event of events) {
     let acuAddress = await getAcuAddress(event.returnValues.sender);
 
-    let sellLockValue = parseFloat(event.returnValues.value) / parseFloat(price.value);
+    let sellLockValue = (parseFloat(event.returnValues.value) / price.value).toString();
 
     //this.$arbitrumClient.web3.utils.fromWei((BigInt(this.$arbitrumClient.web3.utils.toWei(lock.buyLockValue.toString())) / BigInt(this.priceWei)).toString()),
 
@@ -96,10 +101,11 @@ async function load() {
 
   for (let event of events) {
     if (locks.value[event.returnValues.buyLockId]) {
-      locks.value[event.returnValues.buyLockId].sellLockId = event.returnValues.lockId;
-      locks.value[event.returnValues.buyLockId].sellLockState = "Locked";
-      locks.value[event.returnValues.buyLockId].sellLockTimeoutRaw = event.returnValues.timeout;
-      locks.value[event.returnValues.buyLockId].sellLockTimeout = new Date(parseInt(event.returnValues.timeout)).toLocaleString();
+      let buyLockId = parseInt(event.returnValues.buyLockId);
+      locks.value[buyLockId].sellLockId = event.returnValues.lockId;
+      locks.value[buyLockId].sellLockState = "Locked";
+      locks.value[buyLockId].sellLockTimeoutRaw = event.returnValues.timeout;
+      locks.value[buyLockId].sellLockTimeout = new Date(parseInt(event.returnValues.timeout)).toLocaleString();
     }
   }
 
@@ -136,20 +142,20 @@ let buyEmitter;
 let sellEmitter;
 
 onMounted(async () => {
-  sellerAccountId.value = route.params.accountId;
-  sellerName.value = await loadName(route.params.accountId);
-  sellChainId.value = $ethClient.web3.utils.hexToNumber(route.params.sellAssetId);
+  sellerAccountId.value = props.accountId;
+  sellerName.value = await loadName(props.accountId);
+  sellChainId.value = $ethClient.web3.utils.hexToNumber(props.sellAssetId);
   sellChain.value = ethChainsData[sellChainId.value].label;
-  buyChainId.value = $ethClient.web3.utils.hexToNumber(route.params.buyAssetId);
+  buyChainId.value = $ethClient.web3.utils.hexToNumber(props.buyAssetId);
   buyChain.value = ethChainsData[buyChainId.value].label;
 
   let chainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellChainId.value), 16);
   let result = await $acuityClient.api.query.orderbook.accountForeignAccount(sellerAccountId.value, chainIdHex);
   foreignAddress = '0x' + Buffer.from(result).toString('hex').slice(24);
 
-  stashed.value = $ethClient.formatWei(await $ethClient.chains[sellChainId.value].atomicSwap.methods.getStashValue(route.params.buyAssetId, foreignAddress).call());
+  stashed.value = $ethClient.formatWei(await $ethClient.chains[sellChainId.value].atomicSwap.methods.getStashValue(props.buyAssetId, foreignAddress).call());
 
-  result = await $acuityClient.api.query.orderbook.orderbook(route.params.accountId, route.params.sellAssetId, route.params.buyAssetId);
+  result = await $acuityClient.api.query.orderbook.orderbook(props.accountId, props.sellAssetId, props.buyAssetId);
 
   priceWei = result.price;
   price.value = $ethClient.web3.utils.fromWei(result.price);
@@ -182,7 +188,7 @@ async function createBuyLock(event: any) {
   let hashedSecret = $ethClient.web3.utils.keccak256(secret);
   $db.put('/secrets/' + hashedSecret, secret);
   let timeout = Date.now() + 60 * 60 * 24 * 3 * 1000;   // 3 days
-  let sellAssetId = route.params.sellAssetId
+  let sellAssetId = props.sellAssetId
   let sellPrice = priceWei.toHex();
   let value = $ethClient.web3.utils.fromWei((BigInt($ethClient.web3.utils.toWei(buyValue.value)) * BigInt(priceWei)).toString()).split('.')[0];
 
@@ -193,7 +199,7 @@ async function createBuyLock(event: any) {
     .send({from: store.metaMaskAccount, value: value});
 }
 
-async function createSellLock(lock, event: any) {
+async function createSellLock(lock: any) {
 
   console.log(lock);
 //  return;
@@ -201,7 +207,7 @@ async function createSellLock(lock, event: any) {
   let recipient = lock.buyerEthAddress;
   let hashedSecret = lock.hashedSecret;
   let timeout = Date.now() + 60 * 60 * 24 * 2 * 1000;   // 2 days
-  let stashAssetId = route.params.buyAssetId;
+  let stashAssetId = props.buyAssetId;
   let value = $ethClient.web3.utils.numberToHex(lock.sellLockValueWei);
   let buyLockId = lock.lockId;
 
@@ -212,7 +218,7 @@ async function createSellLock(lock, event: any) {
     .send({from: store.metaMaskAccount});
 }
 
-async function unlockSellLock(lock, event: any) {
+async function unlockSellLock(lock: any) {
 
   let sender = lock.seller;
   let secret = await $db.get('/secrets/' + lock.hashedSecret);
@@ -225,7 +231,7 @@ async function unlockSellLock(lock, event: any) {
     .send({from: store.metaMaskAccount});
 }
 
-async function unlockBuyLock(lock, event: any) {
+async function unlockBuyLock(lock: any) {
 
   let sender = lock.buyerEthAddress;
   let secret = await $db.get('/secrets/' + lock.hashedSecret);

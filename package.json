@@ -17,6 +17,7 @@
     "@polkadot/util-crypto": "^8.7.1",
     "@polkadot/wasm-crypto": "^5.1.1",
     "@polkadot/x-randomvalues": "^8.7.1",
+    "@types/bn.js": "^5.1.0",
     "agent-base": "^6.0.2",
     "browserify-zlib": "^0.2.0",
     "events": "^3.3.0",

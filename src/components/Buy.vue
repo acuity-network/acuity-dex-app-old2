@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, inject, onMounted, computed, watch} from 'vue'
+import type { Ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import {
   web3Accounts,
@@ -11,7 +12,8 @@ import {
 import { encodeAddress } from '@polkadot/keyring';
 import { main } from '../stores/index'
 
-import ethChainsData from '../lib/eth-chains.json'
+import ethChainsDataJson from '../lib/eth-chains.json'
+const ethChainsData: any = ethChainsDataJson;
 
 let $acuityClient: any = inject('$acuityClient');
 let $ethClient: any = inject('$ethClient');
@@ -26,14 +28,14 @@ const metaMaskChainId = computed(() => store.metaMaskChainId);
 const sellSymbol = computed(() => store.sellChainId ? ethChainsData[store.sellChainId].symbol : '');
 const buySymbol = computed(() => store.buyChainId ? ethChainsData[store.buyChainId].symbol : '');
 
-const sellOrders = ref([]);
+const sellOrders: Ref<any[]> = ref([]);
 
 
-async function getAcuAddress(foreignAddress) {
+async function getAcuAddress(foreignAddress: string) {
   return encodeAddress(await $ethClient.chains[store.sellChainId].account.methods.getAcuAccount(foreignAddress).call());
 }
 
-async function loadName(acuAddress) {
+async function loadName(acuAddress: string) {
   let result = await $acuityClient.api.query.identity.identityOf(acuAddress);
   let json = result.unwrap().info.display.toString();
   let display = JSON.parse(json);
@@ -94,7 +96,7 @@ watch(() => store.buyChainId, async (newValue, oldValue) => {
   load();
 });
 
-async function buy(accountId, event: any) {
+async function buy(accountId: string) {
   let sellAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.sellChainId), 32);
   let buyAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.buyChainId), 32);
 

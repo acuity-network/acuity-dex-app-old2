@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, inject, onMounted, computed, watch} from 'vue'
+import { defineProps, ref, inject, onMounted, computed, watch} from 'vue'
+import type { Ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import {
   web3Accounts,
@@ -10,6 +11,8 @@ import {
 } from '@polkadot/extension-dapp';
 import { encodeAddress } from '@polkadot/keyring';
 import { main } from '../stores/index'
+
+const props = defineProps(['id']);
 
 let $acuityClient: any = inject('$acuityClient');
 let $ethClient: any = inject('$ethClient');
@@ -23,13 +26,13 @@ const addressesAcu = computed(() => store.addressesAcu);
 const name = ref("");
 const trusted = ref(false);
 const trustsMe = ref(false);
-const trusts = ref([]);
-const trustedThatTrust = ref([]);
+const trusts: Ref<any[]> = ref([]);
+const trustedThatTrust: Ref<any[]> = ref([]);
 
 async function trust(event: any) {
   const injector = await web3FromAddress(store.activeAcu);
   $acuityClient.api.tx.trustedAccounts
-    .trustAccount(route.params.id)
+    .trustAccount(props.id)
     .signAndSend(store.activeAcu, { signer: injector.signer }, (status: any) => {
       console.log(status)
     });
@@ -38,13 +41,13 @@ async function trust(event: any) {
 async function untrust(event: any) {
   const injector = await web3FromAddress(store.activeAcu);
   $acuityClient.api.tx.trustedAccounts
-    .untrustAccount(route.params.id)
+    .untrustAccount(props.id)
     .signAndSend(store.activeAcu, { signer: injector.signer }, (status: any) => {
       console.log(status)
     });
 }
 
-async function loadName(address) {
+async function loadName(address: string): Promise<string> {
   try {
     let result = await $acuityClient.api.query.identity.identityOf(address);
     let json = result.unwrap().info.display.toString();
@@ -56,7 +59,7 @@ async function loadName(address) {
   }
 }
 
-watch(() => route.params.id, async (newValue, oldValue) => {
+watch(() => props.id, async (newValue, oldValue) => {
   load();
 });
 
@@ -66,13 +69,13 @@ watch(() => store.activeAcu, async (newValue, oldValue) => {
 
 async function load() {
 
-  name.value = await loadName(route.params.id);
+  name.value = await loadName(props.id);
 
-  trusted.value = await $acuityClient.api.rpc.trustedAccounts.isTrusted(store.activeAcu, route.params.id);
+  trusted.value = await $acuityClient.api.rpc.trustedAccounts.isTrusted(store.activeAcu, props.id);
 
-  trustsMe.value = await $acuityClient.api.rpc.trustedAccounts.isTrusted(route.params.id, store.activeAcu);
+  trustsMe.value = await $acuityClient.api.rpc.trustedAccounts.isTrusted(props.id, store.activeAcu);
 
-  let result = await $acuityClient.api.rpc.trustedAccounts.trustedBy(route.params.id);
+  let result = await $acuityClient.api.rpc.trustedAccounts.trustedBy(props.id);
   trusts.value = [];
   for (let account of result) {
     let address = encodeAddress(account);
@@ -82,7 +85,7 @@ async function load() {
     })
   }
 
-  result = await $acuityClient.api.rpc.trustedAccounts.trustedByThatTrust(store.activeAcu, route.params.id);
+  result = await $acuityClient.api.rpc.trustedAccounts.trustedByThatTrust(store.activeAcu, props.id);
   trustedThatTrust.value = [];
   for (let account of result) {
     let address = encodeAddress(account);
@@ -97,7 +100,7 @@ onMounted(async () => {
 
   load();
 
-  $acuityClient.api.query.system.events((events) => {
+  $acuityClient.api.query.system.events((events: any[]) => {
 
     // Loop through the Vec<EventRecord>
     events.forEach((record) => {
@@ -138,7 +141,7 @@ onMounted(async () => {
         <p>{{ name }}</p>
 
         <div class="text-h6">Address</div>
-        <p>{{ $route.params.id }}</p>
+        <p>{{ $props.id }}</p>
 
         <div class="text-h6">Trusted by me</div>
         <p>{{ trusted }}</p>

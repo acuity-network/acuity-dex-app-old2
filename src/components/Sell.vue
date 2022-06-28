@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, inject, onMounted, computed, watch} from 'vue'
+import type { Ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import {
   web3Accounts,
@@ -11,7 +12,8 @@ import {
 import { encodeAddress } from '@polkadot/keyring';
 import { main } from '../stores/index'
 
-import ethChainsData from '../lib/eth-chains.json'
+import ethChainsDataJson from '../lib/eth-chains.json'
+const ethChainsData: any = ethChainsDataJson;
 
 let $acuityClient: any = inject('$acuityClient');
 let $ethClient: any = inject('$ethClient');
@@ -35,7 +37,7 @@ const buySymbol = computed(() => store.buyChainId ? ethChainsData[store.buyChain
 
 const sellValue = ref(null);
 const sellPrice = ref(null);
-const sellTotal = computed(() => sellValue.value * sellPrice.value);
+const sellTotal = computed(() => (sellValue.value ?? 0) * (sellPrice.value ?? 0));
 
 
 let emitter;

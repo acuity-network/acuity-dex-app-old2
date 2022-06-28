@@ -2,23 +2,23 @@ import { defineStore } from 'pinia'
 
 export const main = defineStore('main', {
   state: () => ({
-		activeAcu: "",
-		accountsAcu: [],
-    addressesAcu: [],
-    metaMaskChainId: null,
-    metaMaskAccount: null,
-    sellChainId: null,
-    buyChainId: null,
-    endpoints: {},
-    chains: {},
-    chainSelect: [],
-    foreignAccountAcuAccount: {},
-    acuAccountForeignAccount: {},
+		activeAcu: "" as string,
+		accountsAcu: [] as any[],
+    addressesAcu: [] as string[],
+    metaMaskChainId: 0 as number,
+    metaMaskAccount: "" as string,
+    sellChainId: 0 as number,
+    buyChainId: 0 as number,
+    endpoints: {} as any,
+    chains: {} as any,
+    chainSelect: [] as any[],
+    foreignAccountAcuAccount: {} as any,
+    acuAccountForeignAccount: {} as any,
   }),
   getters: {
   },
   actions: {
-		activeAcuSet(account: String) {
+		activeAcuSet(account: string) {
 			this.activeAcu = account;
 		},
 		accountsAcuSet(accounts: any[]) {
@@ -30,31 +30,31 @@ export const main = defineStore('main', {
           this.addressesAcu.push(account.address);
       }
     },
-    metaMaskChainIdSet(chainId) {
+    metaMaskChainIdSet(chainId: number) {
 			this.metaMaskChainId = chainId;
       console.log("MetaMask switched to chainId", chainId);
 		},
-    metaMaskAccountSet(account: String) {
+    metaMaskAccountSet(account: string) {
 			this.metaMaskAccount = account;
       console.log("MetaMask switched to account", account);
 		},
-    sellChainIdSet(chainId) {
+    sellChainIdSet(chainId: number) {
       this.sellChainId = chainId;
     },
-    buyChainIdSet(chainId) {
+    buyChainIdSet(chainId: number) {
       this.buyChainId = chainId;
     },
-    endpointsSet(endpoints) {
+    endpointsSet(endpoints: string[]) {
       this.endpoints = {};
 
       for (let endpoint of endpoints) {
         this.endpoints[endpoint] = {};
       }
     },
-    endpointHeightSet(endpoint, height) {
+    endpointHeightSet(endpoint: string, height: number) {
       this.endpoints[endpoint].height = height;
     },
-    chainSet(chainId, label, uri) {
+    chainSet(chainId: number, label: string, uri: string) {
       if (!(chainId in this.chains)) {
         this.chainSelect.push({
           value: chainId,
@@ -68,14 +68,14 @@ export const main = defineStore('main', {
         height: null,
       };
     },
-    chainHeightSet(chainId, height) {
+    chainHeightSet(chainId: number, height: number) {
       this.chains[chainId].height = height;
     },
-    foreignAccountAcuAccountSet(chainId, foreignAccount, acuAccount) {
+    foreignAccountAcuAccountSet(chainId: number, foreignAccount: string, acuAccount: string) {
       this.foreignAccountAcuAccount[chainId] = {};
       this.foreignAccountAcuAccount[chainId][foreignAccount] = acuAccount;
     },
-    acuAccountForeignAccountSet(chainId, acuAccount, foreignAccount) {
+    acuAccountForeignAccountSet(chainId: number, acuAccount: string, foreignAccount: string) {
       this.acuAccountForeignAccount[chainId] = {};
       this.acuAccountForeignAccount[chainId][acuAccount] = foreignAccount;
     },
