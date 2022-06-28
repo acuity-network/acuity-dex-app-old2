@@ -14,52 +14,6 @@
 		"explorers": [
 		]
 	},
-	"1": {
-		"label": "Ethereum",
-		"symbol": "ETH",
-		"genesis": "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3",
-		"contracts": {
-			"account": "",
-			"atomicSwap": "",
-			"atomicSwapERC20": ""
-		},
-		"rpcs": [
-			"wss://eth-mainnet.public.blastapi.io",
-			"wss://mainnet.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-			"https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-			"https://api.mycryptoapi.com/eth",
-			"https://rpc.flashbots.net/",
-			"https://eth-mainnet.gateway.pokt.network/v1/5f3453978e354ab992c4da79",
-			"https://cloudflare-eth.com/",
-			"https://mainnet-nethermind.blockscout.com/",
-			"https://nodes.mewapi.io/rpc/eth",
-			"https://main-rpc.linkpool.io/",
-			"https://mainnet.eth.cloud.ava.do/",
-			"https://ethereumnodelight.app.runonflux.io",
-			"https://rpc.ankr.com/eth",
-			"https://eth-rpc.gateway.pokt.network",
-			"https://main-light.eth.linkpool.io",
-			"https://eth-mainnet.public.blastapi.io"
-		],
-		"explorers": [
-		]
-	},
-	"2": {
-		"label": "Expanse",
-		"symbol": "EXP",
-		"genesis": "0x2fe75cf9ba10cb1105e1750d872911e75365ba24fdd5db7f099445c901fea895",
-		"contracts": {
-			"account": "",
-			"atomicSwap": "",
-			"atomicSwapERC20": ""
-		},
-		"rpcs": [
-			"wss://node.expanse.tech/ws",
-			"https://node.expanse.tech"
-		],
-		"explorers": [
-		]
-	},
 	"3": {
 		"label": "Ropsten",
 		"symbol": "ROP",
