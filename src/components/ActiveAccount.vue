@@ -28,10 +28,15 @@ const foreignAccountAcuAccount = computed(() => store.foreignAccountAcuAccount);
 const name = ref("");
 
 async function loadName(address) {
-  let result = await $acuityClient.api.query.identity.identityOf(address);
-  let json = result.unwrap().info.display.toString();
-  let display = JSON.parse(json);
-  return $ethClient.web3.utils.hexToAscii(display.raw);
+  try {
+    let result = await $acuityClient.api.query.identity.identityOf(address);
+    let json = result.unwrap().info.display.toString();
+    let display = JSON.parse(json);
+    return $ethClient.web3.utils.hexToAscii(display.raw);
+  }
+  catch (e) {
+    return '';
+  }
 }
 
 async function load() {
@@ -104,7 +109,7 @@ async function setAcuAccount(event) {
 
         <div class="text-h6">Public Identity</div>
         <p>
-          <router-link :to="{ name: 'account', params: { id: store.activeAcu }}">{{ name }}</router-link>
+          <router-link v-if="store.activeAcu != ''" :to="{ name: 'account', params: { id: store.activeAcu }}">{{ name }}</router-link>
         </p>
 
         <div v-for="chain in chains">

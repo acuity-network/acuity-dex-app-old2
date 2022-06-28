@@ -45,10 +45,15 @@ async function untrust(event) {
 }
 
 async function loadName(address) {
-  let result = await $acuityClient.api.query.identity.identityOf(address);
-  let json = result.unwrap().info.display.toString();
-  let display = JSON.parse(json);
-  return $ethClient.web3.utils.hexToAscii(display.raw);
+  try {
+    let result = await $acuityClient.api.query.identity.identityOf(address);
+    let json = result.unwrap().info.display.toString();
+    let display = JSON.parse(json);
+    return $ethClient.web3.utils.hexToAscii(display.raw);
+  }
+  catch (e) {
+    return '';
+  }
 }
 
 watch(() => route.params.id, async (newValue, oldValue) => {
