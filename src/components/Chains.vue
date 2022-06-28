@@ -30,18 +30,15 @@ const ethToWithdraw = ref("");
 
 let emitter;
 
-import ethChainsDataJson from '../lib/eth-chains.json'
-const ethChainsData: any = ethChainsDataJson;
-
 const ethChains: Ref<any[]> = ref([]);
 const chainId = ref(null);
 const uri = ref("");
 
 onMounted(async () => {
-  for (let chainId in ethChainsData) {
+  for (let chainId in $ethClient.chainsData) {
     ethChains.value.push({
       value: parseInt(chainId),
-      title: ethChainsData[parseInt(chainId)].label,
+      title: $ethClient.chainsData[parseInt(chainId)].label,
     });
   }
 })
@@ -68,7 +65,7 @@ function newEndpoint(uri: string) {
 
 watch(chainId, async (newValue, oldValue) => {
   let chainId: number = newValue ?? 0;
-  store.endpointsSet(ethChainsData[chainId].rpcs);
+  store.endpointsSet($ethClient.chainsData[chainId].rpcs);
 /*
   for (let web3 of Object.entries(endpointsWeb3)) {
     try {
@@ -79,8 +76,8 @@ watch(chainId, async (newValue, oldValue) => {
 */
   endpointsWeb3 = {};
 
-  for (let i in ethChainsData[chainId].rpcs) {
-    endpointsWeb3[ethChainsData[chainId].rpcs[i]] = newEndpoint(ethChainsData[chainId].rpcs[i]);
+  for (let i in $ethClient.chainsData[chainId].rpcs) {
+    endpointsWeb3[$ethClient.chainsData[chainId].rpcs[i]] = newEndpoint($ethClient.chainsData[chainId].rpcs[i]);
   }
 
 

@@ -3,8 +3,7 @@ import Web3 from 'web3'
 import { main } from '../stores/index'
 let store: any;
 
-import ethChainsDataJson from '../lib/eth-chains.json'
-const ethChainsData: any = ethChainsDataJson;
+import ethChainsDataJson from '../lib/eth-chains-testnets.json'
 
 import accountAbiJson from '../lib/contracts/AcuityAccount.abi.json'
 const accountAbi: any = accountAbiJson;
@@ -36,6 +35,7 @@ export default class EthClient {
   account: any;
   atomicSwap: any;
 	chains: { [key: number]: any; } = {};
+  chainsData: any = ethChainsDataJson;
 
 	async init($db: any) {
     // This function detects most providers injected at window.ethereum
@@ -52,8 +52,8 @@ export default class EthClient {
         .on('chainChanged', (chainIdHex: string) => {
           let chainId = parseInt(chainIdHex, 16);
           store.metaMaskChainIdSet(chainId);
-          this.account = new this.web3.eth.Contract(accountAbi, ethChainsData[chainId].contracts.account);
-      		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, ethChainsData[chainId].contracts.atomicSwap);
+          this.account = new this.web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
+      		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
         })
         .on('accountsChanged', (accounts: any) => {
   				store.metaMaskAccountSet(accounts[0]);
@@ -61,8 +61,8 @@ export default class EthClient {
 
       let chainId = await this.web3.eth.getChainId();
       store.metaMaskChainIdSet(chainId);
-      this.account = new this.web3.eth.Contract(accountAbi, ethChainsData[chainId].contracts.account);
-  		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, ethChainsData[chainId].contracts.atomicSwap);
+      this.account = new this.web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
+  		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
 
       let accounts = await this.web3.eth.requestAccounts();
 			store.metaMaskAccountSet(accounts[0]);
@@ -73,15 +73,15 @@ export default class EthClient {
 		    let chainId = parseInt(key.slice(8));
 
 				if (Number.isInteger(chainId)) {
-					store.chainSet(chainId, ethChainsData[chainId].label, uri);
+					store.chainSet(chainId, this.chainsData[chainId].label, uri);
 					let web3 = newEndpoint(chainId, uri);
 					this.chains[chainId] = {};
 					this.chains[chainId].web3 = web3;
-          if (ethChainsData[chainId].contracts.account) {
-				    this.chains[chainId].account = new web3.eth.Contract(accountAbi, ethChainsData[chainId].contracts.account);
+          if (this.chainsData[chainId].contracts.account) {
+				    this.chains[chainId].account = new web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
           }
-          if (ethChainsData[chainId].contracts.atomicSwap) {
-  					this.chains[chainId].atomicSwap = new web3.eth.Contract(atomicSwapAbi, ethChainsData[chainId].contracts.atomicSwap);
+          if (this.chainsData[chainId].contracts.atomicSwap) {
+  					this.chains[chainId].atomicSwap = new web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
           }
 	//				this.chains[chainId].atomicSwapERC20 =
 				}

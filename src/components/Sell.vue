@@ -12,9 +12,6 @@ import {
 import { encodeAddress } from '@polkadot/keyring';
 import { main } from '../stores/index'
 
-import ethChainsDataJson from '../lib/eth-chains.json'
-const ethChainsData: any = ethChainsDataJson;
-
 let $acuityClient: any = inject('$acuityClient');
 let $ethClient: any = inject('$ethClient');
 let route = useRoute();
@@ -32,8 +29,8 @@ const eth = ref(null);
 const ethToStash = ref("");
 const ethToWithdraw = ref("");
 
-const sellSymbol = computed(() => ethChainsData[metaMaskChainId.value].symbol);
-const buySymbol = computed(() => store.buyChainId ? ethChainsData[store.buyChainId].symbol : '');
+const sellSymbol = computed(() => $ethClient.chainsData[metaMaskChainId.value].symbol);
+const buySymbol = computed(() => store.buyChainId ? $ethClient.chainsData[store.buyChainId].symbol : '');
 
 const sellValue = ref(null);
 const sellPrice = ref(null);

@@ -15,9 +15,6 @@ import { main } from '../stores/index'
 
 const props = defineProps(['accountId', 'sellAssetId', 'buyAssetId']);
 
-import ethChainsDataJson from '../lib/eth-chains.json'
-const ethChainsData: any = ethChainsDataJson;
-
 let $db: any = inject('$db');
 let $acuityClient: any = inject('$acuityClient');
 let $ethClient: any = inject('$ethClient');
@@ -49,8 +46,8 @@ const buyCost = computed(() => {
 let foreignAddress: string;
 let priceWei: typeof $ethClient.web3.utils.BN;
 
-const sellSymbol = computed(() => sellChainId.value ? ethChainsData[sellChainId.value].symbol : '');
-const buySymbol = computed(() => buyChainId.value ? ethChainsData[buyChainId.value].symbol : '');
+const sellSymbol = computed(() => sellChainId.value ? $ethClient.chainsData[sellChainId.value].symbol : '');
+const buySymbol = computed(() => buyChainId.value ? $ethClient.chainsData[buyChainId.value].symbol : '');
 
 async function getAcuAddress(foreignAddress: string): Promise<string> {
   return encodeAddress(await $ethClient.chains[buyChainId.value].account.methods.getAcuAccount(foreignAddress).call());
@@ -145,9 +142,9 @@ onMounted(async () => {
   sellerAccountId.value = props.accountId;
   sellerName.value = await loadName(props.accountId);
   sellChainId.value = $ethClient.web3.utils.hexToNumber(props.sellAssetId);
-  sellChain.value = ethChainsData[sellChainId.value].label;
+  sellChain.value = $ethClient.chainsData[sellChainId.value].label;
   buyChainId.value = $ethClient.web3.utils.hexToNumber(props.buyAssetId);
-  buyChain.value = ethChainsData[buyChainId.value].label;
+  buyChain.value = $ethClient.chainsData[buyChainId.value].label;
 
   let chainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellChainId.value), 16);
   let result = await $acuityClient.api.query.orderbook.accountForeignAccount(sellerAccountId.value, chainIdHex);
