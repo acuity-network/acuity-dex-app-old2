@@ -96,6 +96,38 @@
 			"https://kovan-optimistic.etherscan.io"
 		]
 	},
+	"77": {
+		"label": "POA Network Sokol",
+		"symbol": "SPOA",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"https://sokol.poa.network"
+		],
+		"explorers": [
+			""
+		]
+	},
+	"97": {
+		"label": "Binance Smart Chain Testnet",
+		"symbol": "BNB",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"https://data-seed-prebsc-1-s1.binance.org:8545/",
+			"wss://bsc-testnet.public.blastapi.io",
+			"https://bsc-testnet.public.blastapi.io"
+		],
+		"explorers": [
+			"https://testnet.bscscan.com"
+		]
+	},
 	"256": {
 		"label": "HECO Chain Testnet",
 		"symbol": "HT",
@@ -147,6 +179,23 @@
 			"https://moonbase.moonscan.io/",
 			"https://moonbase-blockscout.testnet.moonbeam.network/",
 			"https://moonbeam-explorer.netlify.app/?network=MoonbaseAlpha"
+		]
+	},
+	"4002": {
+		"label": "Fantom Testnet",
+		"symbol": "FTM",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"https://rpc.testnet.fantom.network/",
+			"https://xapi.testnet.fantom.network/lachesis/",
+			"https://fantom-testnet.public.blastapi.io/"
+		],
+		"explorers": [
+			"https://testnet.ftmscan.com/"
 		]
 	},
 	"5553": {
@@ -205,6 +254,7 @@
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
+			"https://rpc-mumbai.maticvigil.com",
 			"https://rpc-mumbai.matic.today/",
 			"wss://polygon-testnet.public.blastapi.io/"
 		],
@@ -239,7 +289,7 @@
 			"https://nitro-devnet.arbitrum.io/rpc"
 		],
 		"explorers": [
-			"Arbitrum Nitro Devnet"
+			""
 		]
 	},
 	"1313161555": {
@@ -253,6 +303,20 @@
 		},
 		"rpcs": [
 			"https://testnet.aurora.dev/"
+		],
+		"explorers": [
+		]
+	},
+	"1666700000": {
+		"label": "Harmony Testnet",
+		"symbol": "ONE",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"https://api.s0.b.hmny.io"
 		],
 		"explorers": [
 		]
