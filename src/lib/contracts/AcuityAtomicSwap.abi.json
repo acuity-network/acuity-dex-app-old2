@@ -271,7 +271,38 @@
         "type": "bytes32"
       }
     ],
-    "name": "Unlock",
+    "name": "UnlockByRecipient",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "lockId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "secret",
+        "type": "bytes32"
+      }
+    ],
+    "name": "UnlockBySender",
     "type": "event"
   },
   {
@@ -370,6 +401,11 @@
         "internalType": "bytes16",
         "name": "assetId",
         "type": "bytes16"
+      },
+      {
+        "internalType": "uint256",
+        "name": "offset",
+        "type": "uint256"
       },
       {
         "internalType": "uint256",
@@ -556,7 +592,30 @@
         "type": "uint256"
       }
     ],
-    "name": "unlockValue",
+    "name": "unlockByRecipient",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "secret",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timeout",
+        "type": "uint256"
+      }
+    ],
+    "name": "unlockBySender",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
