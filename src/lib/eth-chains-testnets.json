@@ -153,6 +153,7 @@
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
+			"wss://zksync2-testnet.zksync.dev/ws",
 			"https://zksync2-testnet.zksync.dev"
 		],
 		"explorers": [
