@@ -29,8 +29,8 @@
     "util": "^0.12.4",
     "vue": "^3.2.37",
     "vue-i18n": "^9.1.10",
-    "vue-router": "^4.0.16",
-    "vuetify": "^3.0.0-beta.4",
+    "vue-router": "^4.1.0",
+    "vuetify": "^3.0.0-beta.5",
     "web3": "^1.7.4",
     "webfontloader": "^1.6.28"
   },
