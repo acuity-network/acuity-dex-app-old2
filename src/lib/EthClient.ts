@@ -103,4 +103,11 @@ export default class EthClient {
     this.db.put('/chains/' + chainId, uri);
     this.loadChain(chainId, uri);
   }
+
+
+  async removeChain(chainId: number) {
+    this.db.del('/chains/' + chainId);
+    this.chains[chainId] = {};
+    store.chainRemove(chainId);
+  }
 }

@@ -68,6 +68,16 @@ export const main = defineStore('main', {
         height: null,
       };
     },
+    chainRemove(chainId: number, label: string, uri: string) {
+      delete this.chains[chainId];
+
+      for (let i in this.chainSelect) {
+        if (this.chainSelect[i].value == chainId) {
+          delete this.chainSelect[i];
+          break;
+        }
+      }
+    },
     chainHeightSet(chainId: number, height: number) {
       this.chains[chainId].height = height;
     },

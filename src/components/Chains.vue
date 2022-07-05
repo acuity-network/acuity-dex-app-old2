@@ -80,8 +80,12 @@ watch(chainId, async (newValue, oldValue) => {
   }
 });
 
-async function add(event: any) {
+async function addChain(event: any) {
   $ethClient.addChain(chainId.value, uri.value);
+}
+
+async function deleteChain(chainId: number) {
+  $ethClient.removeChain(chainId);
 }
 
 </script>
@@ -102,6 +106,8 @@ async function add(event: any) {
               <th class="text-right">
                 Height
               </th>
+              <th>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -109,6 +115,7 @@ async function add(event: any) {
               <td>{{ chain.label }}</td>
               <td>{{ chain.uri }}</td>
               <td class="text-right">{{ chain.height }}</td>
+              <td><v-icon @click="deleteChain(chain.chainId)" size="small">mdi-delete</v-icon></td>
             </tr>
           </tbody>
         </v-table>
@@ -143,7 +150,7 @@ async function add(event: any) {
             </tbody>
           </v-table>
         </v-radio-group>
-        <v-btn class="mb-10" @click="add">Add chain</v-btn>
+        <v-btn class="mb-10" @click="addChain">Add chain</v-btn>
       </v-col>
     </v-row>
   </v-container>
