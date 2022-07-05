@@ -16,7 +16,6 @@ import { main } from '../stores/index'
 
 let $acuityClient: any = inject('$acuityClient');
 let $ethClient: any = inject('$ethClient');
-let $db: any = inject('$db');
 let route = useRoute();
 let router = useRouter();
 
@@ -79,12 +78,10 @@ watch(chainId, async (newValue, oldValue) => {
   for (let i in $ethClient.chainsData[chainId].rpcs) {
     endpointsWeb3[$ethClient.chainsData[chainId].rpcs[i]] = newEndpoint($ethClient.chainsData[chainId].rpcs[i]);
   }
-
-
 });
 
 async function add(event: any) {
-  $db.put('/chains/' + chainId.value, uri.value);
+  $ethClient.addChain(chainId.value, uri.value);
 }
 
 </script>

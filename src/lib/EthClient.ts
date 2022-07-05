@@ -30,6 +30,7 @@ function newEndpoint(chainId: number, uri: string) {
 }
 
 export default class EthClient {
+  db: any;
 	web3: any;
   formatWei: any;
   account: any;
@@ -37,7 +38,8 @@ export default class EthClient {
 	chains: { [key: number]: any; } = {};
   chainsData: any = ethChainsDataJson;
 
-	async init($db: any) {
+	async init(db: any) {
+    this.db = db;
     // This function detects most providers injected at window.ethereum
     const provider: any = await detectEthereumProvider();
 		store = main();
@@ -67,23 +69,13 @@ export default class EthClient {
       let accounts = await this.web3.eth.requestAccounts();
 			store.metaMaskAccountSet(accounts[0]);
 
-			for await (const [key, uri] of $db.iterator({
+			for await (const [key, uri] of this.db.iterator({
 		    gt: '/chains/'
 		  })) {
 		    let chainId = parseInt(key.slice(8));
 
 				if (Number.isInteger(chainId)) {
-					store.chainSet(chainId, this.chainsData[chainId].label, uri);
-					let web3 = newEndpoint(chainId, uri);
-					this.chains[chainId] = {};
-					this.chains[chainId].web3 = web3;
-          if (this.chainsData[chainId].contracts.account) {
-				    this.chains[chainId].account = new web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
-          }
-          if (this.chainsData[chainId].contracts.atomicSwap) {
-  					this.chains[chainId].atomicSwap = new web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
-          }
-	//				this.chains[chainId].atomicSwapERC20 =
+          this.loadChain(chainId, uri);
 				}
 		  }
     } else {
@@ -91,5 +83,24 @@ export default class EthClient {
     }
 
 		return this;
+  }
+
+  loadChain(chainId: number, uri: string) {
+    store.chainSet(chainId, this.chainsData[chainId].label, uri);
+    let web3 = newEndpoint(chainId, uri);
+    this.chains[chainId] = {};
+    this.chains[chainId].web3 = web3;
+    if (this.chainsData[chainId].contracts.account) {
+      this.chains[chainId].account = new web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
+    }
+    if (this.chainsData[chainId].contracts.atomicSwap) {
+      this.chains[chainId].atomicSwap = new web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
+    }
+//				this.chains[chainId].atomicSwapERC20 =
+  }
+
+  async addChain(chainId: number, uri: string) {
+    this.db.put('/chains/' + chainId, uri);
+    this.loadChain(chainId, uri);
   }
 }
