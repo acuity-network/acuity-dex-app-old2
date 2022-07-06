@@ -27,8 +27,10 @@ const acuAccountForeignAccount = computed(() => store.acuAccountForeignAccount);
 const foreignAccountAcuAccount = computed(() => store.foreignAccountAcuAccount);
 
 const name = ref("");
-const setForeignAccountActive = ref(true);
-const setAcuAccountActive = ref(true);
+const setForeignAccountDisabled = ref(false);
+const setForeignAccountWaiting = ref(false);
+const setAcuAccountDisabled = ref(false);
+const setAcuAccountWaiting = ref(false);
 
 async function loadName(address: string): Promise<string> {
   try {
@@ -87,35 +89,47 @@ watch(() => store.activeAcu, async (newValue, oldValue) => {
 });
 
 async function setForeignAccount(event: any) {
-  setForeignAccountActive.value = false;
+  setForeignAccountDisabled.value = true;
   const injector = await web3FromAddress(store.activeAcu);
   let chainId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.metaMaskChainId), 16);
   let foreignAccount = $ethClient.web3.utils.padLeft(store.metaMaskAccount, 64);
   try {
-    let status = await $acuityClient.api.tx.orderbook
+    const unsub = await $acuityClient.api.tx.orderbook
       .setForeignAccount(chainId, foreignAccount)
-      .signAndSend(store.activeAcu, { signer: injector.signer });
-    console.log(status)
+      .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
+        if (!result.status.isInBlock) {
+          setForeignAccountWaiting.value = true;
+        }
+        else {
+          unsub();
+          setForeignAccountWaiting.value = false;
+          setForeignAccountDisabled.value = false;
+        }
+      });
   }
-  catch (error) {
-    console.log(error)
+  catch (e) {
+    setForeignAccountWaiting.value = false;
+    setForeignAccountDisabled.value = false;
   }
-  setForeignAccountActive.value = true;
 }
 
 async function setAcuAccount(event: any) {
-  setAcuAccountActive.value = false;
+  setAcuAccountDisabled.value = true;
   let acuAddress = '0x' + Buffer.from(decodeAddress(store.activeAcu)).toString('hex');
-  try {
-    let status = await $ethClient.account.methods
-      .setAcuAccount(acuAddress)
-      .send({from: store.metaMaskAccount});
-    console.log(status)
-  }
-  catch (error) {
-    console.log(error)
-  }
-  setAcuAccountActive.value = true;
+  $ethClient.account.methods
+    .setAcuAccount(acuAddress)
+    .send({from: store.metaMaskAccount})
+    .on('transactionHash', function(payload: any) {
+      setAcuAccountWaiting.value = true;
+    })
+    .on('receipt', function(receipt: any) {
+      setAcuAccountWaiting.value = false;
+      setAcuAccountDisabled.value = false;
+    })
+    .on('error', function(error: any) {
+      setAcuAccountWaiting.value = false;
+      setAcuAccountDisabled.value = false;
+    });
 }
 
 </script>
@@ -137,9 +151,12 @@ async function setAcuAccount(event: any) {
             <span v-if="foreignAccountAcuAccount[chain.chainId] && (foreignAccountAcuAccount[chain.chainId][acuAccountForeignAccount[chain.chainId][store.activeAcu]] == store.activeAcu)"><v-icon icon="mdi-link-variant"></v-icon></span>
           </div>
         </div>
-        <div v-if="chains[metaMaskChainId]">
-          <v-btn class="mt-10 mr-10" @click="setForeignAccount" :disabled="!setForeignAccountActive">Set {{ metaMaskChainName }} Account on Acuity</v-btn>
-          <v-btn class="mt-10" @click="setAcuAccount" :disabled="!setAcuAccountActive">Set Acuity Account on {{ metaMaskChainName }}</v-btn>
+        <div v-if="chains[metaMaskChainId]" class="mt-10" >
+          <v-btn class="mb-4" @click="setForeignAccount" :disabled="setForeignAccountDisabled">Set {{ metaMaskChainName }} Account on Acuity</v-btn>
+          <v-progress-linear class="mb-10" :indeterminate="setForeignAccountWaiting" color="yellow darken-2"></v-progress-linear>
+
+          <v-btn class="mb-4" @click="setAcuAccount" :disabled="setAcuAccountDisabled">Set Acuity Account on {{ metaMaskChainName }}</v-btn>
+          <v-progress-linear class="mb-10" :indeterminate="setAcuAccountWaiting" color="yellow darken-2"></v-progress-linear>
         </div>
       </v-col>
     </v-row>

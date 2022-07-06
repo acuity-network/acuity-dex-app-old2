@@ -29,6 +29,13 @@ const eth = ref(null);
 const ethToStash = ref("");
 const ethToWithdraw = ref("");
 
+const stashDisabled = ref(false);
+const stashWaiting = ref(false);
+const unstashDisabled = ref(false);
+const unstashWaiting = ref(false);
+const setDisabled = ref(false);
+const setWaiting = ref(false);
+
 const sellSymbol = computed(() => $ethClient.chainsData[metaMaskChainId.value].symbol);
 const buySymbol = computed(() => store.buyChainId ? $ethClient.chainsData[store.buyChainId].symbol : '');
 
@@ -78,28 +85,66 @@ watch(() => store.buyChainId, async (newValue, oldValue) => {
   load();
 });
 
-async function deposit(event: any) {
+async function stash(event: any) {
+  stashDisabled.value = true;
   $ethClient.atomicSwap.methods
     .depositStash(buyAssetId.value)
-    .send({from: store.metaMaskAccount, value: $ethClient.web3.utils.toWei(ethToStash.value)});
+    .send({from: store.metaMaskAccount, value: $ethClient.web3.utils.toWei(ethToStash.value)})
+    .on('transactionHash', function(payload: any) {
+      stashWaiting.value = true;
+    })
+    .on('receipt', function(receipt: any) {
+      stashWaiting.value = false;
+      stashDisabled.value = false;
+    })
+    .on('error', function(error: any) {
+      stashWaiting.value = false;
+      stashDisabled.value = false;
+    });
 }
 
-async function withdraw(event: any) {
+async function unstash(event: any) {
+  unstashDisabled.value = true;
   $ethClient.atomicSwap.methods
     .withdrawStash(buyAssetId.value, $ethClient.web3.utils.toWei(ethToWithdraw.value))
-    .send({from: store.metaMaskAccount});
+    .send({from: store.metaMaskAccount})
+    .on('transactionHash', function(payload: any) {
+      unstashWaiting.value = true;
+    })
+    .on('receipt', function(receipt: any) {
+      unstashWaiting.value = false;
+      unstashDisabled.value = false;
+    })
+    .on('error', function(error: any) {
+      unstashWaiting.value = false;
+      unstashDisabled.value = false;
+    });
 }
 
 async function set(event: any) {
+  setDisabled.value = true;
   const injector = await web3FromAddress(store.activeAcu);
   let price = $ethClient.web3.utils.toWei(sellPrice.value);
   let value = $ethClient.web3.utils.toWei(sellValue.value);
 
-  $acuityClient.api.tx.orderbook
-    .setOrder(sellAssetId.value, buyAssetId.value, price, value)
-    .signAndSend(store.activeAcu, { signer: injector.signer }, (status: any) => {
-      console.log(status)
-    });
+  try {
+    const unsub = await $acuityClient.api.tx.orderbook
+      .setOrder(sellAssetId.value, buyAssetId.value, price, value)
+      .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
+        if (!result.status.isInBlock) {
+          setWaiting.value = true;
+        }
+        else {
+          unsub();
+          setWaiting.value = false;
+          setDisabled.value = false;
+        }
+      });
+  }
+  catch (e) {
+    setWaiting.value = false;
+    setDisabled.value = false;
+  }
 }
 
 async function reset(event: any) {
@@ -116,10 +161,15 @@ async function reset(event: any) {
         <v-select v-model="store.buyChainId" :items="chainSelect" label="Buy chain"></v-select>
         <div class="text-h6">{{ sellSymbol }} Stashed</div>
         <p class="mb-10">{{ eth }}</p>
-        <v-text-field v-model="ethToStash" label="Value to stash" :suffix="sellSymbol"></v-text-field>
-        <v-btn class="mb-10" @click="deposit">Stash</v-btn>
-        <v-text-field v-model="ethToWithdraw" label="Value to withdraw" :suffix="sellSymbol"></v-text-field>
-        <v-btn class="mb-10" @click="withdraw">Withdraw</v-btn>
+
+        <v-text-field v-model="ethToStash" label="Value to stash" :suffix="sellSymbol" :disabled="stashDisabled"></v-text-field>
+        <v-btn class="mb-4" @click="stash" :disabled="stashDisabled">Stash</v-btn>
+        <v-progress-linear class="mb-10" :indeterminate="stashWaiting" color="yellow darken-2"></v-progress-linear>
+
+        <v-text-field v-model="ethToWithdraw" label="Value to unstash" :suffix="sellSymbol" :disabled="unstashDisabled"></v-text-field>
+        <v-btn class="mb-4" @click="unstash" :disabled="unstashDisabled">Unstash</v-btn>
+        <v-progress-linear class="mb-10" :indeterminate="unstashWaiting" color="yellow darken-2"></v-progress-linear>
+
         <div class="text-h6 mb-10">Sell order</div>
         <v-row>
           <v-col cols="12" sm="6" md="4">
@@ -132,10 +182,11 @@ async function reset(event: any) {
             <v-text-field v-model="sellTotal" readonly label="Total" :suffix="buySymbol"></v-text-field>
           </v-col>
         </v-row>
-        <div class="d-flex" style="gap: 1rem">
-          <v-btn @click="set">Set</v-btn>
+        <div class="d-flex mb-4" style="gap: 1rem">
+          <v-btn @click="set" :disabled="setDisabled">Set</v-btn>
           <v-btn @click="reset">Reset</v-btn>
         </div>
+        <v-progress-linear class="mb-10" :indeterminate="setWaiting" color="yellow darken-2"></v-progress-linear>
       </v-col>
     </v-row>
   </v-container>
