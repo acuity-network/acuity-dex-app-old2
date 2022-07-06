@@ -26,6 +26,8 @@ const acuAccountForeignAccount = computed(() => store.acuAccountForeignAccount);
 const foreignAccountAcuAccount = computed(() => store.foreignAccountAcuAccount);
 
 const name = ref("");
+const setForeignAccountActive = ref(true);
+const setAcuAccountActive = ref(true);
 
 async function loadName(address: string): Promise<string> {
   try {
@@ -84,21 +86,35 @@ watch(() => store.activeAcu, async (newValue, oldValue) => {
 });
 
 async function setForeignAccount(event: any) {
+  setForeignAccountActive.value = false;
   const injector = await web3FromAddress(store.activeAcu);
   let chainId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.metaMaskChainId), 16);
   let foreignAccount = $ethClient.web3.utils.padLeft(store.metaMaskAccount, 64);
-  $acuityClient.api.tx.orderbook
-    .setForeignAccount(chainId, foreignAccount)
-    .signAndSend(store.activeAcu, { signer: injector.signer }, (status: any) => {
-      console.log(status)
-    });
+  try {
+    let status = await $acuityClient.api.tx.orderbook
+      .setForeignAccount(chainId, foreignAccount)
+      .signAndSend(store.activeAcu, { signer: injector.signer });
+    console.log(status)
+  }
+  catch (error) {
+    console.log(error)
+  }
+  setForeignAccountActive.value = true;
 }
 
 async function setAcuAccount(event: any) {
+  setAcuAccountActive.value = false;
   let acuAddress = '0x' + Buffer.from(decodeAddress(store.activeAcu)).toString('hex');
-  $ethClient.account.methods
-    .setAcuAccount(acuAddress)
-    .send({from: store.metaMaskAccount});
+  try {
+    let status = await $ethClient.account.methods
+      .setAcuAccount(acuAddress)
+      .send({from: store.metaMaskAccount});
+    console.log(status)
+  }
+  catch (error) {
+    console.log(error)
+  }
+  setAcuAccountActive.value = true;
 }
 
 </script>
@@ -121,8 +137,8 @@ async function setAcuAccount(event: any) {
           </div>
         </div>
 
-        <v-btn class="mt-10 mr-10" @click="setForeignAccount">Set Foreign Account</v-btn>
-        <v-btn class="mt-10" @click="setAcuAccount">Set ACU Account</v-btn>
+        <v-btn class="mt-10 mr-10" @click="setForeignAccount" :disabled="!setForeignAccountActive">Set Foreign Account</v-btn>
+        <v-btn class="mt-10" @click="setAcuAccount" :disabled="!setAcuAccountActive">Set ACU Account</v-btn>
 
       </v-col>
     </v-row>
