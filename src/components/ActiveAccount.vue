@@ -21,6 +21,7 @@ const store = main();
 const addressesAcu = computed(() => store.addressesAcu);
 const chains = computed(() => store.chains);
 const metaMaskChainId = computed(() => store.metaMaskChainId);
+const metaMaskChainName = computed(() => store.metaMaskChainName);
 const metaMaskAccount = computed(() => store.metaMaskAccount);
 const acuAccountForeignAccount = computed(() => store.acuAccountForeignAccount);
 const foreignAccountAcuAccount = computed(() => store.foreignAccountAcuAccount);
@@ -136,10 +137,10 @@ async function setAcuAccount(event: any) {
             <span v-if="foreignAccountAcuAccount[chain.chainId] && (foreignAccountAcuAccount[chain.chainId][acuAccountForeignAccount[chain.chainId][store.activeAcu]] == store.activeAcu)"><v-icon icon="mdi-link-variant"></v-icon></span>
           </div>
         </div>
-
-        <v-btn class="mt-10 mr-10" @click="setForeignAccount" :disabled="!setForeignAccountActive">Set Foreign Account</v-btn>
-        <v-btn class="mt-10" @click="setAcuAccount" :disabled="!setAcuAccountActive">Set ACU Account</v-btn>
-
+        <div v-if="chains[metaMaskChainId]">
+          <v-btn class="mt-10 mr-10" @click="setForeignAccount" :disabled="!setForeignAccountActive">Set {{ metaMaskChainName }} Account on Acuity</v-btn>
+          <v-btn class="mt-10" @click="setAcuAccount" :disabled="!setAcuAccountActive">Set Acuity Account on {{ metaMaskChainName }}</v-btn>
+        </div>
       </v-col>
     </v-row>
   </v-container>

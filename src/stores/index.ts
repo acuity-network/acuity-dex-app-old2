@@ -1,11 +1,15 @@
 import { defineStore } from 'pinia'
 
+import ethChainsDataJson from '../lib/eth-chains-testnets.json'
+const chainsData: any = ethChainsDataJson;
+
 export const main = defineStore('main', {
   state: () => ({
 		activeAcu: "" as string,
 		accountsAcu: [] as any[],
     addressesAcu: [] as string[],
     metaMaskChainId: 0 as number,
+    metaMaskChainName: "" as string,
     metaMaskAccount: "" as string,
     sellChainId: 0 as number,
     buyChainId: 0 as number,
@@ -32,7 +36,8 @@ export const main = defineStore('main', {
     },
     metaMaskChainIdSet(chainId: number) {
 			this.metaMaskChainId = chainId;
-      console.log("MetaMask switched to chainId", chainId);
+      this.metaMaskChainName = chainsData[chainId] ? chainsData[chainId].label : chainId;
+      console.log("MetaMask switched to", this.metaMaskChainName);
 		},
     metaMaskAccountSet(account: string) {
 			this.metaMaskAccount = account;
