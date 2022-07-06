@@ -64,6 +64,7 @@ function newEndpoint(uri: string) {
 
 watch(chainId, async (newValue, oldValue) => {
   let chainId: number = newValue ?? 0;
+  uri.value = "";
   store.endpointsSet($ethClient.chainsData[chainId].rpcs);
 /*
   for (let web3 of Object.entries(endpointsWeb3)) {
@@ -150,7 +151,7 @@ async function deleteChain(chainId: number) {
             </tbody>
           </v-table>
         </v-radio-group>
-        <v-btn class="mb-10" @click="addChain">Add chain</v-btn>
+        <v-btn class="mb-10" @click="addChain" :disabled="uri == ''">Add chain</v-btn>
       </v-col>
     </v-row>
   </v-container>
