@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref, inject, onMounted, computed, watch} from 'vue'
+import { ref, inject, onMounted, computed, watch} from 'vue'
 import type { Ref } from 'vue'
 
 import { useRouter, useRoute } from 'vue-router'
@@ -12,8 +12,6 @@ import {
 } from '@polkadot/extension-dapp';
 import { encodeAddress } from '@polkadot/keyring';
 import { main } from '../stores/index'
-
-const props = defineProps(['accountId', 'sellAssetId', 'buyAssetId']);
 
 let $db: any = inject('$db');
 let $acuityClient: any = inject('$acuityClient');
@@ -106,7 +104,7 @@ async function load() {
     }
   }
 
-  events = await $ethClient.chains[sellChainId.value].atomicSwap.getPastEvents('Unlock', {
+  events = await $ethClient.chains[sellChainId.value].atomicSwap.getPastEvents('UnlockByRecipient', {
     fromBlock: Math.max(sellHeight - 2000, 0),
   });
 
@@ -122,7 +120,7 @@ async function load() {
     }
   }
 
-  events = await $ethClient.chains[buyChainId.value].atomicSwap.getPastEvents('Unlock', {
+  events = await $ethClient.chains[buyChainId.value].atomicSwap.getPastEvents('UnlockByRecipient', {
     fromBlock: Math.max(buyHeight - 2000, 0),
   });
 
@@ -139,20 +137,20 @@ let buyEmitter;
 let sellEmitter;
 
 onMounted(async () => {
-  sellerAccountId.value = props.accountId;
-  sellerName.value = await loadName(props.accountId);
-  sellChainId.value = $ethClient.web3.utils.hexToNumber(props.sellAssetId);
+  sellerAccountId.value = route.params.accountId;
+  sellerName.value = await loadName(route.params.accountId);
+  sellChainId.value = $ethClient.web3.utils.hexToNumber(route.params.sellAssetId);
   sellChain.value = $ethClient.chainsData[sellChainId.value].label;
-  buyChainId.value = $ethClient.web3.utils.hexToNumber(props.buyAssetId);
+  buyChainId.value = $ethClient.web3.utils.hexToNumber(route.params.buyAssetId);
   buyChain.value = $ethClient.chainsData[buyChainId.value].label;
 
   let chainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellChainId.value), 16);
   let result = await $acuityClient.api.query.orderbook.accountForeignAccount(sellerAccountId.value, chainIdHex);
   foreignAddress = '0x' + Buffer.from(result).toString('hex').slice(24);
 
-  stashed.value = $ethClient.formatWei(await $ethClient.chains[sellChainId.value].atomicSwap.methods.getStashValue(props.buyAssetId, foreignAddress).call());
+  stashed.value = $ethClient.formatWei(await $ethClient.chains[sellChainId.value].atomicSwap.methods.getStashValue(route.params.buyAssetId, foreignAddress).call());
 
-  result = await $acuityClient.api.query.orderbook.orderbook(props.accountId, props.sellAssetId, props.buyAssetId);
+  result = await $acuityClient.api.query.orderbook.orderbook(route.params.accountId, route.params.sellAssetId, route.params.buyAssetId);
 
   priceWei = result.price;
   price.value = $ethClient.web3.utils.fromWei(result.price);
@@ -185,7 +183,7 @@ async function createBuyLock(event: any) {
   let hashedSecret = $ethClient.web3.utils.keccak256(secret);
   $db.put('/secrets/' + hashedSecret, secret);
   let timeout = Date.now() + 60 * 60 * 24 * 3 * 1000;   // 3 days
-  let sellAssetId = props.sellAssetId
+  let sellAssetId = route.params.sellAssetId
   let sellPrice = priceWei.toHex();
   let value = $ethClient.web3.utils.fromWei((BigInt($ethClient.web3.utils.toWei(buyValue.value)) * BigInt(priceWei)).toString()).split('.')[0];
 
@@ -204,7 +202,7 @@ async function createSellLock(lock: any) {
   let recipient = lock.buyerEthAddress;
   let hashedSecret = lock.hashedSecret;
   let timeout = Date.now() + 60 * 60 * 24 * 2 * 1000;   // 2 days
-  let stashAssetId = props.buyAssetId;
+  let stashAssetId = route.params.buyAssetId;
   let value = $ethClient.web3.utils.numberToHex(lock.sellLockValueWei);
   let buyLockId = lock.lockId;
 
