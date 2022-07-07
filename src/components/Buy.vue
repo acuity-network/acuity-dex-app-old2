@@ -55,7 +55,7 @@ async function load() {
   let sellAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.sellChainId), 32);
   let buyAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.buyChainId), 32);
 
-  let stashes = await $ethClient.chains[store.sellChainId].atomicSwap.methods.getStashes(buyAssetId, 100).call();
+  let stashes = await $ethClient.chains[store.sellChainId].atomicSwap.methods.getStashes(buyAssetId, 0, 100).call();
 
   sellOrders.value = [];
 
