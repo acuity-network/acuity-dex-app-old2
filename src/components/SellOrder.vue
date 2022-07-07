@@ -38,6 +38,9 @@ const buyValue = ref(0);
 const buyDisabled = ref(false);
 const buyWaiting = ref(false);
 
+const createSellLockDisabled = ref(false);
+const createSellLockWaiting = ref(false);
+
 const buyCost = computed(() => {
   if (price.value && buyValue.value) {
     return price.value * buyValue.value;
@@ -98,8 +101,8 @@ async function load() {
   });
 
   for (let event of events) {
-    if (locks.value[event.returnValues.buyLockId]) {
-      let buyLockId = parseInt(event.returnValues.buyLockId);
+    let buyLockId = event.returnValues.buyLockId;
+    if (locks.value[buyLockId]) {
       locks.value[buyLockId].sellLockId = event.returnValues.lockId;
       locks.value[buyLockId].sellLockState = "Locked";
       locks.value[buyLockId].sellLockTimeoutRaw = event.returnValues.timeout;
@@ -210,9 +213,9 @@ async function createBuyLock(event: any) {
 }
 
 async function createSellLock(lock: any) {
+  createSellLockDisabled.value = true;
 
   console.log(lock);
-//  return;
 
   let recipient = lock.buyerEthAddress;
   let hashedSecret = lock.hashedSecret;
@@ -225,7 +228,18 @@ async function createSellLock(lock: any) {
 
   $ethClient.atomicSwap.methods
     .lockSell(recipient, hashedSecret, timeout, stashAssetId, value, buyLockId)
-    .send({from: store.metaMaskAccount});
+    .send({from: store.metaMaskAccount})
+    .on('transactionHash', function(payload: any) {
+      createSellLockWaiting.value = true;
+    })
+    .on('receipt', function(receipt: any) {
+      createSellLockWaiting.value = false;
+      createSellLockDisabled.value = false;
+    })
+    .on('error', function(error: any) {
+      createSellLockWaiting.value = false;
+      createSellLockDisabled.value = false;
+    });
 }
 
 async function unlockSellLock(lock: any) {
@@ -303,7 +317,10 @@ async function unlockBuyLock(lock: any) {
               <td>{{ lock.sellLockState }}</td>
               <td>{{ lock.sellLockTimeout }}</td>
               <td>
-                <v-btn v-if="lock.sellLockState == 'Not locked' && store.metaMaskChainId == sellChainId && store.metaMaskAccount == lock.seller" size="small" @click="createSellLock(lock)"><v-icon size="small">mdi-lock</v-icon></v-btn>
+                <v-btn v-if="lock.sellLockState == 'Not locked' && store.metaMaskChainId == sellChainId && store.metaMaskAccount == lock.seller" size="small" @click="createSellLock(lock)" :disabled="createSellLockDisabled">
+                  <v-icon size="small" v-if="!createSellLockWaiting">mdi-lock</v-icon>
+                  <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
+                </v-btn>
                 <v-btn v-if="lock.sellLockState == 'Locked' && store.metaMaskAccount == lock.buyerEthAddress" size="small" @click="unlockSellLock(lock)"><v-icon size="small">mdi-lock-open-variant</v-icon></v-btn>
               </td>
             </tr>
