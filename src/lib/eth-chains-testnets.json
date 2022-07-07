@@ -50,8 +50,8 @@
 		"label": "Görli",
 		"symbol": "GOR",
 		"contracts": {
-			"account": "",
-			"atomicSwap": "",
+			"account": "0xdBe4e69953abc81d9C59F1aEc4F0d713Db834965",
+			"atomicSwap": "0xf92f37169F9E112BC924144b871E67C8CCb12BB2",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
@@ -164,8 +164,8 @@
 		"label": "Moonbase Alpha",
 		"symbol": "DEV",
 		"contracts": {
-			"account": "",
-			"atomicSwap": "",
+			"account": "0x81e70D725bFfC99bAae32C783F4F05b993AacCFC",
+			"atomicSwap": "0xB4AB3B919AdC6A9725F9959580831F08D26DB493",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
@@ -219,8 +219,8 @@
 		"symbol": "BCH",
 		"genesis": "0x0000000000000000000000000000000000000000000000000000000000000000",
 		"contracts": {
-			"account": "",
-			"atomicSwap": "",
+			"account": "0x0b28cc778E2A0b08e8Ed6A7Ada455bCbbf944729",
+			"atomicSwap": "0x1E335b8B56810C8E1FF90F1b84Ae246Ea333141b",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
