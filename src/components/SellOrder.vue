@@ -38,15 +38,6 @@ const buyValue = ref(0);
 const buyDisabled = ref(false);
 const buyWaiting = ref(false);
 
-const createSellLockDisabled = ref(false);
-const createSellLockWaiting = ref(false);
-
-const unlockSellLockDisabled = ref(false);
-const unlockSellLockWaiting = ref(false);
-
-const unlockBuyLockDisabled = ref(false);
-const unlockBuyLockWaiting = ref(false);
-
 const buyCost = computed(() => {
   if (price.value && buyValue.value) {
     return price.value * buyValue.value;
@@ -86,6 +77,7 @@ async function load() {
 
     locks.value[event.returnValues.lockId] = {
       lockId: event.returnValues.lockId,
+      secret: "",
       hashedSecret: event.returnValues.hashedSecret,
       buyerEthAddress: event.returnValues.sender.toLowerCase(),
       buyer: await loadName(acuAddress),
@@ -97,6 +89,12 @@ async function load() {
       sellLockValue: $ethClient.formatWei(sellLockValue),
       sellLockState: "Not locked",
       seller: event.returnValues.recipient.toLowerCase(),
+      createSellLockDisabled: false,
+      createSellLockWaiting: false,
+      unlockSellLockDisabled: false,
+      unlockSellLockWaiting: false,
+      unlockBuyLockDisabled: false,
+      unlockBuyLockWaiting: false,
     };
   }
 
@@ -220,7 +218,7 @@ async function createBuyLock(event: any) {
 }
 
 async function createSellLock(lock: any) {
-  createSellLockDisabled.value = true;
+  locks.value[lock.lockId].createSellLockDisabled = true;
 
   console.log(lock);
 
@@ -237,20 +235,20 @@ async function createSellLock(lock: any) {
     .lockSell(recipient, hashedSecret, timeout, stashAssetId, value, buyLockId)
     .send({from: store.metaMaskAccount})
     .on('transactionHash', function(payload: any) {
-      createSellLockWaiting.value = true;
+      locks.value[lock.lockId].createSellLockWaiting = true;
     })
     .on('receipt', function(receipt: any) {
-      createSellLockWaiting.value = false;
-      createSellLockDisabled.value = false;
+      locks.value[lock.lockId].createSellLockWaiting = false;
+      locks.value[lock.lockId].createSellLockDisabled = false;
     })
     .on('error', function(error: any) {
-      createSellLockWaiting.value = false;
-      createSellLockDisabled.value = false;
+      locks.value[lock.lockId].createSellLockWaiting = false;
+      locks.value[lock.lockId].createSellLockDisabled = false;
     });
 }
 
 async function unlockSellLock(lock: any) {
-  unlockSellLockDisabled.value = true;
+  locks.value[lock.lockId].unlockSellLockDisabled = true;
 
   let sender = lock.seller;
   let secret = await $db.get('/secrets/' + lock.hashedSecret);
@@ -262,20 +260,20 @@ async function unlockSellLock(lock: any) {
     .unlockByRecipient(sender, secret, timeout)
     .send({from: store.metaMaskAccount})
     .on('transactionHash', function(payload: any) {
-      unlockSellLockWaiting.value = true;
+      locks.value[lock.lockId].unlockSellLockWaiting = true;
     })
     .on('receipt', function(receipt: any) {
-      unlockSellLockWaiting.value = false;
-      unlockSellLockDisabled.value = false;
+      locks.value[lock.lockId].unlockSellLockWaiting = false;
+      locks.value[lock.lockId].unlockSellLockDisabled = false;
     })
     .on('error', function(error: any) {
-      unlockSellLockWaiting.value = false;
-      unlockSellLockDisabled.value = false;
+      locks.value[lock.lockId].unlockSellLockWaiting = false;
+      locks.value[lock.lockId].unlockSellLockDisabled = false;
     });
 }
 
 async function unlockBuyLock(lock: any) {
-  unlockBuyLockDisabled.value = true;
+  locks.value[lock.lockId].unlockBuyLockDisabled = true;
 
   let sender = lock.buyerEthAddress;
   let secret = lock.secret;
@@ -287,15 +285,15 @@ async function unlockBuyLock(lock: any) {
     .unlockByRecipient(sender, secret, timeout)
     .send({from: store.metaMaskAccount})
     .on('transactionHash', function(payload: any) {
-      unlockBuyLockWaiting.value = true;
+      locks.value[lock.lockId].unlockBuyLockWaiting = true;
     })
     .on('receipt', function(receipt: any) {
-      unlockBuyLockWaiting.value = false;
-      unlockBuyLockDisabled.value = false;
+      locks.value[lock.lockId].unlockBuyLockWaiting = false;
+      locks.value[lock.lockId].unlockBuyLockDisabled = false;
     })
     .on('error', function(error: any) {
-      unlockBuyLockWaiting.value = false;
-      unlockBuyLockDisabled.value = false;
+      locks.value[lock.lockId].unlockBuyLockWaiting = false;
+      locks.value[lock.lockId].unlockBuyLockDisabled = false;
     });
 }
 
@@ -341,8 +339,8 @@ async function unlockBuyLock(lock: any) {
               <td>{{ lock.buyLockState }}</td>
               <td>{{ lock.buyLockTimeout }}</td>
               <td>
-                <v-btn v-if="lock.buyLockState == 'Locked' && lock.sellLockState == 'Unlocked' && store.metaMaskChainId == buyChainId && store.metaMaskAccount == lock.seller" size="small" @click="unlockBuyLock(lock)" :disabled="unlockBuyLockDisabled">
-                  <v-icon size="small" v-if="!unlockBuyLockWaiting">mdi-lock-open-variant</v-icon>
+                <v-btn v-if="lock.buyLockState == 'Locked' && lock.sellLockState == 'Unlocked' && store.metaMaskChainId == buyChainId && store.metaMaskAccount == lock.seller" size="small" @click="unlockBuyLock(lock)" :disabled="lock.unlockBuyLockDisabled">
+                  <v-icon size="small" v-if="!lock.unlockBuyLockWaiting">mdi-lock-open-variant</v-icon>
                   <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                 </v-btn>
               </td>
@@ -351,12 +349,12 @@ async function unlockBuyLock(lock: any) {
               <td>{{ lock.sellLockState }}</td>
               <td>{{ lock.sellLockTimeout }}</td>
               <td>
-                <v-btn v-if="lock.sellLockState == 'Not locked' && store.metaMaskChainId == sellChainId && store.metaMaskAccount == lock.seller" size="small" @click="createSellLock(lock)" :disabled="createSellLockDisabled">
-                  <v-icon size="small" v-if="!createSellLockWaiting">mdi-lock</v-icon>
+                <v-btn v-if="lock.sellLockState == 'Not locked' && store.metaMaskChainId == sellChainId && store.metaMaskAccount == lock.seller" size="small" @click="createSellLock(lock)" :disabled="lock.createSellLockDisabled">
+                  <v-icon size="small" v-if="!lock.createSellLockWaiting">mdi-lock</v-icon>
                   <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                 </v-btn>
-                <v-btn v-if="lock.sellLockState == 'Locked' && store.metaMaskChainId == sellChainId && store.metaMaskAccount == lock.buyerEthAddress" size="small" @click="unlockSellLock(lock)" :disabled="unlockSellLockDisabled">
-                  <v-icon size="small" v-if="!unlockSellLockWaiting">mdi-lock-open-variant</v-icon>
+                <v-btn v-if="lock.sellLockState == 'Locked' && store.metaMaskChainId == sellChainId && store.metaMaskAccount == lock.buyerEthAddress" size="small" @click="unlockSellLock(lock)" :disabled="lock.unlockSellLockDisabled">
+                  <v-icon size="small" v-if="!lock.unlockSellLockWaiting">mdi-lock-open-variant</v-icon>
                   <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                 </v-btn>
               </td>
