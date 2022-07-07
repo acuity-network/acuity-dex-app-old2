@@ -136,6 +136,7 @@ async function set(event: any) {
         }
         else {
           unsub();
+          load();
           setWaiting.value = false;
           setDisabled.value = false;
         }
