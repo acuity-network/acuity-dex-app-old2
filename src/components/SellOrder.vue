@@ -35,6 +35,9 @@ const value = ref(0);
 const total = ref(0);
 const buyValue = ref(0);
 
+const buyDisabled = ref(false);
+const buyWaiting = ref(false);
+
 const buyCost = computed(() => {
   if (price.value && buyValue.value) {
     return price.value * buyValue.value;
@@ -177,6 +180,7 @@ watch(() => store.metaMaskAccount, async (newValue, oldValue) => {
 */
 
 async function createBuyLock(event: any) {
+  buyDisabled.value = true;
 
   let recipient = foreignAddress;
   let secret = $ethClient.web3.utils.randomHex(32);
@@ -191,7 +195,18 @@ async function createBuyLock(event: any) {
 
   $ethClient.atomicSwap.methods
     .lockBuy(recipient, hashedSecret, timeout, sellAssetId, sellPrice)
-    .send({from: store.metaMaskAccount, value: value});
+    .send({from: store.metaMaskAccount, value: value})
+    .on('transactionHash', function(payload: any) {
+      buyWaiting.value = true;
+    })
+    .on('receipt', function(receipt: any) {
+      buyWaiting.value = false;
+      buyDisabled.value = false;
+    })
+    .on('error', function(error: any) {
+      buyWaiting.value = false;
+      buyDisabled.value = false;
+    });
 }
 
 async function createSellLock(lock: any) {
@@ -307,7 +322,8 @@ async function unlockBuyLock(lock: any) {
         <v-text-field readonly v-model="total" label="Total" :suffix="buySymbol" hint="Maximum that can be paid." persistent-hint></v-text-field>
         <v-text-field v-model="buyValue" label="Buy value" :suffix="sellSymbol" hint="How much you want to buy." persistent-hint></v-text-field>
         <v-text-field readonly v-model="buyCost" label="Cost" :suffix="buySymbol" hint="Cost to buy." persistent-hint></v-text-field>
-        <v-btn @click="createBuyLock" class="mt-4">Buy</v-btn>
+        <v-btn @click="createBuyLock" class="mt-4 mb-4"  :disabled="buyDisabled">Buy</v-btn>
+        <v-progress-linear class="mb-10" :indeterminate="buyWaiting" color="yellow darken-2"></v-progress-linear>
       </v-col>
     </v-row>
   </v-container>
