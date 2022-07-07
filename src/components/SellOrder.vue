@@ -303,7 +303,7 @@ async function unlockBuyLock(lock: any) {
               <td>{{ lock.sellLockState }}</td>
               <td>{{ lock.sellLockTimeout }}</td>
               <td>
-                <v-btn v-if="lock.sellLockState == 'Not locked' && store.metaMaskAccount == lock.seller" size="small" @click="createSellLock(lock)"><v-icon size="small">mdi-lock</v-icon></v-btn>
+                <v-btn v-if="lock.sellLockState == 'Not locked' && store.metaMaskChainId == sellChainId && store.metaMaskAccount == lock.seller" size="small" @click="createSellLock(lock)"><v-icon size="small">mdi-lock</v-icon></v-btn>
                 <v-btn v-if="lock.sellLockState == 'Locked' && store.metaMaskAccount == lock.buyerEthAddress" size="small" @click="unlockSellLock(lock)"><v-icon size="small">mdi-lock-open-variant</v-icon></v-btn>
               </td>
             </tr>
