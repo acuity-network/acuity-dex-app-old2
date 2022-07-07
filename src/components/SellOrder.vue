@@ -41,6 +41,12 @@ const buyWaiting = ref(false);
 const createSellLockDisabled = ref(false);
 const createSellLockWaiting = ref(false);
 
+const unlockSellLockDisabled = ref(false);
+const unlockSellLockWaiting = ref(false);
+
+const unlockBuyLockDisabled = ref(false);
+const unlockBuyLockWaiting = ref(false);
+
 const buyCost = computed(() => {
   if (price.value && buyValue.value) {
     return price.value * buyValue.value;
@@ -243,6 +249,7 @@ async function createSellLock(lock: any) {
 }
 
 async function unlockSellLock(lock: any) {
+  unlockSellLockDisabled.value = true;
 
   let sender = lock.seller;
   let secret = await $db.get('/secrets/' + lock.hashedSecret);
@@ -251,11 +258,23 @@ async function unlockSellLock(lock: any) {
   console.log({sender, secret, timeout});
 
   $ethClient.atomicSwap.methods
-    .unlockValue(sender, secret, timeout)
-    .send({from: store.metaMaskAccount});
+    .unlockByRecipient(sender, secret, timeout)
+    .send({from: store.metaMaskAccount})
+    .on('transactionHash', function(payload: any) {
+      unlockSellLockWaiting.value = true;
+    })
+    .on('receipt', function(receipt: any) {
+      unlockSellLockWaiting.value = false;
+      unlockSellLockDisabled.value = false;
+    })
+    .on('error', function(error: any) {
+      unlockSellLockWaiting.value = false;
+      unlockSellLockDisabled.value = false;
+    });
 }
 
 async function unlockBuyLock(lock: any) {
+  unlockBuyLockDisabled.value = true;
 
   let sender = lock.buyerEthAddress;
   let secret = await $db.get('/secrets/' + lock.hashedSecret);
@@ -264,8 +283,19 @@ async function unlockBuyLock(lock: any) {
   console.log({sender, secret, timeout});
 
   $ethClient.atomicSwap.methods
-    .unlockValue(sender, secret, timeout)
-    .send({from: store.metaMaskAccount});
+    .unlockByRecipient(sender, secret, timeout)
+    .send({from: store.metaMaskAccount})
+    .on('transactionHash', function(payload: any) {
+      unlockBuyLockWaiting.value = true;
+    })
+    .on('receipt', function(receipt: any) {
+      unlockBuyLockWaiting.value = false;
+      unlockBuyLockDisabled.value = false;
+    })
+    .on('error', function(error: any) {
+      unlockBuyLockWaiting.value = false;
+      unlockBuyLockDisabled.value = false;
+    });
 }
 
 </script>
@@ -310,7 +340,10 @@ async function unlockBuyLock(lock: any) {
               <td>{{ lock.buyLockState }}</td>
               <td>{{ lock.buyLockTimeout }}</td>
               <td>
-                <v-btn v-if="lock.buyLockState == 'Locked' && lock.sellLockState == 'Unlocked' && store.metaMaskAccount == lock.seller" size="small" @click="unlockBuyLock(lock)"><v-icon size="small">mdi-lock-open-variant</v-icon></v-btn>
+                <v-btn v-if="lock.buyLockState == 'Locked' && lock.sellLockState == 'Unlocked' && store.metaMaskChainId == buyChainId && store.metaMaskAccount == lock.seller" size="small" @click="unlockBuyLock(lock)" :disabled="unlockBuyLockDisabled">
+                  <v-icon size="small" v-if="!unlockBuyLockWaiting">mdi-lock-open-variant</v-icon>
+                  <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
+                </v-btn>
               </td>
               <td style="background-color: rgb(18, 18, 18);"></td>
               <td>{{ lock.sellLockValue }}</td>
@@ -321,7 +354,10 @@ async function unlockBuyLock(lock: any) {
                   <v-icon size="small" v-if="!createSellLockWaiting">mdi-lock</v-icon>
                   <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                 </v-btn>
-                <v-btn v-if="lock.sellLockState == 'Locked' && store.metaMaskAccount == lock.buyerEthAddress" size="small" @click="unlockSellLock(lock)"><v-icon size="small">mdi-lock-open-variant</v-icon></v-btn>
+                <v-btn v-if="lock.sellLockState == 'Locked' && store.metaMaskChainId == sellChainId && store.metaMaskAccount == lock.buyerEthAddress" size="small" @click="unlockSellLock(lock)" :disabled="unlockSellLockDisabled">
+                  <v-icon size="small" v-if="!unlockSellLockWaiting">mdi-lock-open-variant</v-icon>
+                  <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
+                </v-btn>
               </td>
             </tr>
           </tbody>
