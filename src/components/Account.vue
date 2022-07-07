@@ -26,23 +26,53 @@ const trusted = ref(false);
 const trustsMe = ref(false);
 const trusts: Ref<any[]> = ref([]);
 const trustedThatTrust: Ref<any[]> = ref([]);
+const disabled = ref(false);
+const waiting = ref(false);
 
 async function trust(event: any) {
+  disabled.value = true;
   const injector = await web3FromAddress(store.activeAcu);
-  $acuityClient.api.tx.trustedAccounts
-    .trustAccount(route.params.id)
-    .signAndSend(store.activeAcu, { signer: injector.signer }, (status: any) => {
-      console.log(status)
-    });
+  try {
+    const unsub = await $acuityClient.api.tx.trustedAccounts
+      .trustAccount(route.params.id)
+      .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
+        if (!result.status.isInBlock) {
+          waiting.value = true;
+        }
+        else {
+          unsub();
+          waiting.value = false;
+          disabled.value = false;
+        }
+      });
+  }
+  catch (e) {
+    waiting.value = false;
+    disabled.value = false;
+  }
 }
 
 async function untrust(event: any) {
+  disabled.value = true;
   const injector = await web3FromAddress(store.activeAcu);
-  $acuityClient.api.tx.trustedAccounts
-    .untrustAccount(route.params.id)
-    .signAndSend(store.activeAcu, { signer: injector.signer }, (status: any) => {
-      console.log(status)
-    });
+  try {
+    const unsub = await $acuityClient.api.tx.trustedAccounts
+      .untrustAccount(route.params.id)
+      .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
+        if (!result.status.isInBlock) {
+          waiting.value = true;
+        }
+        else {
+          unsub();
+          waiting.value = false;
+          disabled.value = false;
+        }
+      });
+  }
+  catch (e) {
+    waiting.value = false;
+    disabled.value = false;
+  }
 }
 
 async function loadName(address: string): Promise<string> {
@@ -172,8 +202,10 @@ onMounted(async () => {
           </v-list-item>
         </v-list>
 
-        <v-btn class="mt-10" v-if="trusted == true" @click="untrust">Untrust</v-btn>
-        <v-btn class="mt-10" v-else @click="trust">Trust</v-btn>
+        <v-btn class="mt-10 mb-4" v-if="trusted == true" @click="untrust" :disabled="disabled">Untrust</v-btn>
+        <v-btn class="mt-10 mb-4" v-else @click="trust" :disabled="disabled">Trust</v-btn>
+
+        <v-progress-linear class="mb-10" :indeterminate="waiting" color="yellow darken-2"></v-progress-linear>
 
       </v-col>
     </v-row>
