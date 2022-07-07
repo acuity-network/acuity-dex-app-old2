@@ -31,6 +31,7 @@ function newEndpoint(chainId: number, uri: string) {
 
 export default class EthClient {
   db: any;
+  provider: any;
 	web3: any;
   formatWei: any;
   account: any;
@@ -40,12 +41,11 @@ export default class EthClient {
 
 	async init(db: any) {
     this.db = db;
-    // This function detects most providers injected at window.ethereum
-    const provider: any = await detectEthereumProvider();
+    this.provider = await detectEthereumProvider();
 		store = main();
 
-    if (provider) {
-      this.web3 = new Web3(provider);
+    if (this.provider) {
+      this.web3 = new Web3(this.provider);
   		this.web3.eth.defaultBlock = 'pending';
   		this.web3.eth.transactionConfirmationBlocks = 1;
       this.formatWei = (wei: string) => Number(this.web3.utils.fromWei(this.web3.utils.toBN(wei))).toLocaleString();
@@ -104,10 +104,30 @@ export default class EthClient {
     this.loadChain(chainId, uri);
   }
 
-
   async removeChain(chainId: number) {
     this.db.del('/chains/' + chainId);
     this.chains[chainId] = {};
     store.chainRemove(chainId);
+  }
+
+  async addChainToMetaMask(chainId: number, uri: string) {
+    const params = {
+      chainId: this.web3.utils.numberToHex(chainId),
+      chainName: this.chainsData[chainId].label,
+      nativeCurrency: {
+        name: this.chainsData[chainId].label,
+        symbol: this.chainsData[chainId].symbol,
+        decimals: 18,
+      },
+      rpcUrls: [uri],
+      blockExplorerUrls: this.chainsData[chainId].explorers,
+      iconUrls: [],
+    };
+
+    this.provider.request({
+      method: "wallet_addEthereumChain",
+      params: [params],
+    })
+    .catch((error: any) => {});
   }
 }
