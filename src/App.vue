@@ -7,6 +7,7 @@ import {
   web3ListRpcProviders,
   web3UseRpcProvider
 } from '@polkadot/extension-dapp';
+import MetaMaskOnboarding from '@metamask/onboarding';
 
 const drawer = ref(false);
 
@@ -62,6 +63,12 @@ watch(() => store.activeAcu, async (newValue, oldValue) => {
   $db.put('/activeAccount', newValue);
 });
 
+async function onboardMetaMask(event: any) {
+  const onboarding = new MetaMaskOnboarding();
+  onboarding.startOnboarding();
+}
+
+
 </script>
 
 <template>
@@ -85,6 +92,7 @@ watch(() => store.activeAcu, async (newValue, oldValue) => {
         </v-list-item>
       </v-list>
       <v-select v-model="store.activeAcu" :items="store.accountsAcu" label="Active account"></v-select>
+      <v-btn color="rgb(3, 125, 214)" class="mt-10 mb-4" @click="onboardMetaMask">MetaMask</v-btn>
     </v-navigation-drawer>
 
     <v-app-bar
