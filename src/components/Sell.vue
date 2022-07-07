@@ -159,10 +159,10 @@ async function reset(event: any) {
     <v-row>
       <v-col cols="12" md="10">
         <v-select readonly v-model="metaMaskChainId" :items="chainSelect" label="Sell chain"></v-select>
+        <v-text-field v-model="store.metaMaskAccount" label="Sell account" readonly></v-text-field>
         <v-select v-model="store.buyChainId" :items="chainSelect" label="Buy chain"></v-select>
-        <div class="text-h6">{{ sellSymbol }} Stashed</div>
-        <p class="mb-10">{{ eth }}</p>
-
+        <div class="text-h6 mb-10">Stash</div>
+        <v-text-field v-model="eth" label="Current stash" :suffix="sellSymbol" readonly></v-text-field>
         <v-text-field v-model="ethToStash" label="Value to stash" :suffix="sellSymbol" :disabled="stashDisabled"></v-text-field>
         <v-btn class="mb-4" @click="stash" :disabled="stashDisabled">Stash</v-btn>
         <v-progress-linear class="mb-10" :indeterminate="stashWaiting" color="yellow darken-2"></v-progress-linear>
@@ -172,6 +172,7 @@ async function reset(event: any) {
         <v-progress-linear class="mb-10" :indeterminate="unstashWaiting" color="yellow darken-2"></v-progress-linear>
 
         <div class="text-h6 mb-10">Sell order</div>
+        <v-text-field v-model="store.activeAcu" label="Acuity account" readonly></v-text-field>
         <v-row>
           <v-col cols="12" sm="6" md="4">
             <v-text-field v-model="sellPrice" label="Price" :suffix="buySymbol + ' / ' + sellSymbol"></v-text-field>
