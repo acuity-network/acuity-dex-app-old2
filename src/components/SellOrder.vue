@@ -137,8 +137,8 @@ let buyEmitter;
 let sellEmitter;
 
 onMounted(async () => {
-  sellerAccountId.value = route.params.accountId;
-  sellerName.value = await loadName(route.params.accountId);
+  sellerAccountId.value = route.params.accountId as string;
+  sellerName.value = await loadName(sellerAccountId.value);
   sellChainId.value = $ethClient.web3.utils.hexToNumber(route.params.sellAssetId);
   sellChain.value = $ethClient.chainsData[sellChainId.value].label;
   buyChainId.value = $ethClient.web3.utils.hexToNumber(route.params.buyAssetId);
