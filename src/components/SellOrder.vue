@@ -126,6 +126,7 @@ async function load() {
       // Find the buy lock.
       for (let lock in locks.value) {
         if (locks.value[lock].sellLockId == event.returnValues.lockId) {
+          locks.value[lock].secret = event.returnValues.secret;
           locks.value[lock].sellLockState = "Unlocked";
         }
       }
@@ -277,7 +278,7 @@ async function unlockBuyLock(lock: any) {
   unlockBuyLockDisabled.value = true;
 
   let sender = lock.buyerEthAddress;
-  let secret = await $db.get('/secrets/' + lock.hashedSecret);
+  let secret = lock.secret;
   let timeout = lock.buyLockTimeoutRaw;
 
   console.log({sender, secret, timeout});
