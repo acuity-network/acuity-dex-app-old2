@@ -120,7 +120,7 @@ export default class EthClient {
         decimals: 18,
       },
       rpcUrls: [uri],
-      blockExplorerUrls: this.chainsData[chainId].explorers,
+      blockExplorerUrls: (this.chainsData[chainId].explorers.length > 0) ? this.chainsData[chainId].explorers : null,
       iconUrls: [],
     };
 
