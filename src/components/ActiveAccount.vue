@@ -26,6 +26,7 @@ const metaMaskAccount = computed(() => store.metaMaskAccount);
 const acuAccountForeignAccount = computed(() => store.acuAccountForeignAccount);
 const foreignAccountAcuAccount = computed(() => store.foreignAccountAcuAccount);
 
+const acuAddress = ref(store.addressesAcu[0]);
 const name = ref("");
 const setForeignAccountDisabled = ref(false);
 const setForeignAccountWaiting = ref(false);
@@ -45,18 +46,18 @@ async function loadName(address: string): Promise<string> {
 }
 
 async function load() {
-  name.value = await loadName(store.activeAcu);
+  name.value = await loadName(acuAddress.value);
 
   for (let chainIdKey of Object.keys(store.chains)) {
     let chainId = parseInt(chainIdKey);
     let chainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(chainId), 16);
-    let result = await $acuityClient.api.query.orderbook.accountForeignAccount(store.activeAcu, chainIdHex);
+    let result = await $acuityClient.api.query.orderbook.accountForeignAccount(acuAddress.value, chainIdHex);
     let foreignAddress = '0x' + Buffer.from(result).toString('hex').slice(24);
-    store.acuAccountForeignAccountSet(chainId, store.activeAcu, foreignAddress);
+    store.acuAccountForeignAccountSet(chainId, acuAddress.value, foreignAddress);
 
     if ($ethClient.chains[chainId].account) {
-      let acuAddress = encodeAddress(await $ethClient.chains[chainId].account.methods.getAcuAccount(foreignAddress).call());
-      store.foreignAccountAcuAccountSet(chainId, foreignAddress, acuAddress);
+      let mappedAcuAddress = encodeAddress(await $ethClient.chains[chainId].account.methods.getAcuAccount(foreignAddress).call());
+      store.foreignAccountAcuAccountSet(chainId, foreignAddress, mappedAcuAddress);
     }
   }
 };
@@ -84,19 +85,19 @@ onMounted(async () => {
   load();
 });
 
-watch(() => store.activeAcu, async (newValue, oldValue) => {
+watch(acuAddress, async (newValue, oldValue) => {
   load();
 });
 
 async function setForeignAccount(event: any) {
   setForeignAccountDisabled.value = true;
-  const injector = await web3FromAddress(store.activeAcu);
+  const injector = await web3FromAddress(acuAddress.value);
   let chainId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.metaMaskChainId), 16);
   let foreignAccount = $ethClient.web3.utils.padLeft(store.metaMaskAccount, 64);
   try {
     const unsub = await $acuityClient.api.tx.orderbook
       .setForeignAccount(chainId, foreignAccount)
-      .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
+      .signAndSend(acuAddress.value, { signer: injector.signer }, (result: any) => {
         if (!result.status.isInBlock) {
           setForeignAccountWaiting.value = true;
         }
@@ -115,9 +116,9 @@ async function setForeignAccount(event: any) {
 
 async function setAcuAccount(event: any) {
   setAcuAccountDisabled.value = true;
-  let acuAddress = '0x' + Buffer.from(decodeAddress(store.activeAcu)).toString('hex');
+  let acuAddressHex = '0x' + Buffer.from(decodeAddress(acuAddress.value)).toString('hex');
   $ethClient.account.methods
-    .setAcuAccount(acuAddress)
+    .setAcuAccount(acuAddressHex)
     .send({from: store.metaMaskAccount})
     .on('transactionHash', function(payload: any) {
       setAcuAccountWaiting.value = true;
@@ -138,17 +139,17 @@ async function setAcuAccount(event: any) {
   <v-container>
     <v-row>
       <v-col cols="12" md="10">
-
+        <v-select v-model="acuAddress" :items="store.accountsAcu" label="Acuity account"></v-select>
         <div class="text-h6">Public Identity</div>
         <p>
-          <router-link v-if="store.activeAcu != ''" :to="{ name: 'account', params: { id: store.activeAcu }}">{{ name }}</router-link>
+          <router-link v-if="acuAddress != ''" :to="{ name: 'account', params: { id: acuAddress }}">{{ name }}</router-link>
         </p>
 
         <div v-for="chain in chains">
           <div class="text-h6">{{ chain.label }}</div>
           <div v-if="acuAccountForeignAccount[chain.chainId]">
-            {{ acuAccountForeignAccount[chain.chainId][store.activeAcu] }}
-            <span v-if="foreignAccountAcuAccount[chain.chainId] && (foreignAccountAcuAccount[chain.chainId][acuAccountForeignAccount[chain.chainId][store.activeAcu]] == store.activeAcu)"><v-icon icon="mdi-link-variant"></v-icon></span>
+            {{ acuAccountForeignAccount[chain.chainId][acuAddress] }}
+            <span v-if="foreignAccountAcuAccount[chain.chainId] && (foreignAccountAcuAccount[chain.chainId][acuAccountForeignAccount[chain.chainId][acuAddress]] == acuAddress)"><v-icon icon="mdi-link-variant"></v-icon></span>
           </div>
         </div>
         <div v-if="chains[metaMaskChainId]" class="mt-10" >

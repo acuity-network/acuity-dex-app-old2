@@ -49,19 +49,10 @@ let $ethClient: any = inject('$ethClient');
 const blockNumber = ref(0)
 
 onMounted(async () => {
-  try {
-    store.activeAcuSet(await $db.get('/activeAccount'));
-  }
-  catch (e) {}
-
   $acuityClient.api.rpc.chain.subscribeNewHeads((lastHeader: any) => {
     blockNumber.value = lastHeader.number.toString();
   });
 })
-
-watch(() => store.activeAcu, async (newValue, oldValue) => {
-  $db.put('/activeAccount', newValue);
-});
 
 async function onboardMetaMask(event: any) {
   const onboarding = new MetaMaskOnboarding();
@@ -91,7 +82,7 @@ async function onboardMetaMask(event: any) {
           <v-list-item-title v-text="item.text"></v-list-item-title>
         </v-list-item>
       </v-list>
-      <v-select v-model="store.activeAcu" :items="store.accountsAcu" label="Active account"></v-select>
+      <v-text-field readonly v-model="store.activeAcuName" label="Active account"></v-text-field>
       <v-btn color="rgb(3, 125, 214)" class="mt-10 mb-4" @click="onboardMetaMask">MetaMask</v-btn>
     </v-navigation-drawer>
 

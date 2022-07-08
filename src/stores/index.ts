@@ -6,6 +6,7 @@ const chainsData: any = ethChainsDataJson;
 export const main = defineStore('main', {
   state: () => ({
 		activeAcu: "" as string,
+    activeAcuName: "" as string,
 		accountsAcu: [] as any[],
     addressesAcu: [] as string[],
     metaMaskChainId: 0 as number,
@@ -22,8 +23,14 @@ export const main = defineStore('main', {
   getters: {
   },
   actions: {
-		activeAcuSet(account: string) {
-			this.activeAcu = account;
+		activeAcuSet(address: string) {
+			this.activeAcu = address;
+
+      for (let account of this.accountsAcu) {
+        if (account.value == address) {
+          this.activeAcuName = account.title;
+        }
+      }
 		},
 		accountsAcuSet(accounts: any[]) {
 			this.accountsAcu = [];

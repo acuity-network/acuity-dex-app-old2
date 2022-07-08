@@ -172,7 +172,7 @@ async function reset(event: any) {
         <v-progress-linear class="mb-10" :indeterminate="unstashWaiting" color="yellow darken-2"></v-progress-linear>
 
         <div class="text-h6 mb-10">Sell order</div>
-        <v-text-field v-model="store.activeAcu" label="Acuity account" readonly></v-text-field>
+        <v-text-field readonly v-model="store.activeAcuName" label="Acuity account"></v-text-field>
         <v-row>
           <v-col cols="12" sm="6" md="4">
             <v-text-field v-model="sellPrice" label="Price" :suffix="buySymbol + ' / ' + sellSymbol"></v-text-field>

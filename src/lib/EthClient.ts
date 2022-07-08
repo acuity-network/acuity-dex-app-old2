@@ -1,5 +1,6 @@
 import detectEthereumProvider from '@metamask/detect-provider';
 import Web3 from 'web3'
+import { encodeAddress } from '@polkadot/keyring';
 import { main } from '../stores/index'
 let store: any;
 
@@ -39,6 +40,11 @@ export default class EthClient {
 	chains: { [key: number]: any; } = {};
   chainsData: any = ethChainsDataJson;
 
+  async loadAcuAccount() {
+    let mappedAcuAddress = encodeAddress(await this.chains[store.metaMaskChainId].account.methods.getAcuAccount(store.metaMaskAccount).call());
+    store.activeAcuSet(mappedAcuAddress);
+  }
+
 	async init(db: any) {
     this.db = db;
     this.provider = await detectEthereumProvider();
@@ -56,9 +62,11 @@ export default class EthClient {
           store.metaMaskChainIdSet(chainId);
           this.account = new this.web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
       		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
+          this.loadAcuAccount();
         })
         .on('accountsChanged', (accounts: any) => {
   				store.metaMaskAccountSet(accounts[0]);
+          this.loadAcuAccount();
         });
 
       let chainId = await this.web3.eth.getChainId();
@@ -78,6 +86,8 @@ export default class EthClient {
           this.loadChain(chainId, uri);
 				}
 		  }
+
+      this.loadAcuAccount();
     } else {
       console.log('Please install MetaMask!');
     }
