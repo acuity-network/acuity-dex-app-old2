@@ -374,7 +374,7 @@ async function unlockBuyLock(lock: any) {
         <v-text-field readonly v-model="total" label="Total" :suffix="buySymbol" hint="Maximum that can be paid." persistent-hint></v-text-field>
         <v-text-field v-model="buyValue" label="Buy value" :suffix="sellSymbol" hint="How much you want to buy." persistent-hint></v-text-field>
         <v-text-field readonly v-model="buyCost" label="Cost" :suffix="buySymbol" hint="Cost to buy." persistent-hint></v-text-field>
-        <v-btn @click="createBuyLock" class="mt-4 mb-4"  :disabled="buyDisabled">Buy</v-btn>
+        <v-btn @click="createBuyLock" class="mt-4 mb-4"  :disabled="buyDisabled || (store.buyChainId != store.metaMaskChainId)">Buy</v-btn>
         <v-progress-linear class="mb-10" :indeterminate="buyWaiting" color="yellow darken-2"></v-progress-linear>
       </v-col>
     </v-row>
