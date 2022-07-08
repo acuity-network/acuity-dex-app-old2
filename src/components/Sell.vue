@@ -36,7 +36,7 @@ const unstashWaiting = ref(false);
 const setDisabled = ref(false);
 const setWaiting = ref(false);
 
-const sellSymbol = computed(() => $ethClient.chainsData[metaMaskChainId.value].symbol);
+const sellSymbol = computed(() => metaMaskChainId.value ? $ethClient.chainsData[metaMaskChainId.value].symbol : "");
 const buySymbol = computed(() => store.buyChainId ? $ethClient.chainsData[store.buyChainId].symbol : '');
 
 const sellValue = ref(null);
@@ -49,29 +49,33 @@ let emitter;
 
 async function load() {
 
-  if ($ethClient.chains[metaMaskChainId.value].atomicSwap) {
+  if (metaMaskChainId.value && $ethClient.chains[metaMaskChainId.value].atomicSwap) {
     try {
       eth.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].atomicSwap.methods.getStashValue(buyAssetId.value, store.metaMaskAccount).call());
     }
     catch (e) {};
   }
 
-  let result = await $acuityClient.api.query.orderbook.orderbook(store.activeAcu, sellAssetId.value, buyAssetId.value);
+  if (sellAssetId.value && buyAssetId.value) {
+    let result = await $acuityClient.api.query.orderbook.orderbook(store.activeAcu, sellAssetId.value, buyAssetId.value);
 
-  sellPrice.value = $ethClient.web3.utils.fromWei(result.price);
-  sellValue.value = $ethClient.web3.utils.fromWei(result.value);
+    sellPrice.value = $ethClient.web3.utils.fromWei(result.price);
+    sellValue.value = $ethClient.web3.utils.fromWei(result.value);
+  }
 }
 
 onMounted(async () => {
-  emitter = $ethClient.chains[metaMaskChainId.value].atomicSwap.events.allEvents()
-  .on('data', async (log: any) => {
-    load();
-  });
+  if (metaMaskChainId.value) {
+    emitter = $ethClient.chains[metaMaskChainId.value].atomicSwap.events.allEvents()
+    .on('data', async (log: any) => {
+      load();
+    });
+  }
   load();
 })
 
 watch(metaMaskChainId, async (newValue, oldValue) => {
-  if ($ethClient.chains[newValue].atomicSwap) {
+  if (newValue && $ethClient.chains[newValue].atomicSwap) {
     emitter = $ethClient.chains[newValue].atomicSwap.events.allEvents()
   	.on('data', async (log: any) => {
       load();

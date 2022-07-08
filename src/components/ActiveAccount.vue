@@ -152,7 +152,7 @@ async function setAcuAccount(event: any) {
             <span v-if="foreignAccountAcuAccount[chain.chainId] && (foreignAccountAcuAccount[chain.chainId][acuAccountForeignAccount[chain.chainId][acuAddress]] == acuAddress)"><v-icon icon="mdi-link-variant"></v-icon></span>
           </div>
         </div>
-        <div v-if="chains[metaMaskChainId]" class="mt-10" >
+        <div v-if="metaMaskChainId && chains[metaMaskChainId]" class="mt-10" >
           <v-btn class="mb-4" @click="setForeignAccount" :disabled="setForeignAccountDisabled">Set {{ metaMaskChainName }} Account on Acuity</v-btn>
           <v-progress-linear class="mb-10" :indeterminate="setForeignAccountWaiting" color="yellow darken-2"></v-progress-linear>
 

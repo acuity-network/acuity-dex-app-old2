@@ -28,7 +28,8 @@ const buySymbol = computed(() => store.buyChainId ? $ethClient.chainsData[store.
 const sellOrders: Ref<any[]> = ref([]);
 
 
-async function getAcuAddress(foreignAddress: string) {
+async function getAcuAddress(foreignAddress: string): Promise<string> {
+  if (!store.sellChainId) return "";
   return encodeAddress(await $ethClient.chains[store.sellChainId].account.methods.getAcuAccount(foreignAddress).call());
 }
 
