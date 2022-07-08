@@ -69,6 +69,12 @@ async function load() {
   });
 
   for (let event of events) {
+    if ((event.returnValues.recipient.toLowerCase() != foreignAddress) ||
+      (event.returnValues.sellAssetId != route.params.sellAssetId) ||
+      (event.returnValues.sellPrice != priceWei)) {
+      continue;
+    }
+
     let acuAddress = await getAcuAddress(event.returnValues.sender);
 
     let sellLockValue = (parseFloat(event.returnValues.value) / price.value).toString();
