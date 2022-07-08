@@ -156,8 +156,8 @@ async function addMetaMask(event: any) {
           </v-table>
         </v-radio-group>
         <div class="d-flex mb-4" style="gap: 1rem">
-          <v-btn @click="addChain" :disabled="uri == ''">Add to app</v-btn>
-          <v-btn @click="addMetaMask" :disabled="uri == ''">Add to MetaMask</v-btn>
+          <v-btn @click="addChain" :disabled="!(uri.startsWith('ws://') || uri.startsWith('wss://'))">Add to app</v-btn>
+          <v-btn @click="addMetaMask" :disabled="!uri.startsWith('https://')">Add to MetaMask</v-btn>
         </div>
       </v-col>
     </v-row>
