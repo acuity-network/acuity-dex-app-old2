@@ -18,8 +18,8 @@
 		"label": "Ropsten",
 		"symbol": "ROP",
 		"contracts": {
-			"account": "",
-			"atomicSwap": "",
+			"account": "0x744Ac7bbcFDDA8fdb41cF55c020d62f2109887A5",
+			"atomicSwap": "0x1E335b8B56810C8E1FF90F1b84Ae246Ea333141b",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
@@ -34,8 +34,8 @@
 		"label": "Rinkeby",
 		"symbol": "RIN",
 		"contracts": {
-			"account": "",
-			"atomicSwap": "",
+			"account": "0xd05647dd9D7B17aBEBa953fbF2dc8D8e87c19cb3",
+			"atomicSwap": "0x744Ac7bbcFDDA8fdb41cF55c020d62f2109887A5",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
@@ -67,8 +67,8 @@
 		"label": "Kovan",
 		"symbol": "KOV",
 		"contracts": {
-			"account": "",
-			"atomicSwap": "",
+			"account": "0xd05647dd9D7B17aBEBa953fbF2dc8D8e87c19cb3",
+			"atomicSwap": "0x744Ac7bbcFDDA8fdb41cF55c020d62f2109887A5",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
@@ -81,6 +81,7 @@
 		]
 	},
 	"69": {
+		"disabled": "true",
 		"label": "Optimism Kovan",
 		"symbol": "KOV",
 		"contracts": {
@@ -97,6 +98,7 @@
 		]
 	},
 	"77": {
+		"disabled": "true",
 		"label": "POA Network Sokol",
 		"symbol": "SPOA",
 		"contracts": {
@@ -112,6 +114,7 @@
 		]
 	},
 	"97": {
+		"disabled": "true",
 		"label": "Binance Smart Chain Testnet",
 		"symbol": "BNB",
 		"contracts": {
@@ -129,6 +132,7 @@
 		]
 	},
 	"256": {
+		"disabled": "true",
 		"label": "HECO Chain Testnet",
 		"symbol": "HT",
 		"contracts": {
@@ -145,6 +149,7 @@
 		]
 	},
 	"280": {
+		"disabled": "true",
 		"label": "zkSync Alpha Testnet",
 		"symbol": "ETH",
 		"contracts": {
@@ -183,6 +188,7 @@
 		]
 	},
 	"4002": {
+		"disabled": "true",
 		"label": "Fantom Testnet",
 		"symbol": "FTM",
 		"contracts": {
@@ -200,6 +206,7 @@
 		]
 	},
 	"5553": {
+		"disabled": "true",
 		"label": "Nahmii 2.0 Testnet",
 		"symbol": "ETH",
 		"contracts": {
@@ -215,6 +222,7 @@
 		]
 	},
 	"10001": {
+		"disabled": "true",
 		"label": "smartBCH Amber",
 		"symbol": "BCH",
 		"genesis": "0x0000000000000000000000000000000000000000000000000000000000000000",
@@ -250,8 +258,8 @@
 		"label": "Polygon Mumbai",
 		"symbol": "MATIC",
 		"contracts": {
-			"account": "",
-			"atomicSwap": "",
+			"account": "0xd05647dd9D7B17aBEBa953fbF2dc8D8e87c19cb3",
+			"atomicSwap": "0x744Ac7bbcFDDA8fdb41cF55c020d62f2109887A5",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
@@ -264,6 +272,7 @@
 		]
 	},
 	"421611": {
+		"disabled": "true",
 		"label": "Arbitrum Testnet",
 		"symbol": "ETH",
 		"contracts": {
@@ -272,6 +281,7 @@
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
+			"wss://rinkeby.arbitrum.io/ws",
 			"https://rinkeby.arbitrum.io/rpc"
 		],
 		"explorers": [
@@ -282,17 +292,19 @@
 		"label": "Arbitrum Nitro Devnet",
 		"symbol": "ETH",
 		"contracts": {
-			"account": "",
-			"atomicSwap": "",
+			"account": "0xd05647dd9D7B17aBEBa953fbF2dc8D8e87c19cb3",
+			"atomicSwap": "0x744Ac7bbcFDDA8fdb41cF55c020d62f2109887A5",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
+			"wss://nitro-devnet.arbitrum.io/ws",
 			"https://nitro-devnet.arbitrum.io/rpc"
 		],
 		"explorers": [
 		]
 	},
 	"1313161555": {
+		"disabled": "true",
 		"label": "Aurora Testnet",
 		"symbol": "AURORA",
 		"genesis": "0x8058d7fe544fdcac6836faa5f84c68291da1773594216957374708a7109a6336",
@@ -308,6 +320,7 @@
 		]
 	},
 	"1666700000": {
+		"disabled": "true",
 		"label": "Harmony Testnet",
 		"symbol": "ONE",
 		"contracts": {
