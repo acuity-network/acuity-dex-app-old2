@@ -35,6 +35,9 @@ const uri = ref("");
 
 onMounted(async () => {
   for (let chainId in $ethClient.chainsData) {
+    if ($ethClient.chainsData[parseInt(chainId)].hasOwnProperty('disabled')) {
+      continue;
+    }
     ethChains.value.push({
       value: parseInt(chainId),
       title: $ethClient.chainsData[parseInt(chainId)].label,
