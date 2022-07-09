@@ -36,8 +36,8 @@ const unstashWaiting = ref(false);
 const setDisabled = ref(false);
 const setWaiting = ref(false);
 
-const sellSymbol = computed(() => metaMaskChainId.value ? $ethClient.chainsData[metaMaskChainId.value].symbol : "");
-const buySymbol = computed(() => store.buyChainId ? $ethClient.chainsData[store.buyChainId].symbol : '');
+const sellSymbol = computed(() => metaMaskChainId.value ? $ethClient.chainsData[metaMaskChainId.value]?.symbol : "");
+const buySymbol = computed(() => store.buyChainId ? $ethClient.chainsData[store.buyChainId]?.symbol : '');
 
 const sellValue = ref(null);
 const sellPrice = ref(null);
@@ -49,7 +49,7 @@ let emitter;
 
 async function load() {
 
-  if (metaMaskChainId.value && $ethClient.chains[metaMaskChainId.value].atomicSwap) {
+  if (metaMaskChainId.value && $ethClient.chains[metaMaskChainId.value]?.atomicSwap) {
     try {
       eth.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].atomicSwap.methods.getStashValue(buyAssetId.value, store.metaMaskAccount).call());
     }
@@ -65,7 +65,7 @@ async function load() {
 }
 
 onMounted(async () => {
-  if (metaMaskChainId.value) {
+  if (metaMaskChainId.value && $ethClient.chains[metaMaskChainId.value]) {
     emitter = $ethClient.chains[metaMaskChainId.value].atomicSwap.events.allEvents()
     .on('data', async (log: any) => {
       load();

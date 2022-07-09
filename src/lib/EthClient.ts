@@ -41,8 +41,10 @@ export default class EthClient {
   chainsData: any = ethChainsDataJson;
 
   async loadAcuAccount() {
-    let mappedAcuAddress = encodeAddress(await this.chains[store.metaMaskChainId].account.methods.getAcuAccount(store.metaMaskAccount).call());
-    store.activeAcuSet(mappedAcuAddress);
+    if (this.chains.hasOwnProperty(store.metaMaskChainId)) {
+      let mappedAcuAddress = encodeAddress(await this.chains[store.metaMaskChainId].account.methods.getAcuAccount(store.metaMaskAccount).call());
+      store.activeAcuSet(mappedAcuAddress);
+    }
   }
 
 	async init(db: any) {
@@ -60,8 +62,10 @@ export default class EthClient {
         .on('chainChanged', (chainIdHex: string) => {
           let chainId = parseInt(chainIdHex, 16);
           store.metaMaskChainIdSet(chainId);
-          this.account = new this.web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
-      		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
+          if (this.chainsData.hasOwnProperty(chainId)) {
+            this.account = new this.web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
+        		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
+          }
           this.loadAcuAccount();
         })
         .on('accountsChanged', (accounts: any) => {
@@ -71,8 +75,11 @@ export default class EthClient {
 
       let chainId = await this.web3.eth.getChainId();
       store.metaMaskChainIdSet(chainId);
-      this.account = new this.web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
-  		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
+
+      if (this.chainsData.hasOwnProperty(chainId)) {
+        this.account = new this.web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
+    		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
+      }
 
       let accounts = await this.web3.eth.requestAccounts();
 			store.metaMaskAccountSet(accounts[0]);

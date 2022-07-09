@@ -1,5 +1,6 @@
 {
 	"1337": {
+		"disabled": "true",
 		"label": "Testnet",
 		"symbol": "TEST",
 		"contracts": {
