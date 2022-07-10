@@ -156,6 +156,20 @@ async function reset(event: any) {
   load();
 }
 
+async function goto(event: any) {
+  let sellAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.metaMaskChainId), 32);
+  let buyAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.buyChainId), 32);
+
+  router.push({
+    name: 'sell-order',
+    params: {
+      accountId: store.activeAcu,
+      sellAssetId: sellAssetId,
+      buyAssetId: buyAssetId,
+    },
+  })
+}
+
 </script>
 
 <template>
@@ -191,6 +205,7 @@ async function reset(event: any) {
         <div class="d-flex mb-4" style="gap: 1rem">
           <v-btn @click="set" :disabled="setDisabled">Set</v-btn>
           <v-btn @click="reset">Reset</v-btn>
+          <v-btn @click="goto">Goto</v-btn>
         </div>
         <v-progress-linear class="mb-10" :indeterminate="setWaiting" color="yellow darken-2"></v-progress-linear>
       </v-col>
