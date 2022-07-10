@@ -204,7 +204,7 @@ async function createBuyLock(event: any) {
   let secret = $ethClient.web3.utils.randomHex(32);
   let hashedSecret = $ethClient.web3.utils.keccak256(secret);
   $db.put('/secrets/' + hashedSecret, secret);
-  let timeout = Date.now() + 60 * 60 * 24 * 3 * 1000;   // 3 days
+  let timeout = Date.now() + 60 * 60 * 3 * 1000;   // 3 hours
   let sellAssetId = route.params.sellAssetId
   let sellPrice = priceWei.toHex();
   let value = $ethClient.web3.utils.fromWei((BigInt($ethClient.web3.utils.toWei(buyValue.value)) * BigInt(priceWei)).toString()).split('.')[0];
@@ -234,7 +234,7 @@ async function createSellLock(lock: any) {
 
   let recipient = lock.buyerEthAddress;
   let hashedSecret = lock.hashedSecret;
-  let timeout = Date.now() + 60 * 60 * 24 * 2 * 1000;   // 2 days
+  let timeout = Date.now() + 60 * 60 * 2 * 1000;   // 2 hours
   let stashAssetId = route.params.buyAssetId;
   let value = $ethClient.web3.utils.numberToHex(lock.sellLockValueWei);
   let buyLockId = lock.lockId;
