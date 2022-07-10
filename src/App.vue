@@ -63,12 +63,8 @@ async function onboardMetaMask(event: any) {
 </script>
 
 <template>
-  <v-app id="inspire"       theme="dark">
-    <v-navigation-drawer
-      v-model="drawer"
-      app
-
-    >
+  <v-app theme="dark">
+    <v-navigation-drawer v-model="drawer" app>
       <v-list density="compact">
         <v-list-item
           v-for="(item, i) in menu"
@@ -86,23 +82,17 @@ async function onboardMetaMask(event: any) {
       <v-btn block color="rgb(227, 126, 6)" class="my-2" target="_blank" href="https://polkadot.js.org/extension/">polkadot{.js}</v-btn>
       <v-btn block color="rgb(3, 125, 214)" class="my-2" @click="onboardMetaMask">MetaMask</v-btn>
     </v-navigation-drawer>
-
-    <v-app-bar
-      density="compact"
-    >
+    <v-app-bar app>
       <template v-slot:prepend>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       </template>
-
       <v-app-bar-title>Acuity DEX {{ blockNumber }}</v-app-bar-title>
-
-      <template v-slot:append>
-        <v-btn icon="mdi-dots-vertical"></v-btn>
-      </template>
     </v-app-bar>
     <v-main>
       <router-view></router-view>
     </v-main>
+    <v-footer app>
+    </v-footer>
   </v-app>
 </template>
 
