@@ -83,7 +83,7 @@ async function loadName(address: string): Promise<string> {
     return $ethClient.web3.utils.hexToAscii(display.raw);
   }
   catch (e) {
-    return '';
+    return 'unknown';
   }
 }
 

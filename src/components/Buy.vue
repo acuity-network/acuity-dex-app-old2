@@ -33,11 +33,16 @@ async function getAcuAddress(foreignAddress: string): Promise<string> {
   return encodeAddress(await $ethClient.chains[store.sellChainId].account.methods.getAcuAccount(foreignAddress).call());
 }
 
-async function loadName(acuAddress: string) {
-  let result = await $acuityClient.api.query.identity.identityOf(acuAddress);
-  let json = result.unwrap().info.display.toString();
-  let display = JSON.parse(json);
-  return $ethClient.web3.utils.hexToAscii(display.raw);
+async function loadName(address: string): Promise<string> {
+  try {
+    let result = await $acuityClient.api.query.identity.identityOf(address);
+    let json = result.unwrap().info.display.toString();
+    let display = JSON.parse(json);
+    return $ethClient.web3.utils.hexToAscii(display.raw);
+  }
+  catch (e) {
+    return 'unknown';
+  }
 }
 
 async function load() {
