@@ -83,7 +83,8 @@ async function onboardMetaMask(event: any) {
         </v-list-item>
       </v-list>
       <v-text-field readonly v-model="store.activeAcuName" label="Active account"></v-text-field>
-      <v-btn color="rgb(3, 125, 214)" class="mt-10 mb-4" @click="onboardMetaMask">MetaMask</v-btn>
+      <v-btn block color="rgb(227, 126, 6)" class="my-2" target="_blank" href="https://polkadot.js.org/extension/">polkadot{.js}</v-btn>
+      <v-btn block color="rgb(3, 125, 214)" class="my-2" @click="onboardMetaMask">MetaMask</v-btn>
     </v-navigation-drawer>
 
     <v-app-bar
