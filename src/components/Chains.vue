@@ -162,6 +162,7 @@ async function addMetaMask(event: any) {
           <v-btn @click="addChain" :disabled="!(uri.startsWith('ws://') || uri.startsWith('wss://'))">Add to app</v-btn>
           <v-btn @click="addMetaMask" :disabled="!uri.startsWith('https://')">Add to MetaMask</v-btn>
         </div>
+        <p>Select a wss:// URI for the app and a https:// one for MetaMask.</p>
       </v-col>
     </v-row>
   </v-container>
