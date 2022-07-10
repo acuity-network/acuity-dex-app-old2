@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, inject, onMounted, computed, watch} from 'vue'
-import type { Ref } from 'vue'
+import { ref, reactive, inject, onMounted, computed, watch} from 'vue'
 
 import { useRouter, useRoute } from 'vue-router'
 import {
@@ -21,7 +20,7 @@ let router = useRouter();
 
 const store = main();
 
-const locks: Ref<any> = ref({});
+const locks: any = reactive({});
 
 const sellerAccountId = ref("");
 const sellerName = ref("");
@@ -86,7 +85,7 @@ async function load() {
 
     //this.$arbitrumClient.web3.utils.fromWei((BigInt(this.$arbitrumClient.web3.utils.toWei(lock.buyLockValue.toString())) / BigInt(this.priceWei)).toString()),
 
-    locks.value[event.returnValues.lockId] = {
+    locks[event.returnValues.lockId] = {
       lockId: event.returnValues.lockId,
       secret: "",
       hashedSecret: event.returnValues.hashedSecret,
@@ -117,11 +116,11 @@ async function load() {
 
   for (let event of events) {
     let buyLockId = event.returnValues.buyLockId;
-    if (locks.value[buyLockId]) {
-      locks.value[buyLockId].sellLockId = event.returnValues.lockId;
-      locks.value[buyLockId].sellLockState = "Locked";
-      locks.value[buyLockId].sellLockTimeoutRaw = event.returnValues.timeout;
-      locks.value[buyLockId].sellLockTimeout = new Date(parseInt(event.returnValues.timeout)).toLocaleString();
+    if (locks[buyLockId]) {
+      locks[buyLockId].sellLockId = event.returnValues.lockId;
+      locks[buyLockId].sellLockState = "Locked";
+      locks[buyLockId].sellLockTimeoutRaw = event.returnValues.timeout;
+      locks[buyLockId].sellLockTimeout = new Date(parseInt(event.returnValues.timeout)).toLocaleString();
     }
   }
 
@@ -133,10 +132,10 @@ async function load() {
     // Is it the sell lock?
     if (event.returnValues.sender.toLowerCase() == foreignAddress) {
       // Find the buy lock.
-      for (let lock in locks.value) {
-        if (locks.value[lock].sellLockId == event.returnValues.lockId) {
-          locks.value[lock].secret = event.returnValues.secret;
-          locks.value[lock].sellLockState = "Unlocked";
+      for (let lock in locks) {
+        if (locks[lock].sellLockId == event.returnValues.lockId) {
+          locks[lock].secret = event.returnValues.secret;
+          locks[lock].sellLockState = "Unlocked";
         }
       }
     }
@@ -150,7 +149,7 @@ async function load() {
 
     // Is it the buy lock?
     if (event.returnValues.recipient.toLowerCase() == foreignAddress) {
-      locks.value[event.returnValues.lockId].buyLockState = "Unlocked";
+      locks[event.returnValues.lockId].buyLockState = "Unlocked";
     }
   }
 }
@@ -229,7 +228,7 @@ async function createBuyLock(event: any) {
 }
 
 async function createSellLock(lock: any) {
-  locks.value[lock.lockId].createSellLockDisabled = true;
+  locks[lock.lockId].createSellLockDisabled = true;
 
   console.log(lock);
 
@@ -246,20 +245,20 @@ async function createSellLock(lock: any) {
     .lockSell(recipient, hashedSecret, timeout, stashAssetId, value, buyLockId)
     .send({from: store.metaMaskAccount})
     .on('transactionHash', function(payload: any) {
-      locks.value[lock.lockId].createSellLockWaiting = true;
+      locks[lock.lockId].createSellLockWaiting = true;
     })
     .on('receipt', function(receipt: any) {
-      locks.value[lock.lockId].createSellLockWaiting = false;
-      locks.value[lock.lockId].createSellLockDisabled = false;
+      locks[lock.lockId].createSellLockWaiting = false;
+      locks[lock.lockId].createSellLockDisabled = false;
     })
     .on('error', function(error: any) {
-      locks.value[lock.lockId].createSellLockWaiting = false;
-      locks.value[lock.lockId].createSellLockDisabled = false;
+      locks[lock.lockId].createSellLockWaiting = false;
+      locks[lock.lockId].createSellLockDisabled = false;
     });
 }
 
 async function unlockSellLock(lock: any) {
-  locks.value[lock.lockId].unlockSellLockDisabled = true;
+  locks[lock.lockId].unlockSellLockDisabled = true;
 
   let sender = lock.seller;
   let secret = await $db.get('/secrets/' + lock.hashedSecret);
@@ -271,20 +270,20 @@ async function unlockSellLock(lock: any) {
     .unlockByRecipient(sender, secret, timeout)
     .send({from: store.metaMaskAccount})
     .on('transactionHash', function(payload: any) {
-      locks.value[lock.lockId].unlockSellLockWaiting = true;
+      locks[lock.lockId].unlockSellLockWaiting = true;
     })
     .on('receipt', function(receipt: any) {
-      locks.value[lock.lockId].unlockSellLockWaiting = false;
-      locks.value[lock.lockId].unlockSellLockDisabled = false;
+      locks[lock.lockId].unlockSellLockWaiting = false;
+      locks[lock.lockId].unlockSellLockDisabled = false;
     })
     .on('error', function(error: any) {
-      locks.value[lock.lockId].unlockSellLockWaiting = false;
-      locks.value[lock.lockId].unlockSellLockDisabled = false;
+      locks[lock.lockId].unlockSellLockWaiting = false;
+      locks[lock.lockId].unlockSellLockDisabled = false;
     });
 }
 
 async function unlockBuyLock(lock: any) {
-  locks.value[lock.lockId].unlockBuyLockDisabled = true;
+  locks[lock.lockId].unlockBuyLockDisabled = true;
 
   let sender = lock.buyerEthAddress;
   let secret = lock.secret;
@@ -296,15 +295,15 @@ async function unlockBuyLock(lock: any) {
     .unlockByRecipient(sender, secret, timeout)
     .send({from: store.metaMaskAccount})
     .on('transactionHash', function(payload: any) {
-      locks.value[lock.lockId].unlockBuyLockWaiting = true;
+      locks[lock.lockId].unlockBuyLockWaiting = true;
     })
     .on('receipt', function(receipt: any) {
-      locks.value[lock.lockId].unlockBuyLockWaiting = false;
-      locks.value[lock.lockId].unlockBuyLockDisabled = false;
+      locks[lock.lockId].unlockBuyLockWaiting = false;
+      locks[lock.lockId].unlockBuyLockDisabled = false;
     })
     .on('error', function(error: any) {
-      locks.value[lock.lockId].unlockBuyLockWaiting = false;
-      locks.value[lock.lockId].unlockBuyLockDisabled = false;
+      locks[lock.lockId].unlockBuyLockWaiting = false;
+      locks[lock.lockId].unlockBuyLockDisabled = false;
     });
 }
 
