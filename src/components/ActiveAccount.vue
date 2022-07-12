@@ -28,6 +28,8 @@ const foreignAccountAcuAccount = computed(() => store.foreignAccountAcuAccount);
 
 const acuAddress = ref(store.addressesAcu[0]);
 const name = ref("");
+const setNameDisabled = ref(false);
+const setNameWaiting = ref(false);
 const setForeignAccountDisabled = ref(false);
 const setForeignAccountWaiting = ref(false);
 const setAcuAccountDisabled = ref(false);
@@ -41,7 +43,7 @@ async function loadName(address: string): Promise<string> {
     return $ethClient.web3.utils.hexToAscii(display.raw);
   }
   catch (e) {
-    return 'unknown';
+    return '';
   }
 }
 
@@ -88,6 +90,46 @@ onMounted(async () => {
 watch(acuAddress, async (newValue, oldValue) => {
   load();
 });
+
+async function setIdentity(event: any) {
+  setNameDisabled.value = true;
+  const injector = await web3FromAddress(store.activeAcu);
+
+  const identity = {
+    "additional": [],
+    "display": $ethClient.web3.utils.padLeft($ethClient.web3.utils.numberToHex(name.value.length + 1), 2) +  $ethClient.web3.utils.asciiToHex(name.value).slice(2),
+    "legal": null,
+    "web": null,
+    "riot": null,
+    "email": null,
+    "pgpFingerprint": null,
+    "image": null,
+    "twitter": null,
+  };
+
+  console.log(identity);
+
+  try {
+    const unsub = await $acuityClient.api.tx.identity
+      .setIdentity(identity)
+      .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
+        if (!result.status.isInBlock) {
+          setNameWaiting.value = true;
+        }
+        else {
+          unsub();
+          load();
+          setNameWaiting.value = false;
+          setNameDisabled.value = false;
+        }
+      });
+  }
+  catch (e) {
+    console.error(e);
+    setNameWaiting.value = false;
+    setNameDisabled.value = false;
+  }
+}
 
 async function setForeignAccount(event: any) {
   setForeignAccountDisabled.value = true;
@@ -140,10 +182,9 @@ async function setAcuAccount(event: any) {
     <v-row>
       <v-col cols="12" md="10">
         <v-select v-model="acuAddress" :items="store.accountsAcu" label="Acuity account"></v-select>
-        <div class="text-h6">Public Identity</div>
-        <p>
-          <router-link v-if="acuAddress != ''" :to="{ name: 'account', params: { id: acuAddress }}">{{ name }}</router-link>
-        </p>
+        <v-text-field v-model="name" label="Identity" hint="Enter your name." persistent-hint></v-text-field>
+        <v-btn class="mb-4" @click="setIdentity" :disabled="setNameDisabled">Set Identity</v-btn>
+        <v-progress-linear class="mb-10" :indeterminate="setNameWaiting" color="yellow darken-2"></v-progress-linear>
 
         <div v-for="chain in chains">
           <div class="text-h6">{{ chain.label }}</div>
