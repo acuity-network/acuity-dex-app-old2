@@ -93,7 +93,7 @@ watch(acuAddress, async (newValue, oldValue) => {
 
 async function setIdentity(event: any) {
   setNameDisabled.value = true;
-  const injector = await web3FromAddress(store.activeAcu);
+  const injector = await web3FromAddress(acuAddress.value);
 
   const identity = {
     "additional": [],
@@ -112,7 +112,7 @@ async function setIdentity(event: any) {
   try {
     const unsub = await $acuityClient.api.tx.identity
       .setIdentity(identity)
-      .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
+      .signAndSend(acuAddress.value, { signer: injector.signer }, (result: any) => {
         if (!result.status.isInBlock) {
           setNameWaiting.value = true;
         }
