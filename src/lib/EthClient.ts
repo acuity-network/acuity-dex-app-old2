@@ -69,7 +69,7 @@ export default class EthClient {
           this.loadAcuAccount();
         })
         .on('accountsChanged', (accounts: any) => {
-  				store.metaMaskAccountSet(accounts[0]);
+  				store.metaMaskAccountSet(accounts[0].toLowerCase());
           this.loadAcuAccount();
         });
 
@@ -82,7 +82,7 @@ export default class EthClient {
       }
 
       let accounts = await this.web3.eth.requestAccounts();
-			store.metaMaskAccountSet(accounts[0]);
+			store.metaMaskAccountSet(accounts[0].toLowerCase());
 
 			for await (const [key, uri] of this.db.iterator({
 		    gt: '/chains/'
