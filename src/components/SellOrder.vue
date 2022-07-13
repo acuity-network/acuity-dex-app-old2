@@ -66,6 +66,7 @@ async function loadName(address: string): Promise<string> {
 }
 
 async function load() {
+  let newLocks: any = {};
   let buyHeight = await $ethClient.chains[buyChainId.value].web3.eth.getBlockNumber();
 
   let events = await $ethClient.chains[buyChainId.value].atomicSwap.getPastEvents('BuyLock', {
@@ -85,7 +86,7 @@ async function load() {
 
     //this.$arbitrumClient.web3.utils.fromWei((BigInt(this.$arbitrumClient.web3.utils.toWei(lock.buyLockValue.toString())) / BigInt(this.priceWei)).toString()),
 
-    locks[event.returnValues.lockId] = {
+    newLocks[event.returnValues.lockId] = {
       lockId: event.returnValues.lockId,
       secret: "",
       hashedSecret: event.returnValues.hashedSecret,
@@ -116,11 +117,11 @@ async function load() {
 
   for (let event of events) {
     let buyLockId = event.returnValues.buyLockId;
-    if (locks[buyLockId]) {
-      locks[buyLockId].sellLockId = event.returnValues.lockId;
-      locks[buyLockId].sellLockState = "Locked";
-      locks[buyLockId].sellLockTimeoutRaw = event.returnValues.timeout;
-      locks[buyLockId].sellLockTimeout = new Date(parseInt(event.returnValues.timeout)).toLocaleString();
+    if (newLocks[buyLockId]) {
+      newLocks[buyLockId].sellLockId = event.returnValues.lockId;
+      newLocks[buyLockId].sellLockState = "Locked";
+      newLocks[buyLockId].sellLockTimeoutRaw = event.returnValues.timeout;
+      newLocks[buyLockId].sellLockTimeout = new Date(parseInt(event.returnValues.timeout)).toLocaleString();
     }
   }
 
@@ -132,10 +133,10 @@ async function load() {
     // Is it the sell lock?
     if (event.returnValues.sender.toLowerCase() == foreignAddress) {
       // Find the buy lock.
-      for (let lock in locks) {
-        if (locks[lock].sellLockId == event.returnValues.lockId) {
-          locks[lock].secret = event.returnValues.secret;
-          locks[lock].sellLockState = "Unlocked";
+      for (let lockId in newLocks) {
+        if (newLocks[lockId].sellLockId == event.returnValues.lockId) {
+          newLocks[lockId].secret = event.returnValues.secret;
+          newLocks[lockId].sellLockState = "Unlocked";
         }
       }
     }
@@ -149,8 +150,12 @@ async function load() {
 
     // Is it the buy lock?
     if (event.returnValues.recipient.toLowerCase() == foreignAddress) {
-      locks[event.returnValues.lockId].buyLockState = "Unlocked";
+      newLocks[event.returnValues.lockId].buyLockState = "Unlocked";
     }
+  }
+
+  for (let lockId in newLocks) {
+    locks[lockId] = newLocks[lockId];
   }
 }
 
