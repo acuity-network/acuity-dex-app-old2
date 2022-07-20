@@ -64,6 +64,23 @@
 			"https://goerli.etherscan.io"
 		]
 	},
+	"18": {
+		"disabled": "true",
+		"label": "ThunderCore Testnet",
+		"symbol": "TST",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"wss://testnet-ws.thundercore.com",
+			"https://testnet-rpc.thundercore.com"
+		],
+		"explorers": [
+			"https://explorer-testnet.thundercore.com/"
+		]
+	},
 	"42": {
 		"label": "Kovan",
 		"symbol": "KOV",

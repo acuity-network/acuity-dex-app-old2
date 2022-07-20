@@ -319,9 +319,15 @@
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
-			"https://mainnet-rpc.thundercore.com"
+			"wss://mainnet-ws.thundercore.com",
+			"wss://mainnet-ws.thundercore.net",
+			"wss://mainnet-ws.thundercore.io",
+			"https://mainnet-rpc.thundercore.com",
+			"https://mainnet-rpc.thundertoken.net",
+			"https://mainnet-rpc.thundercore.io"
 		],
 		"explorers": [
+			"https://viewblock.io/thundercore"
 		]
 	},
 	"122": {
