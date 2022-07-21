@@ -580,6 +580,22 @@
 		"explorers": [
 		]
 	},
+	"1024": {
+		"label": "Clover",
+		"symbol": "CLV",
+		"genesis": "",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"https://api-para.clover.finance"
+		],
+		"explorers": [
+			"https://clvscan.com/"
+		]
+	},
 	"1088": {
 		"label": "Metis",
 		"symbol": "METIS",

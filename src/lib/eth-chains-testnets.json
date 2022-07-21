@@ -218,6 +218,25 @@
 			"https://blockscout.mandala.acala.network/"
 		]
 	},
+	"1023": {
+		"label": "Clover Testnet",
+		"symbol": "CLV",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"wss://api.clover.finance",
+			"wss://api-2.clover.finance",
+			"wss://api-3.clover.finance",
+			"https://rpc.clover.finance",
+			"https://rpc-2.clover.finance",
+			"https://rpc-3.clover.finance"
+		],
+		"explorers": [
+		]
+	},
 	"1287": {
 		"label": "Moonbase Alpha",
 		"symbol": "DEV",
