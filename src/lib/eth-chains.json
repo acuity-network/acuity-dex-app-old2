@@ -514,6 +514,42 @@
 		"explorers": [
 		]
 	},
+	"686": {
+		"label": "Karura",
+		"symbol": "KAR",
+		"genesis": "",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"wss://eth-rpc-karura.aca-api.network/ws",
+			"https://eth-rpc-karura.aca-api.network/",
+			"https://rpc.evm.karura.network/"
+		],
+		"explorers": [
+			"https://blockscout.karura.network/"
+		]
+	},
+	"787": {
+		"label": "Acala",
+		"symbol": "ACA",
+		"genesis": "",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"wss://eth-rpc-acala.aca-api.network/ws",
+			"https://eth-rpc-acala.aca-api.network/",
+			"https://rpc.evm.acala.network/"
+		],
+		"explorers": [
+			"https://blockscout.acala.network/"
+		]
+	},
 	"820": {
 		"label": "Callisto",
 		"symbol": "CLO",

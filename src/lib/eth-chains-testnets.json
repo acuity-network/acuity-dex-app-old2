@@ -199,6 +199,25 @@
 			"https://zksync2-testnet.zkscan.io/"
 		]
 	},
+	"595": {
+		"disabled": "true",
+		"label": "Mandala TC7",
+		"symbol": "ACA",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"wss://acala-mandala-adapter.api.onfinality.io/public-ws",
+			"wss://mandala-tc7-rpcnode.aca-dev.network/ws",
+			"https://acala-mandala-adapter.api.onfinality.io/public",
+			"https://tc7-eth.aca-dev.network"
+		],
+		"explorers": [
+			"https://blockscout.mandala.acala.network/"
+		]
+	},
 	"1287": {
 		"label": "Moonbase Alpha",
 		"symbol": "DEV",
