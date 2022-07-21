@@ -131,6 +131,22 @@
 			""
 		]
 	},
+	"81": {
+		"label": "Astar Shibuya Testnet",
+		"symbol": "SBY",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"https://shibuya.public.blastapi.io/",
+			"https://evm.shibuya.astar.network/"
+		],
+		"explorers": [
+			""
+		]
+	},
 	"97": {
 		"disabled": "true",
 		"label": "Binance Smart Chain Testnet",

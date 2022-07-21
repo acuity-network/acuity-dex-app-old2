@@ -472,9 +472,10 @@
 		},
 		"rpcs": [
 			"wss://shiden.public.blastapi.io",
-			"https://shiden.public.blastapi.io",
 			"wss://shiden.api.onfinality.io/public-ws",
-			"https://rpc.shiden.astar.network:8545"
+			"https://shiden.api.onfinality.io/public",
+			"https://shiden.public.blastapi.io/",
+			"https://evm.shiden.astar.network/"
 		],
 		"explorers": [
 		]
@@ -506,8 +507,9 @@
 		},
 		"rpcs": [
 			"wss://astar.public.blastapi.io",
-			"https://rpc.astar.network:8545",
-			"https://astar.public.blastapi.io"
+			"https://astar.api.onfinality.io/public",
+			"https://astar.public.blastapi.io/",
+			"https://evm.astar.network/"
 		],
 		"explorers": [
 		]
