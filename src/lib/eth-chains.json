@@ -651,6 +651,40 @@
 			"https://moonriver.moonscan.io/"
 		]
 	},
+	"2021": {
+		"label": "Edgeware",
+		"symbol": "EDG",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"https://mainnet1.edgewa.re/evm",
+			"https://mainnet2.edgewa.re/evm",
+			"https://mainnet3.edgewa.re/evm",
+			"https://mainnet4.edgewa.re/evm",
+			"https://mainnet5.edgewa.re/evm",
+			"https://mainnet6.edgewa.re/evm",
+			"https://mainnet7.edgewa.re/evm",
+			"https://mainnet8.edgewa.re/evm",
+			"https://mainnet9.edgewa.re/evm",
+			"https://mainnet10.edgewa.re/evm",
+			"https://mainnet11.edgewa.re/evm",
+			"https://mainnet12.edgewa.re/evm",
+			"https://mainnet13.edgewa.re/evm",
+			"https://mainnet14.edgewa.re/evm",
+			"https://mainnet15.edgewa.re/evm",
+			"https://mainnet16.edgewa.re/evm",
+			"https://mainnet17.edgewa.re/evm",
+			"https://mainnet18.edgewa.re/evm",
+			"https://mainnet19.edgewa.re/evm",
+			"https://mainnet20.edgewa.re/evm"
+		],
+		"explorers": [
+			"https://mainnet.edgscan.com/"
+		]
+	},
 	"4689": {
 		"label": "IoTeX",
 		"symbol": "IOTX",

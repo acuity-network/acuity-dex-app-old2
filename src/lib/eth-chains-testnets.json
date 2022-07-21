@@ -132,6 +132,7 @@
 		]
 	},
 	"81": {
+		"disabled": "true",
 		"label": "Astar Shibuya Testnet",
 		"symbol": "SBY",
 		"contracts": {
@@ -219,6 +220,7 @@
 		]
 	},
 	"1023": {
+		"disabled": "true",
 		"label": "Clover Testnet",
 		"symbol": "CLV",
 		"contracts": {
@@ -257,6 +259,29 @@
 			"https://moonbase.moonscan.io/",
 			"https://moonbase-blockscout.testnet.moonbeam.network/",
 			"https://moonbeam-explorer.netlify.app/?network=MoonbaseAlpha"
+		]
+	},
+	"2022": {
+		"disabled": "true",
+		"label": "Edgeware Beresheet Testnet",
+		"symbol": "EDG",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"https://beresheet1.edgewa.re/evm",
+			"https://beresheet2.edgewa.re/evm",
+			"https://beresheet3.edgewa.re/evm",
+			"https://beresheet4.edgewa.re/evm",
+			"https://beresheet5.edgewa.re/evm",
+			"https://beresheet6.edgewa.re/evm",
+			"https://beresheet7.edgewa.re/evm",
+			"https://beresheet8.edgewa.re/evm"
+		],
+		"explorers": [
+			"https://beresheet.edgscan.com/"
 		]
 	},
 	"4002": {
