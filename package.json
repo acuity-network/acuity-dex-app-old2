@@ -38,17 +38,11 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.0.1",
-    "@vue/compiler-sfc": "^3.2.37",
     "buffer": "^6.0.3",
     "rollup": "^2.77.2",
-    "sass": "^1.54.0",
-    "sass-loader": "^12.6.0",
     "typescript": "^4.7.4",
     "vite": "^3.0.4",
     "vite-plugin-vuetify": "1.0.0-alpha.14",
-    "vue-cli-plugin-vuetify": "^2.5.1",
-    "vue-tsc": "^0.29.8",
-    "webpack": "^5.74.0",
-    "webpack-plugin-vuetify": "2.0.0-alpha.12"
+    "vue-tsc": "^0.29.8"
   }
 }
