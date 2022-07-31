@@ -22,12 +22,35 @@ const chains = computed(() => store.chains);
 const chainSelect = computed(() => store.chainSelect);
 const metaMaskChainId = computed(() => store.metaMaskChainId);
 
+const wallets = [
+  {
+    title: 'MetaMask Browser Extension',
+    value: 'metamask',
+  },
+  {
+    title: 'Polkadot Browser Extension',
+    value: 'polkadot',
+  },
+];
+
+const wallet = ref('metamask');
+
+const substrateChains = [
+  {
+    title: 'Acuity',
+    value: 'acuity',
+  },
+];
+
+const substrateChain = ref('acuity');
+const acuAddress = ref('');
+
 let sellAssetId: any = computed(() => $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.metaMaskChainId), 32));
 let buyAssetId = computed(() => $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.buyChainId), 32));
 
-const eth = ref(null);
-const ethToStash = ref("");
-const ethToWithdraw = ref("");
+const stashed = ref(null);
+const valueToStash = ref("");
+const valueToWithdraw = ref("");
 
 const stashDisabled = ref(false);
 const stashWaiting = ref(false);
@@ -49,11 +72,21 @@ let emitter;
 
 async function load() {
 
-  if (metaMaskChainId.value && $ethClient.chains[metaMaskChainId.value]?.atomicSwap) {
-    try {
-      eth.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].atomicSwap.methods.getStashValue(buyAssetId.value, store.metaMaskAccount).call());
-    }
-    catch (e) {};
+  switch (wallet.value) {
+    case 'metamask':
+      if (metaMaskChainId.value && $ethClient.chains[metaMaskChainId.value]?.atomicSwap) {
+        try {
+          stashed.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].atomicSwap.methods.getStashValue(buyAssetId.value, store.metaMaskAccount).call());
+        }
+        catch (e) {};
+      }
+      break;
+
+    case 'polkadot':
+      try {
+        stashed.value = $ethClient.formatWei(await $acuityClient.api.query.atomicSwap.stashValue(buyAssetId.value, store.activeAcu));
+      }
+      catch (e) {};
   }
 
   if (sellAssetId.value && buyAssetId.value) {
@@ -74,6 +107,14 @@ onMounted(async () => {
   load();
 })
 
+watch(wallet, async (newValue, oldValue) => {
+  load();
+});
+
+watch(acuAddress, async (newValue, oldValue) => {
+  load();
+});
+
 watch(metaMaskChainId, async (newValue, oldValue) => {
   if (newValue && $ethClient.chains[newValue].atomicSwap) {
     emitter = $ethClient.chains[newValue].atomicSwap.events.allEvents()
@@ -91,38 +132,94 @@ watch(() => store.buyChainId, async (newValue, oldValue) => {
 
 async function stash(event: any) {
   stashDisabled.value = true;
-  $ethClient.atomicSwap.methods
-    .depositStash(buyAssetId.value)
-    .send({from: store.metaMaskAccount, value: $ethClient.web3.utils.toWei(ethToStash.value)})
-    .on('transactionHash', function(payload: any) {
-      stashWaiting.value = true;
-    })
-    .on('receipt', function(receipt: any) {
-      stashWaiting.value = false;
-      stashDisabled.value = false;
-    })
-    .on('error', function(error: any) {
-      stashWaiting.value = false;
-      stashDisabled.value = false;
-    });
+  switch (wallet.value) {
+    case 'metamask':
+      $ethClient.atomicSwap.methods
+        .depositStash(buyAssetId.value)
+        .send({from: store.metaMaskAccount, value: $ethClient.web3.utils.toWei(valueToStash.value)})
+        .on('transactionHash', function(payload: any) {
+          stashWaiting.value = true;
+        })
+        .on('receipt', function(receipt: any) {
+          stashWaiting.value = false;
+          stashDisabled.value = false;
+        })
+        .on('error', function(error: any) {
+          stashWaiting.value = false;
+          stashDisabled.value = false;
+        });
+      break;
+
+    case 'polkadot':
+      const injector = await web3FromAddress(store.activeAcu);
+
+      try {
+        const unsub = await $acuityClient.api.tx.atomicSwap
+          .depositStash(buyAssetId.value, $ethClient.web3.utils.toWei(valueToStash.value))
+          .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
+            if (!result.status.isInBlock) {
+              stashWaiting.value = true;
+            }
+            else {
+              unsub();
+              load();
+              stashWaiting.value = false;
+              stashDisabled.value = false;
+            }
+          });
+      }
+      catch (e) {
+        stashWaiting.value = false;
+        stashDisabled.value = false;
+      }
+      break;
+  }
 }
 
 async function unstash(event: any) {
   unstashDisabled.value = true;
-  $ethClient.atomicSwap.methods
-    .withdrawStash(buyAssetId.value, $ethClient.web3.utils.toWei(ethToWithdraw.value))
-    .send({from: store.metaMaskAccount})
-    .on('transactionHash', function(payload: any) {
-      unstashWaiting.value = true;
-    })
-    .on('receipt', function(receipt: any) {
-      unstashWaiting.value = false;
-      unstashDisabled.value = false;
-    })
-    .on('error', function(error: any) {
-      unstashWaiting.value = false;
-      unstashDisabled.value = false;
-    });
+  switch (wallet.value) {
+    case 'metamask':
+      $ethClient.atomicSwap.methods
+        .withdrawStash(buyAssetId.value, $ethClient.web3.utils.toWei(valueToWithdraw.value))
+        .send({from: store.metaMaskAccount})
+        .on('transactionHash', function(payload: any) {
+          unstashWaiting.value = true;
+        })
+        .on('receipt', function(receipt: any) {
+          unstashWaiting.value = false;
+          unstashDisabled.value = false;
+        })
+        .on('error', function(error: any) {
+          unstashWaiting.value = false;
+          unstashDisabled.value = false;
+        });
+        break;
+
+      case 'polkadot':
+        const injector = await web3FromAddress(store.activeAcu);
+
+        try {
+          const unsub = await $acuityClient.api.tx.atomicSwap
+            .withdrawStash(buyAssetId.value, $ethClient.web3.utils.toWei(valueToWithdraw.value))
+            .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
+              if (!result.status.isInBlock) {
+                unstashWaiting.value = true;
+              }
+              else {
+                unsub();
+                load();
+                unstashWaiting.value = false;
+                unstashDisabled.value = false;
+              }
+            });
+        }
+        catch (e) {
+          unstashWaiting.value = false;
+          unstashDisabled.value = false;
+        }
+      break;
+    }
 }
 
 async function set(event: any) {
@@ -176,16 +273,27 @@ async function goto(event: any) {
   <v-container>
     <v-row>
       <v-col cols="12" md="10">
-        <v-select readonly v-model="metaMaskChainId" :items="chainSelect" label="Sell chain"></v-select>
-        <v-text-field v-model="store.metaMaskAccount" label="Sell account" readonly></v-text-field>
+        <v-select v-model="wallet" :items="wallets" label="Wallet"></v-select>
+
+        <template v-if="wallet == 'metamask'">
+          <v-select readonly v-model="metaMaskChainId" :items="chainSelect" label="Sell chain"></v-select>
+          <v-text-field v-model="store.metaMaskAccount" label="Sell account" readonly></v-text-field>
+        </template>
+
+        <template v-if="wallet == 'polkadot'">
+          <v-select v-model="substrateChain" :items="substrateChains" label="Sell chain"></v-select>
+          <v-select v-model="acuAddress" :items="store.accountsAcu" label="Acuity account"></v-select>
+        </template>
+
         <v-select v-model="store.buyChainId" :items="chainSelect" label="Buy chain"></v-select>
+
         <div class="text-h6 mb-10">Stash</div>
-        <v-text-field v-model="eth" label="Current stash" :suffix="sellSymbol" readonly></v-text-field>
-        <v-text-field v-model="ethToStash" label="Value to stash" :suffix="sellSymbol" :disabled="stashDisabled"></v-text-field>
+        <v-text-field v-model="stashed" label="Current stash" :suffix="sellSymbol" readonly></v-text-field>
+        <v-text-field v-model="valueToStash" label="Value to stash" :suffix="sellSymbol" :disabled="stashDisabled"></v-text-field>
         <v-btn class="mb-4" @click="stash" :disabled="stashDisabled">Stash</v-btn>
         <v-progress-linear class="mb-10" :indeterminate="stashWaiting" color="yellow darken-2"></v-progress-linear>
 
-        <v-text-field v-model="ethToWithdraw" label="Value to unstash" :suffix="sellSymbol" :disabled="unstashDisabled"></v-text-field>
+        <v-text-field v-model="valueToWithdraw" label="Value to unstash" :suffix="sellSymbol" :disabled="unstashDisabled"></v-text-field>
         <v-btn class="mb-4" @click="unstash" :disabled="unstashDisabled">Unstash</v-btn>
         <v-progress-linear class="mb-10" :indeterminate="unstashWaiting" color="yellow darken-2"></v-progress-linear>
 
