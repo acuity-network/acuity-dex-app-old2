@@ -40,9 +40,9 @@
         "type": "address"
       },
       {
-        "internalType": "bytes16",
+        "internalType": "bytes32",
         "name": "assetId",
-        "type": "bytes16"
+        "type": "bytes32"
       },
       {
         "internalType": "uint256",
@@ -99,9 +99,9 @@
       },
       {
         "indexed": false,
-        "internalType": "bytes16",
+        "internalType": "bytes32",
         "name": "sellAssetId",
-        "type": "bytes16"
+        "type": "bytes32"
       },
       {
         "indexed": false,
@@ -179,9 +179,9 @@
       },
       {
         "indexed": false,
-        "internalType": "bytes16",
+        "internalType": "bytes32",
         "name": "buyAssetId",
-        "type": "bytes16"
+        "type": "bytes32"
       },
       {
         "indexed": false,
@@ -204,9 +204,9 @@
       },
       {
         "indexed": true,
-        "internalType": "bytes16",
+        "internalType": "bytes32",
         "name": "assetId",
-        "type": "bytes16"
+        "type": "bytes32"
       },
       {
         "indexed": false,
@@ -229,9 +229,9 @@
       },
       {
         "indexed": true,
-        "internalType": "bytes16",
+        "internalType": "bytes32",
         "name": "assetId",
-        "type": "bytes16"
+        "type": "bytes32"
       },
       {
         "indexed": false,
@@ -356,9 +356,9 @@
   {
     "inputs": [
       {
-        "internalType": "bytes16",
+        "internalType": "bytes32",
         "name": "assetId",
-        "type": "bytes16"
+        "type": "bytes32"
       }
     ],
     "name": "depositStash",
@@ -422,9 +422,9 @@
   {
     "inputs": [
       {
-        "internalType": "bytes16",
+        "internalType": "bytes32",
         "name": "assetId",
-        "type": "bytes16"
+        "type": "bytes32"
       },
       {
         "internalType": "address",
@@ -446,9 +446,9 @@
   {
     "inputs": [
       {
-        "internalType": "bytes16",
+        "internalType": "bytes32",
         "name": "assetId",
-        "type": "bytes16"
+        "type": "bytes32"
       },
       {
         "internalType": "uint256",
@@ -495,9 +495,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "bytes16",
+        "internalType": "bytes32",
         "name": "sellAssetId",
-        "type": "bytes16"
+        "type": "bytes32"
       },
       {
         "internalType": "uint256",
@@ -528,9 +528,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "bytes16",
+        "internalType": "bytes32",
         "name": "stashAssetId",
-        "type": "bytes16"
+        "type": "bytes32"
       },
       {
         "internalType": "uint256",
@@ -551,14 +551,14 @@
   {
     "inputs": [
       {
-        "internalType": "bytes16",
+        "internalType": "bytes32",
         "name": "assetIdFrom",
-        "type": "bytes16"
+        "type": "bytes32"
       },
       {
-        "internalType": "bytes16",
+        "internalType": "bytes32",
         "name": "assetIdTo",
-        "type": "bytes16"
+        "type": "bytes32"
       },
       {
         "internalType": "uint256",
@@ -589,9 +589,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "bytes16",
+        "internalType": "bytes32",
         "name": "stashAssetId",
-        "type": "bytes16"
+        "type": "bytes32"
       }
     ],
     "name": "timeoutStash",
@@ -671,9 +671,9 @@
   {
     "inputs": [
       {
-        "internalType": "bytes16",
+        "internalType": "bytes32",
         "name": "assetId",
-        "type": "bytes16"
+        "type": "bytes32"
       }
     ],
     "name": "withdrawStash",
@@ -684,9 +684,9 @@
   {
     "inputs": [
       {
-        "internalType": "bytes16",
+        "internalType": "bytes32",
         "name": "assetId",
-        "type": "bytes16"
+        "type": "bytes32"
       },
       {
         "internalType": "uint256",

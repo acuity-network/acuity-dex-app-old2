@@ -19,8 +19,8 @@
 		"label": "Ropsten",
 		"symbol": "ROP",
 		"contracts": {
-			"account": "0x744Ac7bbcFDDA8fdb41cF55c020d62f2109887A5",
-			"atomicSwap": "0x1E335b8B56810C8E1FF90F1b84Ae246Ea333141b",
+			"account": "0xD3B8E298a59b0d60E0d112B919Ab3255780D19D7",
+			"atomicSwap": "0xdBe4e69953abc81d9C59F1aEc4F0d713Db834965",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
@@ -35,8 +35,8 @@
 		"label": "Rinkeby",
 		"symbol": "RIN",
 		"contracts": {
-			"account": "0xd05647dd9D7B17aBEBa953fbF2dc8D8e87c19cb3",
-			"atomicSwap": "0x744Ac7bbcFDDA8fdb41cF55c020d62f2109887A5",
+			"account": "0x0b28cc778E2A0b08e8Ed6A7Ada455bCbbf944729",
+			"atomicSwap": "0x1E335b8B56810C8E1FF90F1b84Ae246Ea333141b",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
@@ -51,8 +51,8 @@
 		"label": "Görli",
 		"symbol": "GOR",
 		"contracts": {
-			"account": "0xdBe4e69953abc81d9C59F1aEc4F0d713Db834965",
-			"atomicSwap": "0xf92f37169F9E112BC924144b871E67C8CCb12BB2",
+			"account": "0xef754323Cb565EFD381B27e8985430eF4e00FC91",
+			"atomicSwap": "0x81e70D725bFfC99bAae32C783F4F05b993AacCFC",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
@@ -85,8 +85,8 @@
 		"label": "Kovan",
 		"symbol": "KOV",
 		"contracts": {
-			"account": "0xd05647dd9D7B17aBEBa953fbF2dc8D8e87c19cb3",
-			"atomicSwap": "0x744Ac7bbcFDDA8fdb41cF55c020d62f2109887A5",
+			"account": "0x0b28cc778E2A0b08e8Ed6A7Ada455bCbbf944729",
+			"atomicSwap": "0x1E335b8B56810C8E1FF90F1b84Ae246Ea333141b",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
@@ -243,8 +243,8 @@
 		"label": "Moonbase Alpha",
 		"symbol": "DEV",
 		"contracts": {
-			"account": "0x81e70D725bFfC99bAae32C783F4F05b993AacCFC",
-			"atomicSwap": "0xB4AB3B919AdC6A9725F9959580831F08D26DB493",
+			"account": "0x526799872C2ca387F52a684Ef4F7F17Dc619A127",
+			"atomicSwap": "0xBaf077f3feD80Fa2Dd7cA11D8da9E0e3393DfA1b",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
@@ -324,8 +324,8 @@
 		"symbol": "BCH",
 		"genesis": "0x0000000000000000000000000000000000000000000000000000000000000000",
 		"contracts": {
-			"account": "0x0b28cc778E2A0b08e8Ed6A7Ada455bCbbf944729",
-			"atomicSwap": "0x1E335b8B56810C8E1FF90F1b84Ae246Ea333141b",
+			"account": "",
+			"atomicSwap": "",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
@@ -339,8 +339,8 @@
 		"label": "Avalanche Fuji Testnet",
 		"symbol": "AVAX",
 		"contracts": {
-			"account": "0x81e70D725bFfC99bAae32C783F4F05b993AacCFC",
-			"atomicSwap": "0xB4AB3B919AdC6A9725F9959580831F08D26DB493",
+			"account": "0x526799872C2ca387F52a684Ef4F7F17Dc619A127",
+			"atomicSwap": "0xBaf077f3feD80Fa2Dd7cA11D8da9E0e3393DfA1b",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
@@ -355,8 +355,8 @@
 		"label": "Polygon Mumbai",
 		"symbol": "MATIC",
 		"contracts": {
-			"account": "0xd05647dd9D7B17aBEBa953fbF2dc8D8e87c19cb3",
-			"atomicSwap": "0x744Ac7bbcFDDA8fdb41cF55c020d62f2109887A5",
+			"account": "0x0b28cc778E2A0b08e8Ed6A7Ada455bCbbf944729",
+			"atomicSwap": "0x1E335b8B56810C8E1FF90F1b84Ae246Ea333141b",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
@@ -389,8 +389,8 @@
 		"label": "Arbitrum Nitro Devnet",
 		"symbol": "ETH",
 		"contracts": {
-			"account": "0xd05647dd9D7B17aBEBa953fbF2dc8D8e87c19cb3",
-			"atomicSwap": "0x744Ac7bbcFDDA8fdb41cF55c020d62f2109887A5",
+			"account": "0x0b28cc778E2A0b08e8Ed6A7Ada455bCbbf944729",
+			"atomicSwap": "0x1E335b8B56810C8E1FF90F1b84Ae246Ea333141b",
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
