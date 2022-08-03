@@ -44,8 +44,14 @@ const substrateChains = [
 
 const substrateChain = ref('acuity');
 
-let sellAssetId: any = computed(() => $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.metaMaskChainId), 64));
-let buyAssetId: any = computed(() => $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.buyChainId), 64));
+let sellAssetId: any = computed(() => (wallet.value == 'metamask') ? metaMaskChainId.value : 0);
+let buyAssetId: any = computed(() => (wallet.value == 'metamask') ? store.buyChainId : metaMaskChainId.value);
+
+let sellAssetIdHex: any = computed(() => $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellAssetId.value), 64));
+let buyAssetIdHex: any = computed(() => $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(buyAssetId.value), 64));
+
+const sellSymbol = computed(() => (wallet.value == 'metamask') ? (metaMaskChainId.value ? $ethClient.chainsData[metaMaskChainId.value]?.symbol : "") : "ACU");
+const buySymbol = computed(() => (wallet.value == 'metamask') ? ((store.buyChainId == 0) ? "ACU" : (store.buyChainId ? $ethClient.chainsData[store.buyChainId]?.symbol : "")) : (metaMaskChainId.value ? $ethClient.chainsData[metaMaskChainId.value]?.symbol: ""));
 
 const stashed = ref(null);
 const valueToStash = ref("");
@@ -58,16 +64,11 @@ const unstashWaiting = ref(false);
 const setDisabled = ref(false);
 const setWaiting = ref(false);
 
-const sellSymbol = computed(() => (wallet.value == 'metamask') ? (metaMaskChainId.value ? $ethClient.chainsData[metaMaskChainId.value]?.symbol : "") : "ACU");
-const buySymbol = computed(() => (wallet.value == 'metamask') ? ((store.buyChainId == 0) ? "ACU" : (store.buyChainId ? $ethClient.chainsData[store.buyChainId]?.symbol : "")) : (metaMaskChainId.value ? $ethClient.chainsData[metaMaskChainId.value]?.symbol: ""));
-
 const sellValue = ref(null);
 const sellPrice = ref(null);
 const sellTotal = computed(() => (sellValue.value ?? 0) * (sellPrice.value ?? 0));
 
-
 let emitter;
-
 
 async function load() {
 
@@ -75,7 +76,7 @@ async function load() {
     case 'metamask':
       if (metaMaskChainId.value && $ethClient.chains[metaMaskChainId.value]?.atomicSwap) {
         try {
-          stashed.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].atomicSwap.methods.getStashValue(buyAssetId.value, store.metaMaskAccount).call());
+          stashed.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].atomicSwap.methods.getStashValue(buyAssetIdHex.value, store.metaMaskAccount).call());
         }
         catch (e) {};
       }
@@ -83,13 +84,16 @@ async function load() {
 
     case 'polkadot':
       try {
-        stashed.value = $ethClient.formatWei(await $acuityClient.api.query.atomicSwap.stashValue(buyAssetId.value, store.activeAcu));
+        console.log(buyAssetIdHex.value, store.activeAcu);
+        stashed.value = $ethClient.formatWei(await $acuityClient.api.query.atomicSwap.stashValue(buyAssetIdHex.value, store.activeAcu));
       }
-      catch (e) {};
+      catch (e) {
+        console.error(e);
+      };
   }
 
-  if (sellAssetId.value && buyAssetId.value) {
-    let result = await $acuityClient.api.query.orderbook.orderbook(store.activeAcu, sellAssetId.value, buyAssetId.value);
+  if (sellAssetIdHex.value && buyAssetIdHex.value) {
+    let result = await $acuityClient.api.query.orderbook.orderbook(store.activeAcu, sellAssetIdHex.value, buyAssetIdHex.value);
 
     sellPrice.value = $ethClient.web3.utils.fromWei(result.price);
     sellValue.value = $ethClient.web3.utils.fromWei(result.value);
@@ -130,7 +134,7 @@ async function stash(event: any) {
   switch (wallet.value) {
     case 'metamask':
       $ethClient.atomicSwap.methods
-        .depositStash(buyAssetId.value)
+        .depositStash(buyAssetIdHex.value)
         .send({from: store.metaMaskAccount, value: $ethClient.web3.utils.toWei(valueToStash.value)})
         .on('transactionHash', function(payload: any) {
           stashWaiting.value = true;
@@ -150,7 +154,7 @@ async function stash(event: any) {
 
       try {
         const unsub = await $acuityClient.api.tx.atomicSwap
-          .depositStash(buyAssetId.value, $ethClient.web3.utils.toWei(valueToStash.value))
+          .depositStash(buyAssetIdHex.value, $ethClient.web3.utils.toWei(valueToStash.value))
           .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
             if (!result.status.isInBlock) {
               stashWaiting.value = true;
@@ -176,7 +180,7 @@ async function unstash(event: any) {
   switch (wallet.value) {
     case 'metamask':
       $ethClient.atomicSwap.methods
-        .withdrawStash(buyAssetId.value, $ethClient.web3.utils.toWei(valueToWithdraw.value))
+        .withdrawStash(buyAssetIdHex.value, $ethClient.web3.utils.toWei(valueToWithdraw.value))
         .send({from: store.metaMaskAccount})
         .on('transactionHash', function(payload: any) {
           unstashWaiting.value = true;
@@ -196,7 +200,7 @@ async function unstash(event: any) {
 
         try {
           const unsub = await $acuityClient.api.tx.atomicSwap
-            .withdrawStash(buyAssetId.value, $ethClient.web3.utils.toWei(valueToWithdraw.value))
+            .withdrawStash(buyAssetIdHex.value, $ethClient.web3.utils.toWei(valueToWithdraw.value))
             .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
               if (!result.status.isInBlock) {
                 unstashWaiting.value = true;
@@ -225,7 +229,7 @@ async function set(event: any) {
 
   try {
     const unsub = await $acuityClient.api.tx.orderbook
-      .setOrder(sellAssetId.value, buyAssetId.value, price, value)
+      .setOrder(sellAssetIdHex.value, buyAssetIdHex.value, price, value)
       .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
         if (!result.status.isInBlock) {
           setWaiting.value = true;
@@ -249,15 +253,12 @@ async function reset(event: any) {
 }
 
 async function goto(event: any) {
-  let sellAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.metaMaskChainId), 32);
-  let buyAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.buyChainId), 32);
-
   router.push({
     name: 'sell-order',
     params: {
       accountId: store.activeAcu,
-      sellAssetId: sellAssetId,
-      buyAssetId: buyAssetId,
+      sellAssetId: sellAssetIdHex,
+      buyAssetId: buyAssetIdHex,
     },
   })
 }
