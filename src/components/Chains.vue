@@ -21,7 +21,7 @@ let router = useRouter();
 
 const store = main();
 const endpoints = computed(() => store.endpoints);
-const chains = computed(() => store.chains);
+const chains = computed(() => store.ethChains);
 
 const eth = ref("");
 const ethToStash = ref("");

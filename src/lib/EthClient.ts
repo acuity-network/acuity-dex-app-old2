@@ -103,7 +103,7 @@ export default class EthClient {
   }
 
   loadChain(chainId: number, uri: string) {
-    store.chainSet(chainId, this.chainsData[chainId].label, uri);
+    store.ethChainSet(chainId, this.chainsData[chainId].label, uri);
     let web3 = newEndpoint(chainId, uri);
     this.chains[chainId] = {};
     this.chains[chainId].web3 = web3;
@@ -124,7 +124,7 @@ export default class EthClient {
   async removeChain(chainId: number) {
     this.db.del('/chains/' + chainId);
     this.chains[chainId] = {};
-    store.chainRemove(chainId);
+    store.ethChainRemove(chainId);
   }
 
   async addChainToMetaMask(chainId: number, uri: string) {

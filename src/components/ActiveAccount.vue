@@ -19,7 +19,7 @@ let router = useRouter();
 
 const store = main();
 const addressesAcu = computed(() => store.addressesAcu);
-const chains = computed(() => store.chains);
+const chains = computed(() => store.ethChains);
 const metaMaskChainId = computed(() => store.metaMaskChainId);
 const metaMaskChainName = computed(() => store.metaMaskChainName);
 const metaMaskAccount = computed(() => store.metaMaskAccount);
@@ -50,7 +50,7 @@ async function loadName(address: string): Promise<string> {
 async function load() {
   name.value = await loadName(acuAddress.value);
 
-  for (let chainIdKey of Object.keys(store.chains)) {
+  for (let chainIdKey of Object.keys(store.ethChains)) {
     let chainId = parseInt(chainIdKey);
     let chainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(chainId), 16);
     let result = await $acuityClient.api.query.orderbook.accountForeignAccount(acuAddress.value, chainIdHex);
@@ -75,7 +75,7 @@ onMounted(async () => {
     });
   });
 
-  for (let chainId of Object.keys(store.chains)) {
+  for (let chainId of Object.keys(store.ethChains)) {
     if ($ethClient.chains[chainId].account) {
       let emitter = $ethClient.chains[chainId].account.events.allEvents()
     	.on('data', async (log: any) => {

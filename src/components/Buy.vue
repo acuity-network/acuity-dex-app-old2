@@ -18,7 +18,7 @@ let route = useRoute();
 let router = useRouter();
 
 const store = main();
-const chains = computed(() => store.chains);
+const chains = computed(() => store.ethChains);
 const chainSelect = computed(() => store.chainSelect);
 const metaMaskChainId = computed(() => store.metaMaskChainId);
 

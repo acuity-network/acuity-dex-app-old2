@@ -15,8 +15,13 @@ export const main = defineStore('main', {
     sellChainId: null as null | number,
     buyChainId: null as null | number,
     endpoints: {} as any,
-    chains: {} as any,
-    chainSelect: [] as any[],
+    ethChains: {} as any,
+    chainSelect: [
+      {
+        value: 0,
+        title: "Acuity",
+      }
+    ] as any[],
     foreignAccountAcuAccount: {} as any,
     acuAccountForeignAccount: {} as any,
   }),
@@ -66,22 +71,22 @@ export const main = defineStore('main', {
     endpointHeightSet(endpoint: string, height: number) {
       this.endpoints[endpoint].height = height;
     },
-    chainSet(chainId: number, label: string, uri: string) {
-      if (!(chainId in this.chains)) {
+    ethChainSet(chainId: number, label: string, uri: string) {
+      if (!(chainId in this.ethChains)) {
         this.chainSelect.push({
           value: chainId,
           title: label,
         });
       }
-      this.chains[chainId] = {
+      this.ethChains[chainId] = {
         chainId: chainId,
         label: label,
         uri: uri,
         height: null,
       };
     },
-    chainRemove(chainId: number, label: string, uri: string) {
-      delete this.chains[chainId];
+    ethChainRemove(chainId: number, label: string, uri: string) {
+      delete this.ethChains[chainId];
 
       for (let i in this.chainSelect) {
         if (this.chainSelect[i].value == chainId) {
@@ -91,7 +96,7 @@ export const main = defineStore('main', {
       }
     },
     chainHeightSet(chainId: number, height: number) {
-      this.chains[chainId].height = height;
+      this.ethChains[chainId].height = height;
     },
     foreignAccountAcuAccountSet(chainId: number, foreignAccount: string, acuAccount: string) {
       this.foreignAccountAcuAccount[chainId] = {};

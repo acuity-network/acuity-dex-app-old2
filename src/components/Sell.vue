@@ -18,7 +18,7 @@ let route = useRoute();
 let router = useRouter();
 
 const store = main();
-const chains = computed(() => store.chains);
+const chains = computed(() => store.ethChains);
 const chainSelect = computed(() => store.chainSelect);
 const metaMaskChainId = computed(() => store.metaMaskChainId);
 
@@ -43,10 +43,9 @@ const substrateChains = [
 ];
 
 const substrateChain = ref('acuity');
-const acuAddress = ref('');
 
-let sellAssetId: any = computed(() => $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.metaMaskChainId), 32));
-let buyAssetId = computed(() => $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.buyChainId), 32));
+let sellAssetId: any = computed(() => $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.metaMaskChainId), 64));
+let buyAssetId: any = computed(() => $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.buyChainId), 64));
 
 const stashed = ref(null);
 const valueToStash = ref("");
@@ -59,8 +58,8 @@ const unstashWaiting = ref(false);
 const setDisabled = ref(false);
 const setWaiting = ref(false);
 
-const sellSymbol = computed(() => metaMaskChainId.value ? $ethClient.chainsData[metaMaskChainId.value]?.symbol : "");
-const buySymbol = computed(() => store.buyChainId ? $ethClient.chainsData[store.buyChainId]?.symbol : '');
+const sellSymbol = computed(() => (wallet.value == 'metamask') ? (metaMaskChainId.value ? $ethClient.chainsData[metaMaskChainId.value]?.symbol : "") : "ACU");
+const buySymbol = computed(() => (wallet.value == 'metamask') ? ((store.buyChainId == 0) ? "ACU" : (store.buyChainId ? $ethClient.chainsData[store.buyChainId]?.symbol : "")) : (metaMaskChainId.value ? $ethClient.chainsData[metaMaskChainId.value]?.symbol: ""));
 
 const sellValue = ref(null);
 const sellPrice = ref(null);
@@ -108,10 +107,6 @@ onMounted(async () => {
 })
 
 watch(wallet, async (newValue, oldValue) => {
-  load();
-});
-
-watch(acuAddress, async (newValue, oldValue) => {
   load();
 });
 
@@ -273,19 +268,20 @@ async function goto(event: any) {
   <v-container>
     <v-row>
       <v-col cols="12" md="10">
-        <v-select v-model="wallet" :items="wallets" label="Wallet"></v-select>
+        <v-select v-model="wallet" :items="wallets" label="Sell wallet"></v-select>
 
         <template v-if="wallet == 'metamask'">
-          <v-select readonly v-model="metaMaskChainId" :items="chainSelect" label="Sell chain"></v-select>
-          <v-text-field v-model="store.metaMaskAccount" label="Sell account" readonly></v-text-field>
+          <v-text-field v-model="store.metaMaskChainName" label="Sell chain" readonly hint="Select in MetaMask." persistent-hint></v-text-field>
+          <v-text-field v-model="store.metaMaskAccount" label="Sell account" readonly hint="Select in MetaMask." persistent-hint></v-text-field>
+          <v-select v-model="store.buyChainId" :items="chainSelect" label="Buy chain"></v-select>
         </template>
 
         <template v-if="wallet == 'polkadot'">
           <v-select v-model="substrateChain" :items="substrateChains" label="Sell chain"></v-select>
-          <v-select v-model="acuAddress" :items="store.accountsAcu" label="Acuity account"></v-select>
+          <v-text-field readonly v-model="store.activeAcuName" label="Sell account"></v-text-field>
+          <v-text-field v-model="store.metaMaskChainName" label="Buy chain" readonly hint="Select in MetaMask." persistent-hint></v-text-field>
+          <v-text-field v-model="store.metaMaskAccount" label="Buy account" readonly hint="Select in MetaMask." persistent-hint></v-text-field>
         </template>
-
-        <v-select v-model="store.buyChainId" :items="chainSelect" label="Buy chain"></v-select>
 
         <div class="text-h6 mb-10">Stash</div>
         <v-text-field v-model="stashed" label="Current stash" :suffix="sellSymbol" readonly></v-text-field>
@@ -298,7 +294,6 @@ async function goto(event: any) {
         <v-progress-linear class="mb-10" :indeterminate="unstashWaiting" color="yellow darken-2"></v-progress-linear>
 
         <div class="text-h6 mb-10">Sell order</div>
-        <v-text-field readonly v-model="store.activeAcuName" label="Acuity account"></v-text-field>
         <v-row>
           <v-col cols="12" sm="6" md="4">
             <v-text-field v-model="sellPrice" label="Price" :suffix="buySymbol + ' / ' + sellSymbol"></v-text-field>
