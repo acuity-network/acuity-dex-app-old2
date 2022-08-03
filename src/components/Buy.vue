@@ -22,8 +22,8 @@ const chains = computed(() => store.ethChains);
 const chainSelect = computed(() => store.chainSelect);
 const metaMaskChainId = computed(() => store.metaMaskChainId);
 
-const sellSymbol = computed(() => store.sellChainId ? $ethClient.chainsData[store.sellChainId].symbol : '');
-const buySymbol = computed(() => store.buyChainId ? $ethClient.chainsData[store.buyChainId].symbol : '');
+const sellSymbol = computed(() => store.sellChainId ? $ethClient.chainsData[store.sellChainId].symbol : "ACU");
+const buySymbol = computed(() => store.buyChainId ? $ethClient.chainsData[store.buyChainId].symbol : "ACU");
 
 const sellOrders: Ref<any[]> = ref([]);
 
@@ -46,7 +46,8 @@ async function loadName(address: string): Promise<string> {
 }
 
 async function load() {
-  if (!store.sellChainId || !store.buyChainId) {
+
+  if (store.sellChainId === null || store.buyChainId === null) {
     return;
   }
 
@@ -58,10 +59,15 @@ async function load() {
     return;
   }
 
-  let sellAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.sellChainId), 32);
-  let buyAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.buyChainId), 32);
+  let sellAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.sellChainId), 64);
+  let buyAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.buyChainId), 64);
 
-  let stashes = await $ethClient.chains[store.sellChainId].atomicSwap.methods.getStashes(buyAssetId, 0, 100).call();
+  let stashes;
+  if (store.sellChainId == 0) {
+//    let result = await $acuityClient.api.query.orderbook.orderbook(acuAddress, sellAssetId, buyAssetId);
+  } else {
+    stashes = await $ethClient.chains[store.sellChainId].atomicSwap.methods.getStashes(buyAssetId, 0, 100).call();
+  }
 
   sellOrders.value = [];
 
@@ -100,8 +106,8 @@ watch(() => store.buyChainId, async (newValue, oldValue) => {
 });
 
 async function buy(accountId: string) {
-  let sellAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.sellChainId), 32);
-  let buyAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.buyChainId), 32);
+  let sellAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.sellChainId), 64);
+  let buyAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.buyChainId), 64);
 
   router.push({
     name: 'sell-order',
