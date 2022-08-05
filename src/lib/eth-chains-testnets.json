@@ -401,6 +401,7 @@
 		]
 	},
 	"11155111": {
+		"disabled": "true",
 		"label": "Sepolia",
 		"symbol": "SEP",
 		"contracts": {
