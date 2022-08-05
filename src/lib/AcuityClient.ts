@@ -32,8 +32,8 @@ export default class MixClient {
     await ApiPromise.create({
       provider: wsProvider,
       types: {
-        AcuityOrderId: '[u8; 16]',
-        AcuityAssetId: '[u8; 16]',
+        Balance: 'u128',
+        AcuityAssetId: '[u8; 32]',
         AcuityForeignAddress: '[u8; 32]',
         AcuityHashedSecret: '[u8; 32]',
         AcuitySecret: '[u8; 32]',
@@ -41,6 +41,46 @@ export default class MixClient {
         EthereumAddress: '[u8; 20]',
       },
 			rpc: {
+        atomicSwap: {
+          getStashes: {
+            description: '',
+            params: [
+              {
+								name: 'asset_id',
+								type: 'AcuityAssetId',
+							},
+              {
+								name: 'offset',
+								type: 'u32',
+							},
+              {
+								name: 'limit',
+								type: 'u32',
+							},
+              {
+		             name: 'at',
+		             type: 'Hash',
+		             isOptional: true
+		           },
+            ],
+						type: 'Vec<(AccountId, Text)>',
+          },
+          getIndexBlocks: {
+            description: '',
+            params: [
+              {
+								name: 'account',
+								type: 'AccountId',
+							},
+              {
+		             name: 'at',
+		             type: 'Hash',
+		             isOptional: true
+		           },
+            ],
+						type: 'Vec<BlockNumber>',
+          },
+        },
 				trustedAccounts: {
 					isTrusted: {
 						description: 'Is the account trusted',
