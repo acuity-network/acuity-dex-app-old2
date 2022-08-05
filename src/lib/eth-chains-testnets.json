@@ -400,6 +400,22 @@
 		"explorers": [
 		]
 	},
+	"11155111": {
+		"label": "Sepolia",
+		"symbol": "SEP",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"https://rpc.sepolia.org",
+		],
+		"explorers": [
+			"https://sepolia.otterscan.io/",
+			"https://sepolia.etherscan.io/"
+		]
+	},
 	"1313161555": {
 		"disabled": "true",
 		"label": "Aurora Testnet",
