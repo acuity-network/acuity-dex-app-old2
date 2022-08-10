@@ -410,7 +410,7 @@
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
-			"https://rpc.sepolia.org",
+			"https://rpc.sepolia.org"
 		],
 		"explorers": [
 			"https://sepolia.otterscan.io/",

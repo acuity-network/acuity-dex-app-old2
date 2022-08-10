@@ -791,6 +791,22 @@
 			"https://arbiscan.io/"
 		]
 	},
+	"42170": {
+		"label": "Arbitrum Nova",
+		"symbol": "ETH",
+		"genesis": "",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"https://nova.arbitrum.io/rpc"
+		],
+		"explorers": [
+			"https://nova-explorer.arbitrum.io/"
+		]
+	},
 	"42220": {
 		"label": "Celo",
 		"symbol": "CELO",
