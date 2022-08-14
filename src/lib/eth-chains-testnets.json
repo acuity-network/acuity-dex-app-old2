@@ -37,7 +37,7 @@
 		"label": "Rinkeby",
 		"symbol": "RIN",
 		"tokens": {
-			"ChainLink (LINK)": "0x01BE23585060835E02B77ef475b0Cc51aA1e0709"
+			"0x01BE23585060835E02B77ef475b0Cc51aA1e0709": "ChainLink (LINK)"
 		},
 		"contracts": {
 			"account": "0x0b28cc778E2A0b08e8Ed6A7Ada455bCbbf944729",
@@ -56,20 +56,20 @@
 		"label": "Görli",
 		"symbol": "GOR",
 		"tokens": {
-			"Test Token (TEST)": "0x26fe8a8f86511d678d031a022e48fff41c6a3e3b",
-			"Zeta (ZETA)": "0xcc7bb2d219a0fc08033e130629c2b854b7ba9195",
-			"ChainLink Token (LINK)": "0x326c977e6efc84e512bb9c30f76e30c160ed06fb",
-			"Wrapped Ether (WETH)": "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
-			"tnusdc": "0x9e493ce65bd2feb4277dde5d0bb08ddd821aad0f",
-			"USDT": "0xc2c527c0cacf457746bd31b2a698fe89de2b6d49",
-			"wBTC": "0xca063a2ab07491ee991dcecb456d1265f842b568",
-			"Guardrail Token (GR)": "0x9779629472246f8ec2b17d932c8fc1c81638fe56",
-			"USD Coin (USDC)": "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
-			"Feromon Token (FEROMON)": "0x8ca56daa4df20d70e0df5dcda10f29facacd2160",
-			"Liquid staked Ether 2.0 (stETH)": "0x1643e812ae58766192cf7d2cf9567df2c37e9b7f",
-			"Guardrail LP Token (GRLP)": "0xe09ee65b3a59900401f9148dba820aeda8d6d326",
-			"Funghi Token (FUNGHI)": "0xd945bc1d1f2bea1f831c5b1a7691305d015b09cd",
-			"Dai (DAI)": "0xdc31ee1784292379fbb2964b3b9c4124d8f89c60"
+			"0x26fe8a8f86511d678d031a022e48fff41c6a3e3b": "Test Token (TEST)",
+			"0xcc7bb2d219a0fc08033e130629c2b854b7ba9195": "Zeta (ZETA)",
+			"0x326c977e6efc84e512bb9c30f76e30c160ed06fb": "ChainLink Token (LINK)",
+			"0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6": "Wrapped Ether (WETH)",
+			"0x9e493ce65bd2feb4277dde5d0bb08ddd821aad0f": "tnusdc",
+			"0xc2c527c0cacf457746bd31b2a698fe89de2b6d49": "USDT",
+			"0xca063a2ab07491ee991dcecb456d1265f842b568": "wBTC",
+			"0x9779629472246f8ec2b17d932c8fc1c81638fe56": "Guardrail Token (GR)",
+			"0x07865c6e87b9f70255377e024ace6630c1eaa37f": "USD Coin (USDC)",
+			"0x8ca56daa4df20d70e0df5dcda10f29facacd2160": "Feromon Token (FEROMON)",
+			"0x1643e812ae58766192cf7d2cf9567df2c37e9b7f": "Liquid staked Ether 2.0 (stETH)",
+			"0xe09ee65b3a59900401f9148dba820aeda8d6d326": "Guardrail LP Token (GRLP)",
+			"0xd945bc1d1f2bea1f831c5b1a7691305d015b09cd": "Funghi Token (FUNGHI)",
+			"0xdc31ee1784292379fbb2964b3b9c4124d8f89c60": "Dai (DAI)"
 		},
 		"contracts": {
 			"account": "0xef754323Cb565EFD381B27e8985430eF4e00FC91",
@@ -107,7 +107,7 @@
 		"label": "Kovan",
 		"symbol": "KOV",
 		"tokens": {
-			"ChainLink (LINK)": "0xa36085F69e2889c224210F603D836748e7dC0088"
+			"0xa36085F69e2889c224210F603D836748e7dC0088": "ChainLink (LINK)"
 		},
 		"contracts": {
 			"account": "0x0b28cc778E2A0b08e8Ed6A7Ada455bCbbf944729",
@@ -276,12 +276,12 @@
 		"label": "Moonbase Alpha",
 		"symbol": "DEV",
 		"tokens": {
-			"Bananas (GLMB)": "0xfA18F19F75A97cfE7D4FF0832aa37539091aE4Fc",
-			"TDT": "0x3Db9CE38F275199372EF8CCaA8c88C50958AF2Ea",
-			"Wrapped Ether (WETH)": "0xA5fd1F6e7980Fd5cA9d062a762030D449990BBBf",
-			"EnergyFiSwap LP Token (ELP)": "0xE418D94DD0ead33e4EDC1B34B111A11158ac1BdF",
-			"Tether USD (USDT)": "0x05Bf07102EfEbb83Ba5F475fB18F843E8736B6E8",
-			"USDC": "0x3d4e3573EBFeaCfADd62E41dA15f0EF1D04c0c10"
+			"0xfA18F19F75A97cfE7D4FF0832aa37539091aE4Fc": "Bananas (GLMB)",
+			"0x3Db9CE38F275199372EF8CCaA8c88C50958AF2Ea": "TDT",
+			"0xA5fd1F6e7980Fd5cA9d062a762030D449990BBBf": "Wrapped Ether (WETH)",
+			"0xE418D94DD0ead33e4EDC1B34B111A11158ac1BdF": "EnergyFiSwap LP Token (ELP)",
+			"0x05Bf07102EfEbb83Ba5F475fB18F843E8736B6E8": "Tether USD (USDT)",
+			"0x3d4e3573EBFeaCfADd62E41dA15f0EF1D04c0c10": "USDC"
 		},
 		"contracts": {
 			"account": "0x526799872C2ca387F52a684Ef4F7F17Dc619A127",
@@ -384,12 +384,12 @@
 		"label": "Avalanche Fuji Testnet",
 		"symbol": "AVAX",
 		"tokens": {
-			"ChainLink (LINK)": "0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846"
+			"0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846": "ChainLink (LINK)"
 		},
 		"contracts": {
 			"account": "0x526799872C2ca387F52a684Ef4F7F17Dc619A127",
 			"atomicSwap": "0xBaf077f3feD80Fa2Dd7cA11D8da9E0e3393DfA1b",
-			"atomicSwapERC20": ""
+			"atomicSwapERC20": "0xf2c5fDb40c3738328F4c8DceFDdCef235FAb4eA1"
 		},
 		"rpcs": [
 			"wss://api.avax-test.network/ext/bc/C/ws",
@@ -403,7 +403,7 @@
 		"label": "Polygon Mumbai",
 		"symbol": "MATIC",
 		"tokens": {
-			"ChainLink (LINK)": "0x326C977E6efc84E512bB9C30f76E30c160eD06FB"
+			"0x326C977E6efc84E512bB9C30f76E30c160eD06FB": "ChainLink (LINK)"
 		},
 		"contracts": {
 			"account": "0x0b28cc778E2A0b08e8Ed6A7Ada455bCbbf944729",
@@ -441,9 +441,9 @@
 		"label": "Arbitrum Nitro Devnet",
 		"symbol": "ETH",
 		"tokens": {
-			"test Moons (tMOON)": "0x6dD6FA8AA03208D8676C1e06D309B13a0CD4257A",
-			"test Moons-b (tMOON-b)": "0x0f030b54C273D78e2bFE44deB2e2a6ea57a65DE9",
-			"test Bricks (tBRICK)": "0x49Cce4CeB2e338dceb82779592eeDaEAEE5174f5"
+			"0x6dD6FA8AA03208D8676C1e06D309B13a0CD4257A": "test Moons (tMOON)",
+			"0x0f030b54C273D78e2bFE44deB2e2a6ea57a65DE9": "test Moons-b (tMOON-b)",
+			"0x49Cce4CeB2e338dceb82779592eeDaEAEE5174f5": "test Bricks (tBRICK)"
 		},
 		"contracts": {
 			"account": "0x0b28cc778E2A0b08e8Ed6A7Ada455bCbbf944729",

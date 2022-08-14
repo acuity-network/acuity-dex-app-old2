@@ -4,6 +4,7 @@ import ActiveAccount from '../components/ActiveAccount.vue'
 import Goto from '../components/Goto.vue'
 import Account from '../components/Account.vue'
 import Chains from '../components/Chains.vue'
+import Tokens from '../components/Tokens.vue'
 import Buy from '../components/Buy.vue'
 import Sell from '../components/Sell.vue'
 import SellOrder from '../components/SellOrder.vue'
@@ -28,6 +29,11 @@ const routes = [
     path: '/chains',
     name: 'chains',
     component: Chains,
+  },
+  {
+    path: '/tokens/:chainId',
+    name: 'tokens',
+    component: Tokens,
   },
   {
     path: '/buy',

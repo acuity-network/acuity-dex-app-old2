@@ -85,7 +85,8 @@ export default class EthClient {
 			store.metaMaskAccountSet(accounts[0].toLowerCase());
 
 			for await (const [key, uri] of this.db.iterator({
-		    gt: '/chains/'
+		    gt: '/chains/',
+        lt: '/chains/z',
 		  })) {
 		    let chainId = parseInt(key.slice(8));
 
@@ -104,16 +105,19 @@ export default class EthClient {
 
   loadChain(chainId: number, uri: string) {
     store.ethChainSet(chainId, this.chainsData[chainId].label, uri);
-    let web3 = newEndpoint(chainId, uri);
-    this.chains[chainId] = {};
-    this.chains[chainId].web3 = web3;
-    if (this.chainsData[chainId].contracts.account) {
-      this.chains[chainId].account = new web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
+    try {
+      let web3 = newEndpoint(chainId, uri);
+      this.chains[chainId] = {};
+      this.chains[chainId].web3 = web3;
+      if (this.chainsData[chainId].contracts.account) {
+        this.chains[chainId].account = new web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
+      }
+      if (this.chainsData[chainId].contracts.atomicSwap) {
+        this.chains[chainId].atomicSwap = new web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
+      }
+  //				this.chains[chainId].atomicSwapERC20 =
     }
-    if (this.chainsData[chainId].contracts.atomicSwap) {
-      this.chains[chainId].atomicSwap = new web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
-    }
-//				this.chains[chainId].atomicSwapERC20 =
+    catch (e) {}
   }
 
   async addChain(chainId: number, uri: string) {

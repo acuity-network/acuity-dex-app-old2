@@ -92,6 +92,15 @@ async function deleteChain(chainId: number) {
   $ethClient.removeChain(chainId);
 }
 
+async function gotoTokens(chainId: number) {
+  router.push({
+    name: 'tokens',
+    params: {
+      chainId: chainId,
+    },
+  })
+}
+
 async function addMetaMask(event: any) {
   $ethClient.addChainToMetaMask(chainId.value, uri.value);
 }
@@ -114,8 +123,7 @@ async function addMetaMask(event: any) {
               <th class="text-right">
                 Height
               </th>
-              <th>
-              </th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -123,7 +131,16 @@ async function addMetaMask(event: any) {
               <td>{{ chain.label }}</td>
               <td>{{ chain.uri }}</td>
               <td class="text-right">{{ chain.height }}</td>
-              <td><v-icon @click="deleteChain(chain.chainId)" size="small">mdi-delete</v-icon></td>
+              <td>
+                <div class="d-flex" style="gap: 1rem">
+                  <v-btn icon density="comfortable" @click="gotoTokens(chain.chainId)">
+                    <v-icon size="small">mdi-circle-multiple</v-icon>
+                  </v-btn>
+                  <v-btn icon density="comfortable" @click="deleteChain(chain.chainId)">
+                    <v-icon size="small">mdi-delete</v-icon>
+                  </v-btn>
+                </div>
+              </td>
             </tr>
           </tbody>
         </v-table>
