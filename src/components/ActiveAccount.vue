@@ -28,6 +28,11 @@ const foreignAccountAcuAccount = computed(() => store.foreignAccountAcuAccount);
 
 const acuAddress = ref(store.addressesAcu[0]);
 const name = ref("");
+const web = ref("");
+const riot = ref("");
+const twitter = ref("");
+const telegram = ref("");
+
 const setNameDisabled = ref(false);
 const setNameWaiting = ref(false);
 const setForeignAccountDisabled = ref(false);
@@ -35,20 +40,29 @@ const setForeignAccountWaiting = ref(false);
 const setAcuAccountDisabled = ref(false);
 const setAcuAccountWaiting = ref(false);
 
-async function loadName(address: string): Promise<string> {
-  try {
-    let result = await $acuityClient.api.query.identity.identityOf(address);
-    let json = result.unwrap().info.display.toString();
-    let display = JSON.parse(json);
-    return $ethClient.web3.utils.hexToAscii(display.raw);
-  }
-  catch (e) {
-    return '';
-  }
-}
-
 async function load() {
-  name.value = await loadName(acuAddress.value);
+  let result = await $acuityClient.api.query.identity.identityOf(acuAddress.value);
+  let info = result.unwrap().info;
+
+  try {
+    name.value = $ethClient.web3.utils.hexToAscii(JSON.parse(info.display.toString()).raw);
+  }
+  catch (e) {}
+
+  try {
+    web.value = $ethClient.web3.utils.hexToAscii(JSON.parse(info.web.toString()).raw);
+  }
+  catch (e) {}
+
+  try {
+    riot.value = $ethClient.web3.utils.hexToAscii(JSON.parse(info.riot.toString()).raw);
+  }
+  catch (e) {}
+
+  try {
+    twitter.value = $ethClient.web3.utils.hexToAscii(JSON.parse(info.twitter.toString()).raw);
+  }
+  catch (e) {}
 
   for (let chainIdKey of Object.keys(store.ethChains)) {
     let chainId = parseInt(chainIdKey);
@@ -91,20 +105,27 @@ watch(acuAddress, async (newValue, oldValue) => {
   load();
 });
 
+function encodeString(text: string) {
+  if (text.length == 0) {
+    return null;
+  }
+  return $ethClient.web3.utils.padLeft($ethClient.web3.utils.numberToHex(text.length + 1), 2) +  $ethClient.web3.utils.asciiToHex(text).slice(2);
+}
+
 async function setIdentity(event: any) {
   setNameDisabled.value = true;
   const injector = await web3FromAddress(acuAddress.value);
 
   const identity = {
     "additional": [],
-    "display": $ethClient.web3.utils.padLeft($ethClient.web3.utils.numberToHex(name.value.length + 1), 2) +  $ethClient.web3.utils.asciiToHex(name.value).slice(2),
+    "display": encodeString(name.value),
     "legal": null,
-    "web": null,
-    "riot": null,
+    "web": encodeString(web.value),
+    "riot": encodeString(riot.value),
     "email": null,
     "pgpFingerprint": null,
     "image": null,
-    "twitter": null,
+    "twitter": encodeString(twitter.value),
   };
 
   console.log(identity);
@@ -182,9 +203,23 @@ async function setAcuAccount(event: any) {
     <v-row>
       <v-col cols="12" md="10">
         <v-select v-model="acuAddress" :items="store.accountsAcu" label="Acuity account"></v-select>
-        <v-text-field v-model="name" label="Identity" hint="Enter your name." persistent-hint></v-text-field>
-        <v-btn class="mb-4" @click="setIdentity" :disabled="setNameDisabled">Set Identity</v-btn>
-        <v-progress-linear class="mb-10" :indeterminate="setNameWaiting" color="yellow darken-2"></v-progress-linear>
+        <v-card>
+          <v-toolbar color="blue">
+            <v-toolbar-title>Public Information</v-toolbar-title>
+          </v-toolbar>
+          <v-card-text>
+            <v-text-field v-model="name" label="Name" hint="Enter your name."></v-text-field>
+            <v-text-field v-model="web" label="Website" hint="Enter your website address."></v-text-field>
+            <v-text-field v-model="twitter" label="Twitter" hint="Enter your Twitter handle."></v-text-field>
+            <v-text-field v-model="riot" label="Matrix" hint="Enter your Matrix ID."></v-text-field>
+            <v-text-field v-model="telegram" label="Telegram" hint="Enter your Telegram ID."></v-text-field>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="success" @click="setIdentity" :disabled="setNameDisabled">Set Identity</v-btn>
+          </v-card-actions>
+          <v-progress-linear :indeterminate="setNameWaiting" color="yellow darken-2"></v-progress-linear>
+        </v-card>
 
         <div v-for="chain in chains">
           <div class="text-h6">{{ chain.label }}</div>
