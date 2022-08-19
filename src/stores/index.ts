@@ -24,6 +24,7 @@ export const main = defineStore('main', {
     ] as any[],
     foreignAccountAcuAccount: {} as any,
     acuAccountForeignAccount: {} as any,
+    tokens: {} as any,
   }),
   getters: {
   },
@@ -105,6 +106,12 @@ export const main = defineStore('main', {
     acuAccountForeignAccountSet(chainId: number, acuAccount: string, foreignAccount: string) {
       this.acuAccountForeignAccount[chainId] = {};
       this.acuAccountForeignAccount[chainId][acuAccount] = foreignAccount;
+    },
+    tokenSet(chainId: number, address: string, info) {
+      if (!this.tokens[chainId]) {
+        this.tokens[chainId] = {};
+      }
+      this.tokens[chainId][address] = info;
     },
   },
 })

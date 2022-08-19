@@ -36,7 +36,7 @@ async function load() {
 
   let newTokens = [];
 
-    for await (const [key, json] of $db.iterator({
+  for await (const [key, json] of $db.iterator({
     gt: '/tokens/' + route.params.chainId + '/',
     lt: '/tokens/' + route.params.chainId + '/z',
   })) {

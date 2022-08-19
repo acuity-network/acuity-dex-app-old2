@@ -103,7 +103,7 @@ export default class EthClient {
 		return this;
   }
 
-  loadChain(chainId: number, uri: string) {
+  async loadChain(chainId: number, uri: string) {
     store.ethChainSet(chainId, this.chainsData[chainId].label, uri);
     try {
       let web3 = newEndpoint(chainId, uri);
@@ -118,6 +118,17 @@ export default class EthClient {
   //				this.chains[chainId].atomicSwapERC20 =
     }
     catch (e) {}
+
+    // Load tokens from database.
+    for await (const [key, json] of this.db.iterator({
+      gt: '/tokens/' + chainId + '/',
+      lt: '/tokens/' + chainId + '/z',
+    })) {
+      let address = key.split('/')[3];
+      let info = JSON.parse(json);
+
+      store.tokenSet(chainId, address, info);
+    }
   }
 
   async addChain(chainId: number, uri: string) {

@@ -12,6 +12,7 @@ import {
 import { encodeAddress } from '@polkadot/keyring';
 import { main } from '../stores/index'
 
+let $db: any = inject('$db');
 let $acuityClient: any = inject('$acuityClient');
 let $ethClient: any = inject('$ethClient');
 let route = useRoute();
@@ -43,6 +44,82 @@ const substrateChains = [
 ];
 
 const substrateChain = ref('acuity');
+
+let metaMaskSellAsset = ref('0');
+let metaMaskSellAssetItems: any = computed(() => {
+  let assets = [];
+
+  assets.push({
+    title: $ethClient.chainsData[metaMaskChainId.value]?.label + " (" + $ethClient.chainsData[metaMaskChainId.value]?.symbol + ")",
+    value: "0",
+  });
+
+  let tokens = store.tokens[metaMaskChainId.value];
+
+  for (let address in tokens) {
+
+    assets.push({
+      title: tokens[address].name + " (" + tokens[address].symbol + ")",
+      value: address,
+    });
+  }
+
+  return assets;
+});
+
+let metaMaskBuyAsset = ref('0');
+let metaMaskBuyAssetItems: any = computed(() => {
+  let assets = [];
+
+  if (store.buyChainId == 0) {
+    assets.push({
+      title: "Acuity (ACU)",
+      value: "0",
+    })
+  }
+  else {
+    assets.push({
+      title: $ethClient.chainsData[store.buyChainId]?.label + " (" + $ethClient.chainsData[store.buyChainId]?.symbol + ")",
+      value: "0",
+    });
+
+    let tokens = store.tokens[store.buyChainId];
+
+    for (let address in tokens) {
+
+      assets.push({
+        title: tokens[address].name + " (" + tokens[address].symbol + ")",
+        value: address,
+      });
+    }
+  }
+
+  return assets;
+});
+
+let polkadotSellAsset: any = ref("ACU");
+
+let polkadotBuyAsset = ref('0');
+let polkadotBuyAssetItems: any = computed(() => {
+  let assets = [];
+
+  assets.push({
+    title: $ethClient.chainsData[metaMaskChainId.value]?.label + " (" + $ethClient.chainsData[metaMaskChainId.value]?.symbol + ")",
+    value: "0",
+  });
+
+  let tokens = store.tokens[metaMaskChainId.value];
+
+  for (let address in tokens) {
+
+    assets.push({
+      title: tokens[address].name + " (" + tokens[address].symbol + ")",
+      value: address,
+    });
+  }
+
+  return assets;
+});
 
 let sellAssetId: any = computed(() => (wallet.value == 'metamask') ? metaMaskChainId.value : 0);
 let buyAssetId: any = computed(() => (wallet.value == 'metamask') ? store.buyChainId : metaMaskChainId.value);
@@ -115,7 +192,7 @@ watch(wallet, async (newValue, oldValue) => {
 });
 
 watch(metaMaskChainId, async (newValue, oldValue) => {
-  if (newValue && $ethClient.chains[newValue].atomicSwap) {
+  if (newValue && $ethClient.chains[newValue]?.atomicSwap) {
     emitter = $ethClient.chains[newValue].atomicSwap.events.allEvents()
   	.on('data', async (log: any) => {
       load();
@@ -274,14 +351,18 @@ async function goto(event: any) {
         <template v-if="wallet == 'metamask'">
           <v-text-field v-model="store.metaMaskChainName" label="Sell chain" readonly hint="Select in MetaMask." persistent-hint></v-text-field>
           <v-text-field v-model="store.metaMaskAccount" label="Sell account" readonly hint="Select in MetaMask." persistent-hint></v-text-field>
+          <v-select v-model="metaMaskSellAsset" :items="metaMaskSellAssetItems" label="Sell asset"></v-select>
           <v-select v-model="store.buyChainId" :items="chainSelect" label="Buy chain"></v-select>
+          <v-select v-model="metaMaskBuyAsset" :items="metaMaskBuyAssetItems" label="Buy asset"></v-select>
         </template>
 
         <template v-if="wallet == 'polkadot'">
           <v-select v-model="substrateChain" :items="substrateChains" label="Sell chain"></v-select>
           <v-text-field readonly v-model="store.activeAcuName" label="Sell account"></v-text-field>
+          <v-text-field v-model="polkadotSellAsset" label="Sell asset" readonly></v-text-field>
           <v-text-field v-model="store.metaMaskChainName" label="Buy chain" readonly hint="Select in MetaMask." persistent-hint></v-text-field>
           <v-text-field v-model="store.metaMaskAccount" label="Buy account" readonly hint="Select in MetaMask." persistent-hint></v-text-field>
+          <v-select v-model="polkadotBuyAsset" :items="polkadotBuyAssetItems" label="Buy asset"></v-select>
         </template>
 
         <div class="text-h6 mb-10">Stash</div>
