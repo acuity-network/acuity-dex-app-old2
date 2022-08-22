@@ -121,9 +121,6 @@ let polkadotBuyAssetItems: any = computed(() => {
   return assets;
 });
 
-let sellAssetId: any = computed(() => (wallet.value == 'metamask') ? metaMaskChainId.value : 0);
-let buyAssetId: any = computed(() => (wallet.value == 'metamask') ? store.buyChainId : metaMaskChainId.value);
-
 function getSubstrateAssetId(): string {
   return $ethClient.web3.utils.padRight('0x0001', 64);
 }
@@ -174,8 +171,24 @@ let buyAssetIdHex: any = computed(() => {
   }
 });
 
-const sellSymbol = computed(() => (wallet.value == 'metamask') ? (metaMaskChainId.value ? $ethClient.chainsData[metaMaskChainId.value]?.symbol : "") : "ACU");
-const buySymbol = computed(() => (wallet.value == 'metamask') ? ((store.buyChainId == 0) ? "ACU" : (store.buyChainId ? $ethClient.chainsData[store.buyChainId]?.symbol : "")) : (metaMaskChainId.value ? $ethClient.chainsData[metaMaskChainId.value]?.symbol: ""));
+const sellSymbol = computed(() => {
+
+  switch(wallet.value) {
+    case 'polkadot':
+      return "ACU";
+    case 'metamask':
+      return (metaMaskSellAsset.value == "0") ? $ethClient.chainsData[metaMaskChainId.value]?.symbol : store.tokens[metaMaskChainId.value][metaMaskSellAsset.value].symbol;
+  }
+});
+
+const buySymbol = computed(() => {
+  switch(wallet.value) {
+    case 'polkadot':
+      return (polkadotBuyAsset.value == "0") ? $ethClient.chainsData[metaMaskChainId.value]?.symbol : store.tokens[metaMaskChainId.value][polkadotBuyAsset.value].symbol;
+    case 'metamask':
+      return (store.buyChainId == 0) ? "ACU" : (store.buyChainId ? $ethClient.chainsData[store.buyChainId]?.symbol : "")
+  }
+});
 
 const stashed = ref(null);
 const valueToStash = ref("");
@@ -263,7 +276,9 @@ watch(metaMaskBuyAsset, async (newValue, oldValue) => {
   load();
 });
 
-
+watch(polkadotBuyAsset, async (newValue, oldValue) => {
+  load();
+});
 
 async function stash(event: any) {
   stashDisabled.value = true;
