@@ -42,25 +42,29 @@ const setAcuAccountWaiting = ref(false);
 
 async function load() {
   let result = await $acuityClient.api.query.identity.identityOf(acuAddress.value);
-  let info = result.unwrap().info;
 
   try {
-    name.value = $ethClient.web3.utils.hexToAscii(JSON.parse(info.display.toString()).raw);
-  }
-  catch (e) {}
+    let info = result.unwrap().info;
 
-  try {
-    web.value = $ethClient.web3.utils.hexToAscii(JSON.parse(info.web.toString()).raw);
-  }
-  catch (e) {}
+    try {
+      name.value = $ethClient.web3.utils.hexToAscii(JSON.parse(info.display.toString()).raw);
+    }
+    catch (e) {}
 
-  try {
-    riot.value = $ethClient.web3.utils.hexToAscii(JSON.parse(info.riot.toString()).raw);
-  }
-  catch (e) {}
+    try {
+      web.value = $ethClient.web3.utils.hexToAscii(JSON.parse(info.web.toString()).raw);
+    }
+    catch (e) {}
 
-  try {
-    twitter.value = $ethClient.web3.utils.hexToAscii(JSON.parse(info.twitter.toString()).raw);
+    try {
+      riot.value = $ethClient.web3.utils.hexToAscii(JSON.parse(info.riot.toString()).raw);
+    }
+    catch (e) {}
+
+    try {
+      twitter.value = $ethClient.web3.utils.hexToAscii(JSON.parse(info.twitter.toString()).raw);
+    }
+    catch (e) {}
   }
   catch (e) {}
 
