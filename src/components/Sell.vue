@@ -424,34 +424,61 @@ async function goto(event: any) {
           <v-select v-model="polkadotBuyAsset" :items="polkadotBuyAssetItems" label="Buy asset"></v-select>
         </template>
 
-        <div class="text-h6 mb-10">Stash</div>
         <v-text-field v-model="stashed" label="Current stash" :suffix="sellSymbol" readonly></v-text-field>
-        <v-text-field v-model="valueToStash" label="Value to stash" :suffix="sellSymbol" :disabled="stashDisabled"></v-text-field>
-        <v-btn class="mb-4" @click="stash" :disabled="stashDisabled">Stash</v-btn>
-        <v-progress-linear class="mb-10" :indeterminate="stashWaiting" color="yellow darken-2"></v-progress-linear>
 
-        <v-text-field v-model="valueToWithdraw" label="Value to unstash" :suffix="sellSymbol" :disabled="unstashDisabled"></v-text-field>
-        <v-btn class="mb-4" @click="unstash" :disabled="unstashDisabled">Unstash</v-btn>
-        <v-progress-linear class="mb-10" :indeterminate="unstashWaiting" color="yellow darken-2"></v-progress-linear>
+        <v-card class="mb-10">
+          <v-toolbar color="blue">
+            <v-toolbar-title>Add to stash</v-toolbar-title>
+          </v-toolbar>
+          <v-card-text>
+            <v-text-field v-model="valueToStash" label="Value" :suffix="sellSymbol" :disabled="stashDisabled"></v-text-field>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="success" @click="stash" :disabled="stashDisabled">Stash</v-btn>
+          </v-card-actions>
+          <v-progress-linear :indeterminate="stashWaiting" color="yellow darken-2"></v-progress-linear>
+        </v-card>
 
-        <div class="text-h6 mb-10">Sell order</div>
-        <v-row>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field v-model="sellPrice" label="Price" :suffix="buySymbol + ' / ' + sellSymbol"></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field v-model="sellValue" label="Value" :suffix="sellSymbol"></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field v-model="sellTotal" readonly label="Total" :suffix="buySymbol"></v-text-field>
-          </v-col>
-        </v-row>
-        <div class="d-flex mb-4" style="gap: 1rem">
-          <v-btn @click="set" :disabled="setDisabled">Set</v-btn>
-          <v-btn @click="reset">Reset</v-btn>
-          <v-btn @click="goto">Goto</v-btn>
-        </div>
-        <v-progress-linear class="mb-10" :indeterminate="setWaiting" color="yellow darken-2"></v-progress-linear>
+        <v-card class="mb-10">
+          <v-toolbar color="blue">
+            <v-toolbar-title>Remove from stash</v-toolbar-title>
+          </v-toolbar>
+          <v-card-text>
+            <v-text-field v-model="valueToWithdraw" label="Value to unstash" :suffix="sellSymbol" :disabled="unstashDisabled"></v-text-field>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="success" @click="unstash" :disabled="unstashDisabled">Unstash</v-btn>
+          </v-card-actions>
+          <v-progress-linear :indeterminate="unstashWaiting" color="yellow darken-2"></v-progress-linear>
+        </v-card>
+
+        <v-card class="mb-10">
+          <v-toolbar color="blue">
+            <v-toolbar-title>Sell order</v-toolbar-title>
+          </v-toolbar>
+          <v-card-text>
+            <v-row>
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field v-model="sellPrice" label="Price" :suffix="buySymbol + ' / ' + sellSymbol"></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field v-model="sellValue" label="Value" :suffix="sellSymbol"></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field v-model="sellTotal" readonly label="Total" :suffix="buySymbol"></v-text-field>
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="success" @click="set" :disabled="setDisabled">Set</v-btn>
+            <v-btn color="success" @click="reset">Reset</v-btn>
+            <v-btn color="success" @click="goto">Goto</v-btn>
+          </v-card-actions>
+          <v-progress-linear :indeterminate="setWaiting" color="yellow darken-2"></v-progress-linear>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
