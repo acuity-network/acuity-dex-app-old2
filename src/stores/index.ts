@@ -9,11 +9,11 @@ export const main = defineStore('main', {
     activeAcuName: "" as string,
 		accountsAcu: [] as any[],
     addressesAcu: [] as string[],
-    metaMaskChainId: null as null | number,
+    metaMaskChainId: 0 as number,
     metaMaskChainName: "" as string,
     metaMaskAccount: "" as string,
-    sellChainId: null as null | number,
-    buyChainId: null as null | number,
+    sellChainId: 0 as number,
+    buyChainId: 0 as number,
     endpoints: {} as any,
     ethChains: {} as any,
     chainSelect: [
@@ -107,7 +107,7 @@ export const main = defineStore('main', {
       this.acuAccountForeignAccount[chainId] = {};
       this.acuAccountForeignAccount[chainId][acuAccount] = foreignAccount;
     },
-    tokenSet(chainId: number, address: string, info) {
+    tokenSet(chainId: number, address: string, info: object) {
       if (!this.tokens[chainId]) {
         this.tokens[chainId] = {};
       }

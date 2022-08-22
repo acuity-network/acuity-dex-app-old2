@@ -124,8 +124,55 @@ let polkadotBuyAssetItems: any = computed(() => {
 let sellAssetId: any = computed(() => (wallet.value == 'metamask') ? metaMaskChainId.value : 0);
 let buyAssetId: any = computed(() => (wallet.value == 'metamask') ? store.buyChainId : metaMaskChainId.value);
 
-let sellAssetIdHex: any = computed(() => $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellAssetId.value), 64));
-let buyAssetIdHex: any = computed(() => $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(buyAssetId.value), 64));
+function getSubstrateAssetId(): string {
+  return $ethClient.web3.utils.padRight('0x0001', 64);
+}
+
+function getEthereumAssetId(chainId: number, tokenAddress: string | null): string {
+  // 2 bytes chain type
+  // 6 bytes eth chainId
+  // 2 bytes address type 0 - base, 1 - ERC20
+  // 2 bytes adapterId (smart contract)
+  // 20 bytes tokenAddress
+
+  let assetId = '0x0002';
+  assetId += $ethClient.web3.utils.stripHexPrefix($ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(chainId), 12));
+
+  if (!tokenAddress) {
+    return $ethClient.web3.utils.padRight(assetId, 64);
+  }
+
+  assetId += '0001';
+  assetId += '0001';
+  assetId += $ethClient.web3.utils.stripHexPrefix(tokenAddress);
+
+  return assetId;
+}
+
+let sellAssetIdHex: any = computed(() => {
+
+  switch (wallet.value) {
+    case 'polkadot':
+      return getSubstrateAssetId();
+    case 'metamask':
+      return getEthereumAssetId(metaMaskChainId.value, (metaMaskSellAsset.value == "0") ? null : metaMaskSellAsset.value);
+  }
+});
+
+let buyAssetIdHex: any = computed(() => {
+
+  switch (wallet.value) {
+    case 'polkadot':
+      return getEthereumAssetId(metaMaskChainId.value, (metaMaskSellAsset.value == "0") ? null : metaMaskSellAsset.value);
+    case 'metamask':
+      if (store.buyChainId == 0) {
+        return getSubstrateAssetId();
+      }
+      else {
+        return getEthereumAssetId(store.buyChainId, (metaMaskBuyAsset.value == "0") ? null : metaMaskBuyAsset.value);
+      }
+  }
+});
 
 const sellSymbol = computed(() => (wallet.value == 'metamask') ? (metaMaskChainId.value ? $ethClient.chainsData[metaMaskChainId.value]?.symbol : "") : "ACU");
 const buySymbol = computed(() => (wallet.value == 'metamask') ? ((store.buyChainId == 0) ? "ACU" : (store.buyChainId ? $ethClient.chainsData[store.buyChainId]?.symbol : "")) : (metaMaskChainId.value ? $ethClient.chainsData[metaMaskChainId.value]?.symbol: ""));
@@ -149,6 +196,9 @@ let emitter;
 
 async function load() {
 
+  console.log("sellAssetId:", sellAssetIdHex.value);
+  console.log("buyAssetId:", buyAssetIdHex.value);
+
   switch (wallet.value) {
     case 'metamask':
       if (metaMaskChainId.value && $ethClient.chains[metaMaskChainId.value]?.atomicSwap) {
@@ -161,7 +211,6 @@ async function load() {
 
     case 'polkadot':
       try {
-        console.log(buyAssetIdHex.value, store.activeAcu);
         stashed.value = $ethClient.formatWei(await $acuityClient.api.query.atomicSwap.stashValue(buyAssetIdHex.value, store.activeAcu));
       }
       catch (e) {
@@ -202,9 +251,19 @@ watch(metaMaskChainId, async (newValue, oldValue) => {
   load();
 });
 
+watch(metaMaskSellAsset, async (newValue, oldValue) => {
+  load();
+});
+
 watch(() => store.buyChainId, async (newValue, oldValue) => {
   load();
 });
+
+watch(metaMaskBuyAsset, async (newValue, oldValue) => {
+  load();
+});
+
+
 
 async function stash(event: any) {
   stashDisabled.value = true;
