@@ -12,6 +12,12 @@ const accountAbi: any = accountAbiJson;
 import atomicSwapAbiJson from '../lib/contracts/AcuityAtomicSwap.abi.json'
 const atomicSwapAbi: any = atomicSwapAbiJson;
 
+import atomicSwapERC20AbiJson from '../lib/contracts/AcuityAtomicSwapERC20.abi.json'
+const atomicSwapERC20Abi: any = atomicSwapERC20AbiJson;
+
+import rpcAbiJson from '../lib/contracts/AcuityRPC.abi.json'
+const rpcAbi: any = rpcAbiJson;
+
 function newEndpoint(chainId: number, uri: string) {
   let web3 = new Web3(uri);
 
@@ -37,6 +43,7 @@ export default class EthClient {
   formatWei: any;
   account: any;
   atomicSwap: any;
+  atomicSwapERC20: any;
 	chains: { [key: number]: any; } = {};
   chainsData: any = ethChainsDataJson;
 
@@ -65,6 +72,7 @@ export default class EthClient {
           if (this.chainsData.hasOwnProperty(chainId)) {
             this.account = new this.web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
         		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
+            this.atomicSwapERC20 = new this.web3.eth.Contract(atomicSwapERC20Abi, this.chainsData[chainId].contracts.atomicSwapERC20);
           }
           this.loadAcuAccount();
         })
@@ -79,6 +87,7 @@ export default class EthClient {
       if (this.chainsData.hasOwnProperty(chainId)) {
         this.account = new this.web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
     		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
+        this.atomicSwapERC20 = new this.web3.eth.Contract(atomicSwapERC20Abi, this.chainsData[chainId].contracts.atomicSwapERC20);
       }
 
       let accounts = await this.web3.eth.requestAccounts();
@@ -115,7 +124,12 @@ export default class EthClient {
       if (this.chainsData[chainId].contracts.atomicSwap) {
         this.chains[chainId].atomicSwap = new web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
       }
-  //				this.chains[chainId].atomicSwapERC20 =
+      if (this.chainsData[chainId].contracts.atomicSwapERC20) {
+        this.chains[chainId].atomicSwapERC20 = new web3.eth.Contract(atomicSwapERC20Abi, this.chainsData[chainId].contracts.atomicSwapERC20);
+      }
+      if (this.chainsData[chainId].contracts.AcuityRPC) {
+        this.chains[chainId].rpc = new web3.eth.Contract(rpcAbi, this.chainsData[chainId].contracts.AcuityRPC);
+      }
     }
     catch (e) {}
 

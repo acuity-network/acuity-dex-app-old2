@@ -30,11 +30,11 @@ const chains = computed(() => store.ethChains);
 const tokenAddress = ref("");
 const tokenAddresses: Ref<any[]> = ref([]);
 
-const tokens: Ref<any[]> = ref([]);
+let tokens: any[] = reactive([]);
 
 async function load() {
 
-  let newTokens = [];
+  let tokenList = [];
 
   for await (const [key, json] of $db.iterator({
     gt: '/tokens/' + route.params.chainId + '/',
@@ -43,14 +43,23 @@ async function load() {
     let address = key.split('/')[3];
     let info = JSON.parse(json);
 
-    newTokens.push({
+    tokens.push({
       symbol: info.symbol,
       name: info.name,
       address: address,
+      allowance: '',
     })
+    tokenList.push(address);
   }
 
-  tokens.value = newTokens;
+  let contract = $ethClient.chainsData[parseInt(route.params.chainId as string)].contracts.atomicSwapERC20;
+  let allowances = await
+  $ethClient.chains[route.params.chainId as string].rpc.methods.getTokenAllowances(store.metaMaskAccount, contract, tokenList).call();
+
+  for (let i in allowances) {
+    console.log(i, allowances[i]);
+    tokens[parseInt(i)].allowance = allowances[i];
+  }
 
   for (let address in $ethClient.chainsData[parseInt(route.params.chainId as string)].tokens) {
     tokenAddresses.value.push({
@@ -103,6 +112,9 @@ async function removeToken(address: string) {
               <th class="text-left">
                 Name
               </th>
+              <th class="text-right">
+                Allowance
+              </th>
               <th></th>
             </tr>
           </thead>
@@ -110,9 +122,13 @@ async function removeToken(address: string) {
             <tr v-for="token in tokens">
               <td>{{ token.symbol }}</td>
               <td>{{ token.name }}</td>
+              <td class="text-right">{{ token.allowance }}</td>
               <td>
                 <div class="d-flex" style="gap: 1rem">
                   <v-btn icon density="comfortable" @click="removeToken(token.address)">
+                    <v-icon size="small">mdi-handshake</v-icon>
+                  </v-btn>
+                  <v-btn icon density="comfortable">
                     <v-icon size="small">mdi-delete</v-icon>
                   </v-btn>
                 </div>

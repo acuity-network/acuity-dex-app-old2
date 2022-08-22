@@ -74,7 +74,8 @@
 		"contracts": {
 			"account": "0xef754323Cb565EFD381B27e8985430eF4e00FC91",
 			"atomicSwap": "0x81e70D725bFfC99bAae32C783F4F05b993AacCFC",
-			"atomicSwapERC20": "0x526799872C2ca387F52a684Ef4F7F17Dc619A127"
+			"atomicSwapERC20": "0x526799872C2ca387F52a684Ef4F7F17Dc619A127",
+			"AcuityRPC": "0xBaf077f3feD80Fa2Dd7cA11D8da9E0e3393DfA1b"
 		},
 		"rpcs": [
 			"https://rpc.goerli.mudit.blog/",
