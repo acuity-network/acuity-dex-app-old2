@@ -31,6 +31,11 @@ const menu = ref([
     text: 'Chains',
   },
   {
+    to: '/tokens',
+    icon: 'mdi-circle-multiple',
+    text: 'Tokens',
+  },
+  {
     to: '/buy',
     icon: 'mdi-cart-arrow-down',
     text: 'Buy',

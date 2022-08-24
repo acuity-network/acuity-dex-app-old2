@@ -23,13 +23,13 @@ function newEndpoint(chainId: number, uri: string) {
 
   web3.eth.getBlockNumber()
     .then(height => {
-      store.chainHeightSet(chainId, height);
+      store.chainHeightSet(chainId, BigInt(height).toLocaleString());
     })
     .catch(() => {});
 
   web3.eth.subscribe('newBlockHeaders')
     .on('data', data => {
-      store.chainHeightSet(chainId, data.number);
+      store.chainHeightSet(chainId, BigInt(data.number).toLocaleString());
     })
     .on('error', () => {});
 
@@ -63,7 +63,16 @@ export default class EthClient {
       this.web3 = new Web3(this.provider);
   		this.web3.eth.defaultBlock = 'pending';
   		this.web3.eth.transactionConfirmationBlocks = 1;
-      this.formatWei = (wei: string) => Number(this.web3.utils.fromWei(this.web3.utils.toBN(wei))).toLocaleString();
+      this.formatWei = (wei: string, decimals: number = 18) => {
+        let divisor = BigInt(10) ** BigInt(decimals);
+        let integer = (BigInt(wei) / divisor).toLocaleString();
+        let decimal = (BigInt(wei) % divisor).toLocaleString();
+        return integer + ((decimal == '0') ? '' : ('.' + decimal));
+      }
+
+      this.unformatWei = (formatted: string) => {
+
+      }
 
       (window.ethereum as any)
         .on('chainChanged', (chainIdHex: string) => {

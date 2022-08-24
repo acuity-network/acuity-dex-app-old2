@@ -52,13 +52,13 @@ function newEndpoint(uri: string) {
 
   web3.eth.getBlockNumber()
     .then(height => {
-      store.endpointHeightSet(uri, height);
+      store.endpointHeightSet(uri, BigInt(height).toLocaleString());
     })
     .catch(() => {});
 
   web3.eth.subscribe('newBlockHeaders')
     .on('data', data => {
-      store.endpointHeightSet(uri, data.number);
+      store.endpointHeightSet(uri, BigInt(data.number).toLocaleString());
     })
     .on('error', () => {});
 
@@ -90,15 +90,6 @@ async function addChain(event: any) {
 
 async function deleteChain(chainId: number) {
   $ethClient.removeChain(chainId);
-}
-
-async function gotoTokens(chainId: number) {
-  router.push({
-    name: 'tokens',
-    params: {
-      chainId: chainId,
-    },
-  })
 }
 
 async function addMetaMask(event: any) {
@@ -133,9 +124,6 @@ async function addMetaMask(event: any) {
               <td class="text-right">{{ chain.height }}</td>
               <td>
                 <div class="d-flex" style="gap: 1rem">
-                  <v-btn icon density="comfortable" @click="gotoTokens(chain.chainId)">
-                    <v-icon size="small">mdi-circle-multiple</v-icon>
-                  </v-btn>
                   <v-btn icon density="comfortable" @click="deleteChain(chain.chainId)">
                     <v-icon size="small">mdi-delete</v-icon>
                   </v-btn>
