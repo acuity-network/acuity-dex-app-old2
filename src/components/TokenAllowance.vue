@@ -30,6 +30,7 @@ const erc20Abi: any = erc20AbiJson;
 const allowance = ref("");
 const unlimited = ref(false);
 const allowanceNew = ref("");
+const sellSymbol = ref("");
 
 const allowanceWaiting = ref(false);
 const allowanceDisabled = ref(false);
@@ -85,7 +86,7 @@ async function approve(event: any) {
           </v-toolbar>
           <v-card-text>
             <v-checkbox v-model="unlimited" label="Unlimited"></v-checkbox>
-            <v-text-field v-model="allowanceNew" label="Value" :suffix="sellSymbol" :disabled="allowanceDisabled | unlimited"></v-text-field>
+            <v-text-field v-model="allowanceNew" label="Value" :suffix="sellSymbol" :disabled="allowanceDisabled || unlimited"></v-text-field>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>

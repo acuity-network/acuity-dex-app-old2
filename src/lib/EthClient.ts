@@ -41,6 +41,7 @@ export default class EthClient {
   provider: any;
 	web3: any;
   formatWei: any;
+  unformatWei: any;
   account: any;
   atomicSwap: any;
   atomicSwapERC20: any;
@@ -66,7 +67,7 @@ export default class EthClient {
       this.formatWei = (wei: string, decimals: number = 18) => {
         let divisor = BigInt(10) ** BigInt(decimals);
         let integer = (BigInt(wei) / divisor).toLocaleString();
-        let decimal = (BigInt(wei) % divisor).toLocaleString();
+        let decimal = (BigInt(wei) % divisor).toString().slice(0, 3);
         return integer + ((decimal == '0') ? '' : ('.' + decimal));
       }
 

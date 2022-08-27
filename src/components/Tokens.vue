@@ -33,10 +33,10 @@ const tokenAddresses: Ref<any[]> = ref([]);
 let tokens: any[] = reactive([]);
 
 async function load() {
-  for (let address in $ethClient.chainsData[parseInt(store.metaMaskChainId as string)].tokens) {
+  for (let address in $ethClient.chainsData[store.metaMaskChainId].tokens) {
     tokenAddresses.value.push({
       value: address,
-      title: $ethClient.chainsData[parseInt(store.metaMaskChainId as string)].tokens[address],
+      title: $ethClient.chainsData[store.metaMaskChainId].tokens[address],
     });
   }
 
@@ -62,23 +62,23 @@ async function load() {
     tokenDecimals.push(info.decimals);
   }
 
-  let balances = await
-  $ethClient.chains[store.metaMaskChainId as string].rpc.methods.getTokenBalances(store.metaMaskAccount, tokenList).call();
+  let balances: [] = await
+  $ethClient.chains[store.metaMaskChainId].rpc.methods.getTokenBalances(store.metaMaskAccount, tokenList).call();
 
   for (let i in balances) {
-    tokens[parseInt(i)].balance = $ethClient.formatWei(balances[i]);
+    tokens[i].balance = $ethClient.formatWei(balances[i]);
   }
 
-  let contract = $ethClient.chainsData[parseInt(store.metaMaskChainId as string)].contracts.atomicSwapERC20;
-  let allowances = await
-  $ethClient.chains[store.metaMaskChainId as string].rpc.methods.getTokenAllowances(store.metaMaskAccount, contract, tokenList).call();
+  let contract = $ethClient.chainsData[store.metaMaskChainId].contracts.atomicSwapERC20;
+  let allowances: [] = await
+  $ethClient.chains[store.metaMaskChainId].rpc.methods.getTokenAllowances(store.metaMaskAccount, contract, tokenList).call();
 
   for (let i in allowances) {
     if (allowances[i] == '115792089237316195423570985008687907853269984665640564039457584007913129639935') {
-      tokens[parseInt(i)].allowance = "∞";
+      tokens[i].allowance = "unlimited";
     }
     else {
-      tokens[parseInt(i)].allowance = $ethClient.formatWei(allowances[i], tokenDecimals[i]);
+      tokens[i].allowance = $ethClient.formatWei(allowances[i], tokenDecimals[i]);
     }
   }
 }
@@ -92,7 +92,7 @@ watch(() => store.metaMaskChainId, async (newValue, oldValue) => {
 });
 
 async function addToken(event: any) {
-  let token = new $ethClient.chains[parseInt(store.metaMaskChainId as string)].web3.eth.Contract(erc20Abi, tokenAddress.value);
+  let token = new $ethClient.chains[store.metaMaskChainId].web3.eth.Contract(erc20Abi, tokenAddress.value);
 
   let result = await Promise.all([
     token.methods.name().call(),

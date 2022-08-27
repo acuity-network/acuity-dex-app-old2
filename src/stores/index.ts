@@ -97,7 +97,7 @@ export const main = defineStore('main', {
       }
     },
     chainHeightSet(chainId: number, height: number) {
-      this.ethChains[chainId].height = height;
+      this.ethChains[chainId].height = BigInt(height).toLocaleString()
     },
     foreignAccountAcuAccountSet(chainId: number, foreignAccount: string, acuAccount: string) {
       this.foreignAccountAcuAccount[chainId] = {};

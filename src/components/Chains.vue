@@ -52,13 +52,13 @@ function newEndpoint(uri: string) {
 
   web3.eth.getBlockNumber()
     .then(height => {
-      store.endpointHeightSet(uri, BigInt(height).toLocaleString());
+      store.endpointHeightSet(uri, height);
     })
     .catch(() => {});
 
   web3.eth.subscribe('newBlockHeaders')
     .on('data', data => {
-      store.endpointHeightSet(uri, BigInt(data.number).toLocaleString());
+      store.endpointHeightSet(uri, data.number);
     })
     .on('error', () => {});
 
