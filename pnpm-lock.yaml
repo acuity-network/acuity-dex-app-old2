@@ -23,7 +23,7 @@ specifiers:
   roboto-fontface: ^0.10.0
   rollup: ^2.78.1
   stream-browserify: ^3.0.0
-  typescript: ^4.8.2
+  typescript: 4.7.4
   util: ^0.12.4
   vite: ^3.0.9
   vite-plugin-vuetify: 1.0.0-alpha.14
@@ -51,7 +51,7 @@ dependencies:
   browserify-zlib: 0.2.0
   events: 3.3.0
   level: 8.0.0
-  pinia: 2.0.21_bw4xur2vyhvhfd4whxbr7emp4u
+  pinia: 2.0.21_j6bzmzd4ujpabbp5objtwxyjp4
   process: 0.11.10
   roboto-fontface: 0.10.0
   stream-browserify: 3.0.0
@@ -67,10 +67,10 @@ devDependencies:
   '@vitejs/plugin-vue': 3.0.3_vite@3.0.9+vue@3.2.37
   buffer: 6.0.3
   rollup: 2.78.1
-  typescript: 4.8.2
+  typescript: 4.7.4
   vite: 3.0.9
   vite-plugin-vuetify: 1.0.0-alpha.14_57znuup5yf247fh4nyn6yyws2m
-  vue-tsc: 0.29.8_typescript@4.8.2
+  vue-tsc: 0.29.8_typescript@4.7.4
 
 packages:
 
@@ -3162,7 +3162,7 @@ packages:
   /picocolors/1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
 
-  /pinia/2.0.21_bw4xur2vyhvhfd4whxbr7emp4u:
+  /pinia/2.0.21_j6bzmzd4ujpabbp5objtwxyjp4:
     resolution: {integrity: sha512-6ol04PtL29O0Z6JHI47O3JUSoyOJ7Og0rstXrHVMZSP4zAldsQBXJCNF0i/H7m8vp/Hjd/CSmuPl7C5QAwpeWQ==}
     peerDependencies:
       '@vue/composition-api': ^1.4.0
@@ -3175,7 +3175,7 @@ packages:
         optional: true
     dependencies:
       '@vue/devtools-api': 6.2.1
-      typescript: 4.8.2
+      typescript: 4.7.4
       vue: 3.2.37
       vue-demi: 0.13.11_vue@3.2.37
     dev: false
@@ -3820,8 +3820,8 @@ packages:
       is-typedarray: 1.0.0
     dev: false
 
-  /typescript/4.8.2:
-    resolution: {integrity: sha512-C0I1UsrrDHo2fYI5oaCGbSejwX4ch+9Y5jTQELvovfmFkK3HHSZJB8MSJcWLmCUBzQBchCrZ9rMRV6GuNrvGtw==}
+  /typescript/4.7.4:
+    resolution: {integrity: sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==}
     engines: {node: '>=4.2.0'}
     hasBin: true
 
@@ -4134,14 +4134,14 @@ packages:
       vue: 3.2.37
     dev: false
 
-  /vue-tsc/0.29.8_typescript@4.8.2:
+  /vue-tsc/0.29.8_typescript@4.7.4:
     resolution: {integrity: sha512-pT0wLRjvRuSmB+J4WJT6uuV9mO0KtSSXEAtaVXZQzyk5+DJdbLIQTbRce/TXSkfqt1l1WogO78RjtOJFiMCgfQ==}
     hasBin: true
     peerDependencies:
       typescript: '*'
     dependencies:
       '@volar/shared': 0.29.8
-      typescript: 4.8.2
+      typescript: 4.7.4
       vscode-vue-languageservice: 0.29.8
     dev: true
 
