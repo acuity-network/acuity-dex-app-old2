@@ -39,10 +39,18 @@ async function load() {
 
   let token = new $ethClient.chains[store.metaMaskChainId].web3.eth.Contract(erc20Abi, route.params.address);
   let contractAddress = $ethClient.chainsData[store.metaMaskChainId].contracts.atomicSwapERC20;
-  allowance.value = await token.methods.allowance(store.metaMaskAccount, contractAddress).call();
+
+  let allowanceWei = await token.methods.allowance(store.metaMaskAccount, contractAddress).call();
+  allowance.value = $ethClient.formatWei(allowanceWei, 18);
 }
 
 onMounted(async () => {
+  let token = new $ethClient.chains[store.metaMaskChainId].web3.eth.Contract(erc20Abi, route.params.address);
+  let emitter = token.events.allEvents()
+  .on('data', function(event: any){
+    load();
+  });
+
   load();
 })
 
