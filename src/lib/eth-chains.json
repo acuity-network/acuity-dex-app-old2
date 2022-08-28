@@ -405,6 +405,23 @@
 		"explorers": [
 		]
 	},
+	"246": {
+		"label": "Energy Web Chain",
+		"symbol": "EWT",
+		"genesis": "",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"wss://rpc.energyweb.org/ws",
+			"https://rpc.energyweb.org/",
+		],
+		"explorers": [
+			"https://explorer.energyweb.org/"
+		]
+	},
 	"250": {
 		"label": "Fantom",
 		"symbol": "FTM",
