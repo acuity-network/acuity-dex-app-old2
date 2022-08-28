@@ -763,6 +763,7 @@
 			"atomicSwapERC20": ""
 		},
 		"rpcs": [
+			"wss://eth.bd.evmos.org:8546",
 			"https://eth.bd.evmos.org:8545"
 		],
 		"explorers": [
