@@ -416,7 +416,7 @@
 		},
 		"rpcs": [
 			"wss://rpc.energyweb.org/ws",
-			"https://rpc.energyweb.org/",
+			"https://rpc.energyweb.org/"
 		],
 		"explorers": [
 			"https://explorer.energyweb.org/"
@@ -751,6 +751,22 @@
 			"https://public-node-api.klaytnapi.com/v1/cypress"
 		],
 		"explorers": [
+		]
+	},
+	"9001": {
+		"label": "Evmos",
+		"symbol": "EVMOS",
+		"genesis": "",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"https://eth.bd.evmos.org:8545"
+		],
+		"explorers": [
+			"https://evm.evmos.org/"
 		]
 	},
 	"10000": {
