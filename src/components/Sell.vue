@@ -57,7 +57,6 @@ let metaMaskSellAssetItems: any = computed(() => {
   let tokens = store.tokens[metaMaskChainId.value];
 
   for (let address in tokens) {
-
     assets.push({
       title: tokens[address].name + " (" + tokens[address].symbol + ")",
       value: address,
@@ -86,7 +85,6 @@ let metaMaskBuyAssetItems: any = computed(() => {
     let tokens = store.tokens[store.buyChainId];
 
     for (let address in tokens) {
-
       assets.push({
         title: tokens[address].name + " (" + tokens[address].symbol + ")",
         value: address,
@@ -98,7 +96,6 @@ let metaMaskBuyAssetItems: any = computed(() => {
 });
 
 let polkadotSellAsset: any = ref("ACU");
-
 let polkadotBuyAsset = ref('0');
 let polkadotBuyAssetItems: any = computed(() => {
   let assets = [];
@@ -147,7 +144,6 @@ function getEthereumAssetId(chainId: number, tokenAddress: string | null): strin
 }
 
 let sellAssetIdHex: any = computed(() => {
-
   switch (wallet.value) {
     case 'polkadot':
       return getSubstrateAssetId();
@@ -157,7 +153,6 @@ let sellAssetIdHex: any = computed(() => {
 });
 
 let buyAssetIdHex: any = computed(() => {
-
   switch (wallet.value) {
     case 'polkadot':
       return getEthereumAssetId(metaMaskChainId.value, (metaMaskSellAsset.value == "0") ? null : metaMaskSellAsset.value);
@@ -172,7 +167,6 @@ let buyAssetIdHex: any = computed(() => {
 });
 
 const sellSymbol = computed(() => {
-
   switch(wallet.value) {
     case 'polkadot':
       return "ACU";
@@ -214,11 +208,21 @@ async function load() {
 
   switch (wallet.value) {
     case 'metamask':
-      if (metaMaskChainId.value && $ethClient.chains[metaMaskChainId.value]?.atomicSwap) {
-        try {
-          stashed.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].atomicSwap.methods.getStashValue(buyAssetIdHex.value, store.metaMaskAccount).call());
+      if (metaMaskSellAsset.value == "0") {
+        if (metaMaskChainId.value && $ethClient.chains[metaMaskChainId.value]?.atomicSwap) {
+          try {
+            stashed.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].atomicSwap.methods.getStashValue(buyAssetIdHex.value, store.metaMaskAccount).call());
+          }
+          catch (e) {};
         }
-        catch (e) {};
+      }
+      else {
+        if (metaMaskChainId.value && $ethClient.chains[metaMaskChainId.value]?.atomicSwapERC20) {
+          try {
+            stashed.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].atomicSwapERC20.methods.getStashValue(metaMaskSellAsset.value, buyAssetIdHex.value, store.metaMaskAccount).call());
+          }
+          catch (e) {};
+        }
       }
       break;
 
@@ -246,6 +250,12 @@ onMounted(async () => {
       load();
     });
   }
+  if (metaMaskChainId.value && $ethClient.chains[metaMaskChainId.value]) {
+    emitter = $ethClient.chains[metaMaskChainId.value].atomicSwapERC20.events.allEvents()
+    .on('data', async (log: any) => {
+      load();
+    });
+  }
   load();
 })
 
@@ -256,6 +266,13 @@ watch(wallet, async (newValue, oldValue) => {
 watch(metaMaskChainId, async (newValue, oldValue) => {
   if (newValue && $ethClient.chains[newValue]?.atomicSwap) {
     emitter = $ethClient.chains[newValue].atomicSwap.events.allEvents()
+  	.on('data', async (log: any) => {
+      load();
+    });
+  }
+
+  if (newValue && $ethClient.chains[newValue]?.atomicSwapERC20) {
+    emitter = $ethClient.chains[newValue].atomicSwapERC20.events.allEvents()
   	.on('data', async (log: any) => {
       load();
     });
@@ -284,9 +301,18 @@ async function stash(event: any) {
   stashDisabled.value = true;
   switch (wallet.value) {
     case 'metamask':
-      $ethClient.atomicSwap.methods
-        .depositStash(buyAssetIdHex.value)
-        .send({from: store.metaMaskAccount, value: $ethClient.web3.utils.toWei(valueToStash.value)})
+      let emitter;
+      if (metaMaskSellAsset.value == "0") {
+        emitter = $ethClient.atomicSwap.methods
+          .depositStash(buyAssetIdHex.value)
+          .send({from: store.metaMaskAccount, value: $ethClient.web3.utils.toWei(valueToStash.value)});
+      }
+      else {
+        emitter = $ethClient.atomicSwapERC20.methods
+          .depositStash(metaMaskSellAsset.value, buyAssetIdHex.value, $ethClient.web3.utils.toWei(valueToStash.value))
+          .send({from: store.metaMaskAccount});
+      }
+      emitter
         .on('transactionHash', function(payload: any) {
           stashWaiting.value = true;
         })
@@ -330,9 +356,18 @@ async function unstash(event: any) {
   unstashDisabled.value = true;
   switch (wallet.value) {
     case 'metamask':
-      $ethClient.atomicSwap.methods
-        .withdrawStash(buyAssetIdHex.value, $ethClient.web3.utils.toWei(valueToWithdraw.value))
-        .send({from: store.metaMaskAccount})
+      let emitter;
+      if (metaMaskSellAsset.value == "0") {
+        emitter = $ethClient.atomicSwap.methods
+          .withdrawStash(buyAssetIdHex.value, $ethClient.web3.utils.toWei(valueToWithdraw.value))
+          .send({from: store.metaMaskAccount});
+      }
+      else {
+        emitter = $ethClient.atomicSwapERC20.methods
+          .withdrawStash(metaMaskSellAsset.value, buyAssetIdHex.value, $ethClient.web3.utils.toWei(valueToWithdraw.value))
+          .send({from: store.metaMaskAccount});
+      }
+      emitter
         .on('transactionHash', function(payload: any) {
           unstashWaiting.value = true;
         })
@@ -344,7 +379,7 @@ async function unstash(event: any) {
           unstashWaiting.value = false;
           unstashDisabled.value = false;
         });
-        break;
+      break;
 
       case 'polkadot':
         const injector = await web3FromAddress(store.activeAcu);
