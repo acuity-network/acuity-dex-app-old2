@@ -702,6 +702,22 @@
 			"https://mainnet.edgscan.com/"
 		]
 	},
+	"3000": {
+		"label": "Echelon",
+		"symbol": "ECH",
+		"genesis": "",
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+			"https://rpc.ech.network"
+		],
+		"explorers": [
+			"https://app.ech.network/explorer"
+		]
+	},
 	"4689": {
 		"label": "IoTeX",
 		"symbol": "IOTX",
