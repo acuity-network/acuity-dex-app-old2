@@ -20,10 +20,82 @@ let router = useRouter();
 const store = main();
 const chains = computed(() => store.ethChains);
 const chainSelect = computed(() => store.chainSelect);
-const metaMaskChainId = computed(() => store.metaMaskChainId);
 
-const sellSymbol = computed(() => store.sellChainId ? $ethClient.chainsData[store.sellChainId].symbol : "ACU");
-const buySymbol = computed(() => store.buyChainId ? $ethClient.chainsData[store.buyChainId].symbol : "ACU");
+let sellAsset = ref('0');
+let sellAssetItems: any = computed(() => {
+  let assets = [];
+
+  if (store.sellChainId == 0) {
+    assets.push({
+      title: "Acuity (ACU)",
+      value: "0",
+    })
+  }
+  else {
+    assets.push({
+      title: $ethClient.chainsData[store.sellChainId]?.label + " (" + $ethClient.chainsData[store.sellChainId]?.symbol + ")",
+      value: "0",
+    });
+
+    let tokens = store.tokens[store.sellChainId];
+
+    for (let address in tokens) {
+      assets.push({
+        title: tokens[address].name + " (" + tokens[address].symbol + ")",
+        value: address,
+      });
+    }
+  }
+
+  return assets;
+});
+
+let buyAsset = ref('0');
+let buyAssetItems: any = computed(() => {
+  let assets = [];
+
+  if (store.buyChainId == 0) {
+    assets.push({
+      title: "Acuity (ACU)",
+      value: "0",
+    })
+  }
+  else {
+    assets.push({
+      title: $ethClient.chainsData[store.buyChainId]?.label + " (" + $ethClient.chainsData[store.buyChainId]?.symbol + ")",
+      value: "0",
+    });
+
+    let tokens = store.tokens[store.buyChainId];
+
+    for (let address in tokens) {
+      assets.push({
+        title: tokens[address].name + " (" + tokens[address].symbol + ")",
+        value: address,
+      });
+    }
+  }
+
+  return assets;
+});
+
+const sellSymbol = computed(() => {
+
+  if (store.sellChainId == 0) {
+    return 'ACU';
+  }
+
+  return (sellAsset.value == "0") ? $ethClient.chainsData[store.sellChainId]?.symbol : store.tokens[store.sellChainId][sellAsset.value].symbol;
+
+});
+
+const buySymbol = computed(() => {
+  if (store.buyChainId == 0) {
+    return 'ACU';
+  }
+
+  return (buyAsset.value == "0") ? $ethClient.chainsData[store.buyChainId]?.symbol : store.tokens[store.buyChainId][buyAsset.value].symbol;
+});
 
 const sellOrders: Ref<any[]> = ref([]);
 
@@ -45,6 +117,49 @@ async function loadName(address: string): Promise<string> {
   }
 }
 
+function getSubstrateAssetId(): string {
+  return $ethClient.web3.utils.padRight('0x0001', 64);
+}
+
+function getEthereumAssetId(chainId: number, tokenAddress: string | null): string {
+  // 2 bytes chain type
+  // 6 bytes eth chainId
+  // 2 bytes address type 0 - base, 1 - ERC20
+  // 2 bytes adapterId (smart contract)
+  // 20 bytes tokenAddress
+
+  let assetId = '0x0002';
+  assetId += $ethClient.web3.utils.stripHexPrefix($ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(chainId), 12));
+
+  if (!tokenAddress) {
+    return $ethClient.web3.utils.padRight(assetId, 64);
+  }
+
+  assetId += '0001';
+  assetId += '0001';
+  assetId += $ethClient.web3.utils.stripHexPrefix(tokenAddress);
+
+  return assetId;
+}
+
+let sellAssetIdHex: any = computed(() => {
+  if (store.sellChainId == 0) {
+    return getSubstrateAssetId();
+  }
+  else {
+    return getEthereumAssetId(store.sellChainId, (sellAsset.value == "0") ? null : sellAsset.value);
+  }
+});
+
+let buyAssetIdHex: any = computed(() => {
+  if (store.buyChainId == 0) {
+    return getSubstrateAssetId();
+  }
+  else {
+    return getEthereumAssetId(store.buyChainId, (buyAsset.value == "0") ? null : buyAsset.value);
+  }
+});
+
 async function load() {
 
   if (store.sellChainId === null || store.buyChainId === null) {
@@ -61,18 +176,15 @@ async function load() {
   }
 */
 
-  let sellAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.sellChainId), 64);
-  let buyAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.buyChainId), 64);
-
   sellOrders.value = [];
   if (store.sellChainId == 0) {
-    let stashes = await $acuityClient.api.rpc.atomicSwap.getStashes(buyAssetId, 0, 100);
+    let stashes = await $acuityClient.api.rpc.atomicSwap.getStashes(buyAssetIdHex.value, 0, 100);
 
     for (let stash of stashes) {
       let acuAddress = stash[0];
       let stashValue = $ethClient.web3.utils.toBN(stash[1].toString());
 
-      let result = await $acuityClient.api.query.orderbook.orderbook(acuAddress, sellAssetId, buyAssetId);
+      let result = await $acuityClient.api.query.orderbook.orderbook(acuAddress, sellAssetIdHex.value, buyAssetIdHex.value);
 
       let price = $ethClient.web3.utils.fromWei(result.price);
       let value = $ethClient.web3.utils.fromWei(result.value);
@@ -88,14 +200,24 @@ async function load() {
       });
     }
   } else {
-    let stashes = await $ethClient.chains[store.sellChainId].atomicSwap.methods.getStashes(buyAssetId, 0, 100).call();
+    let stashes
+
+    console.log(sellAsset.value);
+
+    if (sellAsset.value == "0") {
+      stashes = await $ethClient.chains[store.sellChainId].atomicSwap.methods.getStashes(buyAssetIdHex.value, 0, 100).call();
+    }
+    else {
+      stashes = await $ethClient.chains[store.sellChainId].atomicSwapERC20.methods.getStashes(sellAsset.value, buyAssetIdHex.value, 0, 100).call();
+      console.log(stashes);
+    }
 
     for (let i in stashes.accounts) {
       let account = stashes.accounts[i];
       let acuAddress = await getAcuAddress(account);
       let stashValue = stashes.values[i];
 
-      let result = await $acuityClient.api.query.orderbook.orderbook(acuAddress, sellAssetId, buyAssetId);
+      let result = await $acuityClient.api.query.orderbook.orderbook(acuAddress, sellAssetIdHex.value, buyAssetIdHex.value);
 
       let price = $ethClient.web3.utils.fromWei(result.price);
       let value = $ethClient.web3.utils.fromWei(result.value);
@@ -125,16 +247,21 @@ watch(() => store.buyChainId, async (newValue, oldValue) => {
   load();
 });
 
-async function buy(accountId: string) {
-  let sellAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.sellChainId), 64);
-  let buyAssetId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.buyChainId), 64);
+watch(sellAsset, async (newValue, oldValue) => {
+  load();
+});
 
+watch(buyAsset, async (newValue, oldValue) => {
+  load();
+});
+
+async function buy(accountId: string) {
   router.push({
     name: 'sell-order',
     params: {
       accountId: accountId,
-      sellAssetId: sellAssetId,
-      buyAssetId: buyAssetId,
+      sellAssetId: sellAssetIdHex,
+      buyAssetId: buyAssetIdHex,
     },
   })
 }
@@ -147,7 +274,9 @@ async function buy(accountId: string) {
     <v-row>
       <v-col cols="12" md="10">
         <v-select v-model="store.sellChainId" :items="chainSelect" label="Sell chain"></v-select>
+        <v-select v-model="sellAsset" :items="sellAssetItems" label="Sell asset"></v-select>
         <v-select v-model="store.buyChainId" :items="chainSelect" label="Buy chain"></v-select>
+        <v-select v-model="buyAsset" :items="buyAssetItems" label="Buy asset"></v-select>
 
         <v-table class="mb-10">
           <thead>
