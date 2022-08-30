@@ -23,13 +23,13 @@ function newEndpoint(chainId: number, uri: string) {
 
   web3.eth.getBlockNumber()
     .then(height => {
-      store.chainHeightSet(chainId, BigInt(height).toLocaleString());
+      store.chainHeightSet(chainId, height);
     })
     .catch(() => {});
 
   web3.eth.subscribe('newBlockHeaders')
     .on('data', data => {
-      store.chainHeightSet(chainId, BigInt(data.number).toLocaleString());
+      store.chainHeightSet(chainId, data.number);
     })
     .on('error', () => {});
 
@@ -67,7 +67,7 @@ export default class EthClient {
       this.formatWei = (wei: string, decimals: number = 18) => {
         let divisor = BigInt(10) ** BigInt(decimals);
         let integer = (BigInt(wei) / divisor).toLocaleString();
-        let decimal = (BigInt(wei) % divisor).toString().slice(0, 3);
+        let decimal = this.web3.utils.padLeft((BigInt(wei) % divisor).toString(), decimals).slice(0, 3);
         return integer + ((decimal == '0') ? '' : ('.' + decimal));
       }
 
