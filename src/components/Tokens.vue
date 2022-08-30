@@ -91,6 +91,10 @@ watch(() => store.metaMaskChainId, async (newValue, oldValue) => {
   load();
 });
 
+watch(() => store.metaMaskAccount, async (newValue, oldValue) => {
+  load();
+});
+
 async function addToken(event: any) {
   let token = new $ethClient.chains[store.metaMaskChainId].web3.eth.Contract(erc20Abi, tokenAddress.value);
 
