@@ -24,8 +24,6 @@ const endpoints = computed(() => store.endpoints);
 const chains = computed(() => store.ethChains);
 
 const eth = ref("");
-const ethToStash = ref("");
-const ethToWithdraw = ref("");
 
 let emitter;
 

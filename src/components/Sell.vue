@@ -184,14 +184,6 @@ const buySymbol = computed(() => {
   }
 });
 
-const stashed = ref(null);
-const valueToStash = ref("");
-const valueToWithdraw = ref("");
-
-const stashDisabled = ref(false);
-const stashWaiting = ref(false);
-const unstashDisabled = ref(false);
-const unstashWaiting = ref(false);
 const setDisabled = ref(false);
 const setWaiting = ref(false);
 
@@ -205,35 +197,6 @@ async function load() {
 
   console.log("sellAssetId:", sellAssetIdHex.value);
   console.log("buyAssetId:", buyAssetIdHex.value);
-
-  switch (wallet.value) {
-    case 'metamask':
-      if (metaMaskSellAsset.value == "0") {
-        if (metaMaskChainId.value && $ethClient.chains[metaMaskChainId.value]?.atomicSwap) {
-          try {
-            stashed.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].atomicSwap.methods.getStashValue(buyAssetIdHex.value, store.metaMaskAccount).call());
-          }
-          catch (e) {};
-        }
-      }
-      else {
-        if (metaMaskChainId.value && $ethClient.chains[metaMaskChainId.value]?.atomicSwapERC20) {
-          try {
-            stashed.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].atomicSwapERC20.methods.getStashValue(metaMaskSellAsset.value, buyAssetIdHex.value, store.metaMaskAccount).call());
-          }
-          catch (e) {};
-        }
-      }
-      break;
-
-    case 'polkadot':
-      try {
-        stashed.value = $ethClient.formatWei(await $acuityClient.api.query.atomicSwap.stashValue(buyAssetIdHex.value, store.activeAcu));
-      }
-      catch (e) {
-        console.error(e);
-      };
-  }
 
   if (sellAssetIdHex.value && buyAssetIdHex.value) {
     let result = await $acuityClient.api.query.orderbook.orderbook(store.activeAcu, sellAssetIdHex.value, buyAssetIdHex.value);
@@ -296,116 +259,6 @@ watch(metaMaskBuyAsset, async (newValue, oldValue) => {
 watch(polkadotBuyAsset, async (newValue, oldValue) => {
   load();
 });
-
-async function stash(event: any) {
-  stashDisabled.value = true;
-  switch (wallet.value) {
-    case 'metamask':
-      let emitter;
-      if (metaMaskSellAsset.value == "0") {
-        emitter = $ethClient.atomicSwap.methods
-          .depositStash(buyAssetIdHex.value)
-          .send({from: store.metaMaskAccount, value: $ethClient.web3.utils.toWei(valueToStash.value)});
-      }
-      else {
-        emitter = $ethClient.atomicSwapERC20.methods
-          .depositStash(metaMaskSellAsset.value, buyAssetIdHex.value, $ethClient.web3.utils.toWei(valueToStash.value))
-          .send({from: store.metaMaskAccount});
-      }
-      emitter
-        .on('transactionHash', function(payload: any) {
-          stashWaiting.value = true;
-        })
-        .on('receipt', function(receipt: any) {
-          stashWaiting.value = false;
-          stashDisabled.value = false;
-        })
-        .on('error', function(error: any) {
-          stashWaiting.value = false;
-          stashDisabled.value = false;
-        });
-      break;
-
-    case 'polkadot':
-      const injector = await web3FromAddress(store.activeAcu);
-
-      try {
-        const unsub = await $acuityClient.api.tx.atomicSwap
-          .depositStash(buyAssetIdHex.value, $ethClient.web3.utils.toWei(valueToStash.value))
-          .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
-            if (!result.status.isInBlock) {
-              stashWaiting.value = true;
-            }
-            else {
-              unsub();
-              load();
-              stashWaiting.value = false;
-              stashDisabled.value = false;
-            }
-          });
-      }
-      catch (e) {
-        stashWaiting.value = false;
-        stashDisabled.value = false;
-      }
-      break;
-  }
-}
-
-async function unstash(event: any) {
-  unstashDisabled.value = true;
-  switch (wallet.value) {
-    case 'metamask':
-      let emitter;
-      if (metaMaskSellAsset.value == "0") {
-        emitter = $ethClient.atomicSwap.methods
-          .withdrawStash(buyAssetIdHex.value, $ethClient.web3.utils.toWei(valueToWithdraw.value))
-          .send({from: store.metaMaskAccount});
-      }
-      else {
-        emitter = $ethClient.atomicSwapERC20.methods
-          .withdrawStash(metaMaskSellAsset.value, buyAssetIdHex.value, $ethClient.web3.utils.toWei(valueToWithdraw.value))
-          .send({from: store.metaMaskAccount});
-      }
-      emitter
-        .on('transactionHash', function(payload: any) {
-          unstashWaiting.value = true;
-        })
-        .on('receipt', function(receipt: any) {
-          unstashWaiting.value = false;
-          unstashDisabled.value = false;
-        })
-        .on('error', function(error: any) {
-          unstashWaiting.value = false;
-          unstashDisabled.value = false;
-        });
-      break;
-
-      case 'polkadot':
-        const injector = await web3FromAddress(store.activeAcu);
-
-        try {
-          const unsub = await $acuityClient.api.tx.atomicSwap
-            .withdrawStash(buyAssetIdHex.value, $ethClient.web3.utils.toWei(valueToWithdraw.value))
-            .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
-              if (!result.status.isInBlock) {
-                unstashWaiting.value = true;
-              }
-              else {
-                unsub();
-                load();
-                unstashWaiting.value = false;
-                unstashDisabled.value = false;
-              }
-            });
-        }
-        catch (e) {
-          unstashWaiting.value = false;
-          unstashDisabled.value = false;
-        }
-      break;
-    }
-}
 
 async function set(event: any) {
   setDisabled.value = true;
@@ -473,36 +326,6 @@ async function goto(event: any) {
           <v-text-field v-model="store.metaMaskAccount" label="Buy account" readonly hint="Select in MetaMask." persistent-hint></v-text-field>
           <v-select v-model="polkadotBuyAsset" :items="polkadotBuyAssetItems" label="Buy asset"></v-select>
         </template>
-
-        <v-text-field v-model="stashed" label="Current stash" :suffix="sellSymbol" readonly></v-text-field>
-
-        <v-card class="mb-10">
-          <v-toolbar color="blue">
-            <v-toolbar-title>Add to stash</v-toolbar-title>
-          </v-toolbar>
-          <v-card-text>
-            <v-text-field v-model="valueToStash" label="Value" :suffix="sellSymbol" :disabled="stashDisabled"></v-text-field>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="success" @click="stash" :disabled="stashDisabled">Stash</v-btn>
-          </v-card-actions>
-          <v-progress-linear :indeterminate="stashWaiting" color="yellow darken-2"></v-progress-linear>
-        </v-card>
-
-        <v-card class="mb-10">
-          <v-toolbar color="blue">
-            <v-toolbar-title>Remove from stash</v-toolbar-title>
-          </v-toolbar>
-          <v-card-text>
-            <v-text-field v-model="valueToWithdraw" label="Value to unstash" :suffix="sellSymbol" :disabled="unstashDisabled"></v-text-field>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="success" @click="unstash" :disabled="unstashDisabled">Unstash</v-btn>
-          </v-card-actions>
-          <v-progress-linear :indeterminate="unstashWaiting" color="yellow darken-2"></v-progress-linear>
-        </v-card>
 
         <v-card class="mb-10">
           <v-toolbar color="blue">
