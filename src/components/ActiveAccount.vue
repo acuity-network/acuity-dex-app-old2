@@ -71,14 +71,18 @@ async function load() {
   for (let chainIdKey of Object.keys(store.ethChains)) {
     let chainId = parseInt(chainIdKey);
     let chainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(chainId), 16);
-    let result = await $acuityClient.api.query.orderbook.accountForeignAccount(acuAddress.value, chainIdHex);
-    let foreignAddress = '0x' + Buffer.from(result).toString('hex').slice(24);
-    store.acuAccountForeignAccountSet(chainId, acuAddress.value, foreignAddress);
 
-    if ($ethClient.chains[chainId].account) {
-      let mappedAcuAddress = encodeAddress(await $ethClient.chains[chainId].account.methods.getAcuAccount(foreignAddress).call());
-      store.foreignAccountAcuAccountSet(chainId, foreignAddress, mappedAcuAddress);
+    try {
+      let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(acuAddress.value, chainIdHex)).unwrap();
+      let foreignAddress = '0x' + Buffer.from(result).toString('hex').slice(24);
+      store.acuAccountForeignAccountSet(chainId, acuAddress.value, foreignAddress);
+
+      if ($ethClient.chains[chainId].account) {
+        let mappedAcuAddress = encodeAddress(await $ethClient.chains[chainId].account.methods.getAcuAccount(foreignAddress).call());
+        store.foreignAccountAcuAccountSet(chainId, foreignAddress, mappedAcuAddress);
+      }
     }
+    catch (e) {}
   }
 };
 
