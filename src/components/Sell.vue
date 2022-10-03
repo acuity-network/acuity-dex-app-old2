@@ -274,14 +274,16 @@ async function load() {
         }
       }
   }
-/*
-  if (sellAssetIdHex.value && buyAssetIdHex.value) {
-    let result = await $acuityClient.api.query.orderbook.orderbook(store.activeAcu, sellAssetIdHex.value, buyAssetIdHex.value);
 
-    sellPrice.value = $ethClient.web3.utils.fromWei(result.price);
-    sellValue.value = $ethClient.web3.utils.fromWei(result.value);
+  if (sellAssetIdHex.value && buyAssetIdHex.value) {
+    try {
+      let result = (await $acuityClient.api.query.orderbook.accountPairOrder(store.activeAcu, sellAssetIdHex.value, buyAssetIdHex.value)).unwrap();
+
+      sellPrice.value = $ethClient.web3.utils.fromWei(result.price);
+      sellValue.value = $ethClient.web3.utils.fromWei(result.value);
+    }
+    catch (e) {};
   }
-*/
 }
 
 onMounted(async () => {
