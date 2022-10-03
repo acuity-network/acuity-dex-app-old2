@@ -176,6 +176,11 @@ async function load() {
   }
 */
 
+  let orders = await $acuityClient.api.rpc.orderbook.getPairSellersOrders(sellAssetIdHex.value, buyAssetIdHex.value, 0, 100);
+
+  console.log(orders);
+
+/*
   sellOrders.value = [];
   if (store.sellChainId == 0) {
     let stashes = await $acuityClient.api.rpc.atomicSwap.getStashes(buyAssetIdHex.value, 0, 100);
@@ -233,6 +238,7 @@ async function load() {
       });
     }
   }
+  */
 }
 
 onMounted(async () => {
@@ -285,9 +291,6 @@ async function buy(accountId: string) {
                 Account
               </th>
               <th class="text-right">
-                Stash ({{ sellSymbol }})
-              </th>
-              <th class="text-right">
                 Price ({{ buySymbol }} / {{ sellSymbol }})
               </th>
               <th class="text-right">
@@ -303,7 +306,6 @@ async function buy(accountId: string) {
           <tbody>
             <tr v-for="sellOrder in sellOrders">
               <td><router-link :to="'/account/' + sellOrder.account">{{ sellOrder.accountName }}</router-link></td>
-              <td class="text-right">{{ sellOrder.stash }}</td>
               <td class="text-right">{{ sellOrder.price }}</td>
               <td class="text-right">{{ sellOrder.value }}</td>
               <td class="text-right">{{ sellOrder.total }}</td>

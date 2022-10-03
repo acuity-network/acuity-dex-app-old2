@@ -33,7 +33,8 @@ export default class MixClient {
       provider: wsProvider,
       types: {
         Balance: 'u128',
-        AcuityAssetId: '[u8; 32]',
+        AssetId: '[u8; 32]',
+        PriceValue: '(u128, u128)',
         AcuityForeignAddress: '[u8; 32]',
         AcuityHashedSecret: '[u8; 32]',
         AcuitySecret: '[u8; 32]',
@@ -41,30 +42,63 @@ export default class MixClient {
         EthereumAddress: '[u8; 20]',
       },
 			rpc: {
-        atomicSwap: {
-          getStashes: {
+        orderbook: {
+          getPairSellers: {
             description: '',
             params: [
               {
-								name: 'asset_id',
-								type: 'AcuityAssetId',
-							},
+                name: 'sell_asset_id',
+                type: 'AssetId',
+              },
               {
-								name: 'offset',
-								type: 'u32',
-							},
+                name: 'buy_asset_id',
+                type: 'AssetId',
+              },
               {
-								name: 'limit',
-								type: 'u32',
-							},
+                name: 'offset',
+                type: 'u32',
+              },
+              {
+                name: 'count',
+                type: 'u32',
+              },
               {
 		             name: 'at',
 		             type: 'Hash',
 		             isOptional: true
 		           },
             ],
-						type: 'Vec<(AccountId, Text)>',
+						type: 'Vec<AccountId>',
           },
+          getPairSellersOrders: {
+            description: '',
+            params: [
+              {
+                name: 'sell_asset_id',
+                type: 'AssetId',
+              },
+              {
+                name: 'buy_asset_id',
+                type: 'AssetId',
+              },
+              {
+                name: 'offset',
+                type: 'u32',
+              },
+              {
+                name: 'count',
+                type: 'u32',
+              },
+              {
+		             name: 'at',
+		             type: 'Hash',
+		             isOptional: true
+		           },
+            ],
+						type: "(Vec<AccountId>, Vec<PriceValue>)",
+          },
+        },
+        atomicSwap: {
           getIndexBlocks: {
             description: '',
             params: [
