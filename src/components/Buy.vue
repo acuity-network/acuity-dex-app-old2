@@ -175,70 +175,31 @@ async function load() {
     return;
   }
 */
+  sellOrders.value = [];
 
   let orders = await $acuityClient.api.rpc.orderbook.getPairSellersOrders(sellAssetIdHex.value, buyAssetIdHex.value, 0, 100);
 
-  console.log(orders);
+  let i = 0;
+  while (i < orders[0].length) {
+    let acuAddress = orders[0][i];
+    let priceValue = orders[1][i];
 
-/*
-  sellOrders.value = [];
-  if (store.sellChainId == 0) {
-    let stashes = await $acuityClient.api.rpc.atomicSwap.getStashes(buyAssetIdHex.value, 0, 100);
+    let result = (await $acuityClient.api.query.orderbook.accountPairOrder(acuAddress, sellAssetIdHex.value, buyAssetIdHex.value)).unwrap();
 
-    for (let stash of stashes) {
-      let acuAddress = stash[0];
-      let stashValue = $ethClient.web3.utils.toBN(stash[1].toString());
+    let price = $ethClient.web3.utils.fromWei(result.price);
+    let value = $ethClient.web3.utils.fromWei(result.value);
+    let total = price * value;
 
-      let result = await $acuityClient.api.query.orderbook.orderbook(acuAddress, sellAssetIdHex.value, buyAssetIdHex.value);
+    sellOrders.value.push({
+      account: acuAddress,
+      accountName: await loadName(acuAddress),
+      price: price,
+      value: value,
+      total: total,
+    });
 
-      let price = $ethClient.web3.utils.fromWei(result.price);
-      let value = $ethClient.web3.utils.fromWei(result.value);
-      let total = price * value;
-
-      sellOrders.value.push({
-        account: acuAddress,
-        accountName: await loadName(acuAddress),
-        stash: $ethClient.formatWei(stashValue),
-        price: price,
-        value: value,
-        total: total,
-      });
-    }
-  } else {
-    let stashes
-
-    console.log(sellAsset.value);
-
-    if (sellAsset.value == "0") {
-      stashes = await $ethClient.chains[store.sellChainId].atomicSwap.methods.getStashes(buyAssetIdHex.value, 0, 100).call();
-    }
-    else {
-      stashes = await $ethClient.chains[store.sellChainId].atomicSwapERC20.methods.getStashes(sellAsset.value, buyAssetIdHex.value, 0, 100).call();
-      console.log(stashes);
-    }
-
-    for (let i in stashes.accounts) {
-      let account = stashes.accounts[i];
-      let acuAddress = await getAcuAddress(account);
-      let stashValue = stashes.values[i];
-
-      let result = await $acuityClient.api.query.orderbook.orderbook(acuAddress, sellAssetIdHex.value, buyAssetIdHex.value);
-
-      let price = $ethClient.web3.utils.fromWei(result.price);
-      let value = $ethClient.web3.utils.fromWei(result.value);
-      let total = price * value;
-
-      sellOrders.value.push({
-        account: acuAddress,
-        accountName: await loadName(acuAddress),
-        stash: $ethClient.formatWei(stashValue),
-        price: price,
-        value: value,
-        total: total,
-      });
-    }
+    i++;
   }
-  */
 }
 
 onMounted(async () => {
