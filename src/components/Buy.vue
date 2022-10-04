@@ -227,8 +227,8 @@ async function buy(accountId: string) {
     name: 'sell-order',
     params: {
       accountId: accountId,
-      sellAssetId: sellAssetIdHex,
-      buyAssetId: buyAssetIdHex,
+      sellAssetId: sellAssetIdHex.value,
+      buyAssetId: buyAssetIdHex.value,
     },
   })
 }

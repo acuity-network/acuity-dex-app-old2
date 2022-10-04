@@ -28,7 +28,6 @@ const sellChainId = ref(0);
 const sellChain = ref("");
 const buyChainId = ref(0);
 const buyChain = ref("");
-const stashed = ref(0);
 const price = ref(0);
 const value = ref(0);
 const total = ref(0);
@@ -165,18 +164,16 @@ let sellEmitter;
 onMounted(async () => {
   sellerAccountId.value = route.params.accountId as string;
   sellerName.value = await loadName(sellerAccountId.value);
-  sellChainId.value = $ethClient.web3.utils.hexToNumber(route.params.sellAssetId);
+  sellChainId.value = $ethClient.web3.utils.hexToNumber('0x' + route.params.sellAssetId.slice(6, 18));
   sellChain.value = $ethClient.chainsData[sellChainId.value].label;
-  buyChainId.value = $ethClient.web3.utils.hexToNumber(route.params.buyAssetId);
+  buyChainId.value = $ethClient.web3.utils.hexToNumber('0x' + route.params.buyAssetId.slice(6, 18));
   buyChain.value = $ethClient.chainsData[buyChainId.value].label;
 
   let chainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellChainId.value), 16);
-  let result = await $acuityClient.api.query.orderbook.accountForeignAccount(sellerAccountId.value, chainIdHex);
+  let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(sellerAccountId.value, chainIdHex)).unwrap();
   foreignAddress = '0x' + Buffer.from(result).toString('hex').slice(24);
 
-  stashed.value = $ethClient.formatWei(await $ethClient.chains[sellChainId.value].atomicSwap.methods.getStashValue(route.params.buyAssetId, foreignAddress).call());
-
-  result = await $acuityClient.api.query.orderbook.orderbook(route.params.accountId, route.params.sellAssetId, route.params.buyAssetId);
+  result = (await $acuityClient.api.query.orderbook.accountPairOrder(route.params.accountId, route.params.sellAssetId, route.params.buyAssetId)).unwrap();
 
   priceWei = result.price;
   price.value = $ethClient.web3.utils.fromWei(result.price);
@@ -240,15 +237,15 @@ async function createSellLock(lock: any) {
   let recipient = lock.buyerEthAddress;
   let hashedSecret = lock.hashedSecret;
   let timeout = Date.now() + 60 * 60 * 2 * 1000;   // 2 hours
-  let stashAssetId = route.params.buyAssetId;
+  let buyAssetId = route.params.buyAssetId;
   let value = $ethClient.web3.utils.numberToHex(lock.sellLockValueWei);
   let buyLockId = lock.lockId;
 
-  console.log({recipient, hashedSecret, timeout, stashAssetId, value, buyLockId});
+  console.log({recipient, hashedSecret, timeout, buyAssetId, buyLockId, value});
 
   $ethClient.atomicSwap.methods
-    .lockSell(recipient, hashedSecret, timeout, stashAssetId, value, buyLockId)
-    .send({from: store.metaMaskAccount})
+    .lockSell(recipient, hashedSecret, timeout, buyAssetId, buyLockId)
+    .send({from: store.metaMaskAccount, value: value})
     .on('transactionHash', function(payload: any) {
       locks[lock.lockId].createSellLockWaiting = true;
     })
@@ -383,7 +380,6 @@ async function unlockBuyLock(lock: any) {
         <v-text-field readonly v-model="sellerName" label="Seller" hint="Who is selling." persistent-hint></v-text-field>
         <v-text-field readonly v-model="sellChain" label="Sell chain" hint="Asset being sold." persistent-hint></v-text-field>
         <v-text-field readonly v-model="buyChain" label="Buy chain" hint="Asset to pay with." persistent-hint></v-text-field>
-        <v-text-field readonly v-model="stashed" label="Stashed" :suffix="sellSymbol" hint="Value seller has stashed for this pair." persistent-hint></v-text-field>
         <v-text-field readonly v-model="price" label="Price" :suffix="buySymbol + ' / ' + sellSymbol" hint="Price asset is being sold for." persistent-hint></v-text-field>
         <v-text-field readonly v-model="value" label="Value" :suffix="sellSymbol" hint="How much is for sale." persistent-hint></v-text-field>
         <v-text-field readonly v-model="total" label="Total" :suffix="buySymbol" hint="Maximum that can be paid." persistent-hint></v-text-field>

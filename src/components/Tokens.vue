@@ -63,7 +63,7 @@ async function load() {
   }
 
   let balances: [] = await
-  $ethClient.chains[store.metaMaskChainId].rpc.methods.getTokenBalances(store.metaMaskAccount, tokenList).call();
+  $ethClient.chains[store.metaMaskChainId].rpc.methods.getAccountTokenBalances(store.metaMaskAccount, tokenList).call();
 
   for (let i in balances) {
     tokens[i].balance = $ethClient.formatWei(balances[i]);
@@ -71,7 +71,7 @@ async function load() {
 
   let contract = $ethClient.chainsData[store.metaMaskChainId].contracts.atomicSwapERC20;
   let allowances: [] = await
-  $ethClient.chains[store.metaMaskChainId].rpc.methods.getTokenAllowances(store.metaMaskAccount, contract, tokenList).call();
+  $ethClient.chains[store.metaMaskChainId].rpc.methods.getAccountTokenAllowances(store.metaMaskAccount, contract, tokenList).call();
 
   for (let i in allowances) {
     if (allowances[i] == '115792089237316195423570985008687907853269984665640564039457584007913129639935') {

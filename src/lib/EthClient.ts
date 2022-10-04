@@ -137,8 +137,8 @@ export default class EthClient {
       if (this.chainsData[chainId].contracts.atomicSwapERC20) {
         this.chains[chainId].atomicSwapERC20 = new web3.eth.Contract(atomicSwapERC20Abi, this.chainsData[chainId].contracts.atomicSwapERC20);
       }
-      if (this.chainsData[chainId].contracts.AcuityRPC) {
-        this.chains[chainId].rpc = new web3.eth.Contract(rpcAbi, this.chainsData[chainId].contracts.AcuityRPC);
+      if (this.chainsData[chainId].contracts.acuityRPC) {
+        this.chains[chainId].rpc = new web3.eth.Contract(rpcAbi, this.chainsData[chainId].contracts.acuityRPC);
       }
     }
     catch (e) {}

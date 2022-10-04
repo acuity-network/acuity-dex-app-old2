@@ -213,9 +213,9 @@ async function load() {
       sellBalance.value = $ethClient.formatWei(result.data.free);
 
       if (polkadotBuyAsset.value == "0") {
-        if (store.buyChainId) {
+        if (metaMaskChainId.value) {
           try {
-            buyBalance.value = $ethClient.formatWei(await $ethClient.chains[store.buyChainId].web3.eth.getBalance(store.metaMaskAccount));
+            buyBalance.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].web3.eth.getBalance(store.metaMaskAccount));
           }
           catch (e) {};
         }
