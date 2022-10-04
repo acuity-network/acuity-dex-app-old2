@@ -18,6 +18,17 @@
         "type": "bytes32"
       }
     ],
+    "name": "LockNotFound",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "lockId",
+        "type": "bytes32"
+      }
+    ],
     "name": "LockNotTimedOut",
     "type": "error"
   },
@@ -35,33 +46,7 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "assetId",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "value",
-        "type": "uint256"
-      }
-    ],
-    "name": "StashNotBigEnough",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
+        "internalType": "contract ERC20",
         "name": "token",
         "type": "address"
       },
@@ -94,7 +79,7 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "address",
+        "internalType": "contract ERC20",
         "name": "token",
         "type": "address"
       },
@@ -155,7 +140,7 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "address",
+        "internalType": "contract ERC20",
         "name": "token",
         "type": "address"
       },
@@ -186,7 +171,7 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "address",
+        "internalType": "contract ERC20",
         "name": "token",
         "type": "address"
       },
@@ -247,69 +232,7 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "assetId",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "value",
-        "type": "uint256"
-      }
-    ],
-    "name": "StashAdd",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "assetId",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "value",
-        "type": "uint256"
-      }
-    ],
-    "name": "StashRemove",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
+        "internalType": "contract ERC20",
         "name": "token",
         "type": "address"
       },
@@ -340,7 +263,7 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "address",
+        "internalType": "contract ERC20",
         "name": "token",
         "type": "address"
       },
@@ -377,7 +300,7 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "address",
+        "internalType": "contract ERC20",
         "name": "token",
         "type": "address"
       },
@@ -412,7 +335,7 @@
   {
     "inputs": [
       {
-        "internalType": "address",
+        "internalType": "contract ERC20",
         "name": "token",
         "type": "address"
       },
@@ -440,29 +363,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "sellToken",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "assetId",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "value",
-        "type": "uint256"
-      }
-    ],
-    "name": "depositStash",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "bytes32",
         "name": "lockId",
         "type": "bytes32"
@@ -482,7 +382,7 @@
   {
     "inputs": [
       {
-        "internalType": "address",
+        "internalType": "contract ERC20",
         "name": "token",
         "type": "address"
       },
@@ -521,75 +421,7 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "assetId",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "address",
-        "name": "seller",
-        "type": "address"
-      }
-    ],
-    "name": "getStashValue",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "value",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "assetId",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "offset",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "limit",
-        "type": "uint256"
-      }
-    ],
-    "name": "getStashes",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "accounts",
-        "type": "address[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "values",
-        "type": "uint256[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
+        "internalType": "contract ERC20",
         "name": "token",
         "type": "address"
       },
@@ -632,7 +464,7 @@
   {
     "inputs": [
       {
-        "internalType": "address",
+        "internalType": "contract ERC20",
         "name": "sellToken",
         "type": "address"
       },
@@ -675,68 +507,7 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "sellToken",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "assetIdFrom",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "assetIdTo",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "value",
-        "type": "uint256"
-      }
-    ],
-    "name": "moveStash",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "recipient",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "hashedSecret",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "timeout",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "stashAssetId",
-        "type": "bytes32"
-      }
-    ],
-    "name": "timeoutStash",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
+        "internalType": "contract ERC20",
         "name": "token",
         "type": "address"
       },
@@ -764,7 +535,7 @@
   {
     "inputs": [
       {
-        "internalType": "address",
+        "internalType": "contract ERC20",
         "name": "token",
         "type": "address"
       },
@@ -792,7 +563,7 @@
   {
     "inputs": [
       {
-        "internalType": "address",
+        "internalType": "contract ERC20",
         "name": "token",
         "type": "address"
       },
@@ -813,47 +584,6 @@
       }
     ],
     "name": "unlockBySender",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "sellToken",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "assetId",
-        "type": "bytes32"
-      }
-    ],
-    "name": "withdrawStash",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "sellToken",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "assetId",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "value",
-        "type": "uint256"
-      }
-    ],
-    "name": "withdrawStash",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

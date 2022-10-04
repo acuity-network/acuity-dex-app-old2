@@ -5,9 +5,10 @@
 		"symbol": "TEST",
 		"tokens": {},
 		"contracts": {
-			"account": "0xd05647dd9D7B17aBEBa953fbF2dc8D8e87c19cb3",
-			"atomicSwap": "0x744Ac7bbcFDDA8fdb41cF55c020d62f2109887A5",
-			"atomicSwapERC20": ""
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": "",
+			"acuityRPC": ""
 		},
 		"rpcs": [
 			"ws://localhost:8546",
@@ -18,12 +19,13 @@
 	},
 	"3": {
 		"label": "Ropsten",
-		"symbol": "ROP",
+		"symbol": "RopstenETH",
 		"tokens": {},
 		"contracts": {
-			"account": "0xD3B8E298a59b0d60E0d112B919Ab3255780D19D7",
-			"atomicSwap": "0xdBe4e69953abc81d9C59F1aEc4F0d713Db834965",
-			"atomicSwapERC20": ""
+			"account": "0xf92f37169F9E112BC924144b871E67C8CCb12BB2",
+			"atomicSwap": "0xef754323Cb565EFD381B27e8985430eF4e00FC91",
+			"atomicSwapERC20": "0x81e70D725bFfC99bAae32C783F4F05b993AacCFC",
+			"acuityRPC": "0xB4AB3B919AdC6A9725F9959580831F08D26DB493"
 		},
 		"rpcs": [
 			"wss://ropsten.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161",
@@ -35,14 +37,15 @@
 	},
 	"4": {
 		"label": "Rinkeby",
-		"symbol": "RIN",
+		"symbol": "RinkebyETH",
 		"tokens": {
 			"0x01BE23585060835E02B77ef475b0Cc51aA1e0709": "ChainLink (LINK)"
 		},
 		"contracts": {
-			"account": "0x0b28cc778E2A0b08e8Ed6A7Ada455bCbbf944729",
-			"atomicSwap": "0x1E335b8B56810C8E1FF90F1b84Ae246Ea333141b",
-			"atomicSwapERC20": ""
+			"account": "0xD3B8E298a59b0d60E0d112B919Ab3255780D19D7",
+			"atomicSwap": "0xdBe4e69953abc81d9C59F1aEc4F0d713Db834965",
+			"atomicSwapERC20": "0xf92f37169F9E112BC924144b871E67C8CCb12BB2",
+			"acuityRPC": "0xef754323Cb565EFD381B27e8985430eF4e00FC91"
 		},
 		"rpcs": [
 			"wss://rinkeby.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161",
@@ -54,7 +57,7 @@
 	},
 	"5": {
 		"label": "Görli",
-		"symbol": "GOR",
+		"symbol": "GoerliETH",
 		"tokens": {
 			"0x26fe8a8f86511d678d031a022e48fff41c6a3e3b": "Test Token (TEST)",
 			"0xcc7bb2d219a0fc08033e130629c2b854b7ba9195": "Zeta (ZETA)",
@@ -73,10 +76,10 @@
 			"0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984": "Uniswap (UNI)"
 		},
 		"contracts": {
-			"account": "0xef754323Cb565EFD381B27e8985430eF4e00FC91",
-			"atomicSwap": "0x81e70D725bFfC99bAae32C783F4F05b993AacCFC",
-			"atomicSwapERC20": "0x526799872C2ca387F52a684Ef4F7F17Dc619A127",
-			"AcuityRPC": "0xBaf077f3feD80Fa2Dd7cA11D8da9E0e3393DfA1b"
+			"account": "0xf2c5fDb40c3738328F4c8DceFDdCef235FAb4eA1",
+			"atomicSwap": "0x6583D918eF888905023B9898582962e88D165D22",
+			"atomicSwapERC20": "0x027D8B8A4027C1AA54a48295841bB12D63acd6bB",
+			"acuityRPC": "0x684dE4C153E9cb353553A559Dd63cE1dE3942eb1"
 		},
 		"rpcs": [
 			"https://rpc.goerli.mudit.blog/",
@@ -87,6 +90,23 @@
 			"https://goerli.etherscan.io"
 		]
 	},
+	"6": {
+		"disabled": "true",
+		"label": "EthereumFair Testnet",
+		"symbol": "ETF",
+		"tokens": {},
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": "",
+			"acuityRPC": ""
+		},
+		"rpcs": [
+			"https://rpc.etherfair.org"
+		],
+		"explorers": [
+		]
+	},
 	"18": {
 		"disabled": "true",
 		"label": "ThunderCore Testnet",
@@ -95,7 +115,8 @@
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
-			"atomicSwapERC20": ""
+			"atomicSwapERC20": "",
+			"acuityRPC": ""
 		},
 		"rpcs": [
 			"wss://testnet-ws.thundercore.com",
@@ -107,14 +128,15 @@
 	},
 	"42": {
 		"label": "Kovan",
-		"symbol": "KOV",
+		"symbol": "KovanETH",
 		"tokens": {
 			"0xa36085F69e2889c224210F603D836748e7dC0088": "ChainLink (LINK)"
 		},
 		"contracts": {
-			"account": "0x0b28cc778E2A0b08e8Ed6A7Ada455bCbbf944729",
-			"atomicSwap": "0x1E335b8B56810C8E1FF90F1b84Ae246Ea333141b",
-			"atomicSwapERC20": ""
+			"account": "0xD3B8E298a59b0d60E0d112B919Ab3255780D19D7",
+			"atomicSwap": "0xdBe4e69953abc81d9C59F1aEc4F0d713Db834965",
+			"atomicSwapERC20": "0xf92f37169F9E112BC924144b871E67C8CCb12BB2",
+			"acuityRPC": "0xef754323Cb565EFD381B27e8985430eF4e00FC91"
 		},
 		"rpcs": [
 			"https://kovan.poa.network",
@@ -133,7 +155,8 @@
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
-			"atomicSwapERC20": ""
+			"atomicSwapERC20": "",
+			"acuityRPC": ""
 		},
 		"rpcs": [
 			"wss://ws-kovan.optimism.io",
@@ -151,7 +174,8 @@
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
-			"atomicSwapERC20": ""
+			"atomicSwapERC20": "",
+			"acuityRPC": ""
 		},
 		"rpcs": [
 			"https://sokol.poa.network"
@@ -168,7 +192,8 @@
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
-			"atomicSwapERC20": ""
+			"atomicSwapERC20": "",
+			"acuityRPC": ""
 		},
 		"rpcs": [
 			"https://shibuya.public.blastapi.io/",
@@ -186,7 +211,8 @@
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
-			"atomicSwapERC20": ""
+			"atomicSwapERC20": "",
+			"acuityRPC": ""
 		},
 		"rpcs": [
 			"https://data-seed-prebsc-1-s1.binance.org:8545/",
@@ -205,7 +231,8 @@
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
-			"atomicSwapERC20": ""
+			"atomicSwapERC20": "",
+			"acuityRPC": ""
 		},
 		"rpcs": [
 			"wss://ws-testnet.hecochain.com",
@@ -223,7 +250,8 @@
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
-			"atomicSwapERC20": ""
+			"atomicSwapERC20": "",
+			"acuityRPC": ""
 		},
 		"rpcs": [
 			"wss://zksync2-testnet.zksync.dev/ws",
@@ -241,7 +269,8 @@
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
-			"atomicSwapERC20": ""
+			"atomicSwapERC20": "",
+			"acuityRPC": ""
 		},
 		"rpcs": [
 			"wss://acala-mandala-adapter.api.onfinality.io/public-ws",
@@ -261,7 +290,8 @@
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
-			"atomicSwapERC20": ""
+			"atomicSwapERC20": "",
+			"acuityRPC": ""
 		},
 		"rpcs": [
 			"wss://api.clover.finance",
@@ -286,9 +316,10 @@
 			"0x3d4e3573EBFeaCfADd62E41dA15f0EF1D04c0c10": "USDC"
 		},
 		"contracts": {
-			"account": "0x526799872C2ca387F52a684Ef4F7F17Dc619A127",
-			"atomicSwap": "0xBaf077f3feD80Fa2Dd7cA11D8da9E0e3393DfA1b",
-			"atomicSwapERC20": ""
+			"account": "0xf2c5fDb40c3738328F4c8DceFDdCef235FAb4eA1",
+			"atomicSwap": "0x6583D918eF888905023B9898582962e88D165D22",
+			"atomicSwapERC20": "0x027D8B8A4027C1AA54a48295841bB12D63acd6bB",
+			"acuityRPC": "0x684dE4C153E9cb353553A559Dd63cE1dE3942eb1"
 		},
 		"rpcs": [
 			"wss://wss.api.moonbase.moonbeam.network",
@@ -312,7 +343,8 @@
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
-			"atomicSwapERC20": ""
+			"atomicSwapERC20": "",
+			"acuityRPC": ""
 		},
 		"rpcs": [
 			"https://beresheet1.edgewa.re/evm",
@@ -336,7 +368,8 @@
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
-			"atomicSwapERC20": ""
+			"atomicSwapERC20": "",
+			"acuityRPC": ""
 		},
 		"rpcs": [
 			"https://rpc.testnet.fantom.network/",
@@ -373,7 +406,8 @@
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
-			"atomicSwapERC20": ""
+			"atomicSwapERC20": "",
+			"acuityRPC": ""
 		},
 		"rpcs": [
 			"https://moeing.tech:9545",
@@ -389,9 +423,10 @@
 			"0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846": "ChainLink (LINK)"
 		},
 		"contracts": {
-			"account": "0x526799872C2ca387F52a684Ef4F7F17Dc619A127",
-			"atomicSwap": "0xBaf077f3feD80Fa2Dd7cA11D8da9E0e3393DfA1b",
-			"atomicSwapERC20": "0xf2c5fDb40c3738328F4c8DceFDdCef235FAb4eA1"
+			"account": "0x74Bf54A07F3c971Bd9e2F9DFb577af78899efa5f",
+			"atomicSwap": "0x3C64D61A0655BEc959dE0669Ac0b3e5063Dcc30E",
+			"atomicSwapERC20": "0xe0702D7922565C4BAA13f33D338a757E2cBef880",
+			"acuityRPC": "0x43bb576EC865a38e7C40554032f3Bf48Cf492ce7"
 		},
 		"rpcs": [
 			"wss://api.avax-test.network/ext/bc/C/ws",
@@ -408,9 +443,10 @@
 			"0x326C977E6efc84E512bB9C30f76E30c160eD06FB": "ChainLink (LINK)"
 		},
 		"contracts": {
-			"account": "0x0b28cc778E2A0b08e8Ed6A7Ada455bCbbf944729",
-			"atomicSwap": "0x1E335b8B56810C8E1FF90F1b84Ae246Ea333141b",
-			"atomicSwapERC20": ""
+			"account": "0xD3B8E298a59b0d60E0d112B919Ab3255780D19D7",
+			"atomicSwap": "0xdBe4e69953abc81d9C59F1aEc4F0d713Db834965",
+			"atomicSwapERC20": "0xf92f37169F9E112BC924144b871E67C8CCb12BB2",
+			"acuityRPC": "0xef754323Cb565EFD381B27e8985430eF4e00FC91"
 		},
 		"rpcs": [
 			"https://rpc-mumbai.maticvigil.com",
@@ -423,38 +459,39 @@
 	},
 	"421611": {
 		"disabled": "true",
-		"label": "Arbitrum Testnet",
-		"symbol": "ETH",
+		"label": "Arbitrum Rinkby",
+		"symbol": "RinkebyETH",
 		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
-			"atomicSwapERC20": ""
+			"atomicSwapERC20": "",
+			"acuityRPC": ""
 		},
 		"rpcs": [
 			"wss://rinkeby.arbitrum.io/ws",
 			"https://rinkeby.arbitrum.io/rpc"
 		],
 		"explorers": [
-			"https://testnet.arbiscan.io/"
+			"https://testnet.arbiscan.io/",
+			"https://rinkeby-explorer.arbitrum.io"
 		]
 	},
-	"421612": {
-		"label": "Arbitrum Nitro Devnet",
-		"symbol": "ETH",
+	"421613": {
+		"disabled": "true",
+		"label": "Arbitrum Goerli",
+		"symbol": "GoerliETH",
 		"tokens": {
-			"0x6dD6FA8AA03208D8676C1e06D309B13a0CD4257A": "test Moons (tMOON)",
-			"0x0f030b54C273D78e2bFE44deB2e2a6ea57a65DE9": "test Moons-b (tMOON-b)",
-			"0x49Cce4CeB2e338dceb82779592eeDaEAEE5174f5": "test Bricks (tBRICK)"
 		},
 		"contracts": {
-			"account": "0x0b28cc778E2A0b08e8Ed6A7Ada455bCbbf944729",
-			"atomicSwap": "0x1E335b8B56810C8E1FF90F1b84Ae246Ea333141b",
-			"atomicSwapERC20": ""
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": "",
+			"acuityRPC": ""
 		},
 		"rpcs": [
-			"wss://nitro-devnet.arbitrum.io/ws",
-			"https://nitro-devnet.arbitrum.io/rpc"
+			"wss://goerli-rollup.arbitrum.io/ws",
+			"https://goerli-rollup.arbitrum.io/rpc"
 		],
 		"explorers": [
 		]
@@ -467,7 +504,8 @@
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
-			"atomicSwapERC20": ""
+			"atomicSwapERC20": "",
+			"acuityRPC": ""
 		},
 		"rpcs": [
 			"https://rpc.sepolia.org"
@@ -486,7 +524,8 @@
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
-			"atomicSwapERC20": ""
+			"atomicSwapERC20": "",
+			"acuityRPC": ""
 		},
 		"rpcs": [
 			"https://testnet.aurora.dev/"
@@ -502,7 +541,8 @@
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
-			"atomicSwapERC20": ""
+			"atomicSwapERC20": "",
+			"acuityRPC": ""
 		},
 		"rpcs": [
 			"https://api.s0.b.hmny.io"
