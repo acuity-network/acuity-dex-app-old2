@@ -265,7 +265,7 @@ async function load() {
         }
         else {
           try {
-            let token = new $ethClient.web3.eth.Contract(erc20Abi, metaMaskBuyAsset.value);
+            let token = new $ethClient.chains[store.buyChainId].web3.eth.Contract(erc20Abi, metaMaskBuyAsset.value);
             buyBalance.value = $ethClient.formatWei(await token.methods
               .balanceOf(store.metaMaskAccount)
               .call());
