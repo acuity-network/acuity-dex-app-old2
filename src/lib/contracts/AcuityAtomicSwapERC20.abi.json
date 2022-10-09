@@ -70,11 +70,6 @@
     "type": "error"
   },
   {
-    "inputs": [],
-    "name": "ZeroValue",
-    "type": "error"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
@@ -130,6 +125,12 @@
         "internalType": "uint256",
         "name": "sellPrice",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "sellAddress",
+        "type": "bytes32"
       }
     ],
     "name": "BuyLock",
@@ -441,6 +442,11 @@
         "type": "uint256"
       },
       {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      },
+      {
         "internalType": "bytes32",
         "name": "sellAssetId",
         "type": "bytes32"
@@ -451,9 +457,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "value",
-        "type": "uint256"
+        "internalType": "bytes32",
+        "name": "sellAddress",
+        "type": "bytes32"
       }
     ],
     "name": "lockBuy",
@@ -465,7 +471,7 @@
     "inputs": [
       {
         "internalType": "contract ERC20",
-        "name": "sellToken",
+        "name": "token",
         "type": "address"
       },
       {
@@ -484,14 +490,14 @@
         "type": "uint256"
       },
       {
-        "internalType": "bytes32",
-        "name": "stashAssetId",
-        "type": "bytes32"
-      },
-      {
         "internalType": "uint256",
         "name": "value",
         "type": "uint256"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "buyAssetId",
+        "type": "bytes32"
       },
       {
         "internalType": "bytes32",

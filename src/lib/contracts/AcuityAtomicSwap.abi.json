@@ -44,11 +44,6 @@
     "type": "error"
   },
   {
-    "inputs": [],
-    "name": "ZeroValue",
-    "type": "error"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
@@ -98,6 +93,12 @@
         "internalType": "uint256",
         "name": "sellPrice",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "sellAddress",
+        "type": "bytes32"
       }
     ],
     "name": "BuyLock",
@@ -372,6 +373,11 @@
         "internalType": "uint256",
         "name": "sellPrice",
         "type": "uint256"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "sellAddress",
+        "type": "bytes32"
       }
     ],
     "name": "lockBuy",
