@@ -70,7 +70,7 @@ export const main = defineStore('main', {
       }
     },
     endpointHeightSet(endpoint: string, height: number) {
-      this.endpoints[endpoint].height = height;
+      this.endpoints[endpoint].height = BigInt(height).toLocaleString();
     },
     ethChainSet(chainId: number, label: string, uri: string) {
       if (!(chainId in this.ethChains)) {
@@ -97,7 +97,7 @@ export const main = defineStore('main', {
       }
     },
     chainHeightSet(chainId: number, height: number) {
-      this.ethChains[chainId].height = BigInt(height).toLocaleString()
+      this.ethChains[chainId].height = BigInt(height).toLocaleString();
     },
     foreignAccountAcuAccountSet(chainId: number, foreignAccount: string, acuAccount: string) {
       this.foreignAccountAcuAccount[chainId] = {};

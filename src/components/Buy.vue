@@ -249,7 +249,7 @@ async function buy(accountId: string) {
           <thead>
             <tr>
               <th class="text-left">
-                Account
+                Seller
               </th>
               <th class="text-right">
                 Price ({{ buySymbol }} / {{ sellSymbol }})
