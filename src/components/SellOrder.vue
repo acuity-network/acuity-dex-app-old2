@@ -114,6 +114,14 @@ async function loadName(address: string): Promise<string> {
   }
 }
 
+function getLockId(returnValues) {
+  let sender = $ethClient.web3.utils.padLeft(returnValues.sender, 64).slice(2);
+  let recipient = $ethClient.web3.utils.padLeft(returnValues.recipient, 64).slice(2);
+  let hashedSecret = returnValues.hashedSecret.slice(2);
+  let timeout = $ethClient.web3.utils.padLeft($ethClient.web3.utils.numberToHex(returnValues.timeout), 64).slice(2);
+  return $ethClient.web3.utils.keccak256('0x' + sender + recipient + hashedSecret + timeout);
+}
+
 async function load() {
   let newLocks: any = {};
 
@@ -195,6 +203,7 @@ async function load() {
       {
         continue;
       }
+      let lockId = getLockId(event.returnValues);
 
       let buyerAcuAddress = encodeAddress(await $ethClient.chains[buyChainId.value].account.methods.getAcuAccount(event.returnValues.sender).call());
 
@@ -203,8 +212,8 @@ async function load() {
 
       //this.$arbitrumClient.web3.utils.fromWei((BigInt(this.$arbitrumClient.web3.utils.toWei(lock.buyLockValue.toString())) / BigInt(this.priceWei)).toString()),
 
-      newLocks[event.returnValues.lockId] = {
-        lockId: event.returnValues.lockId,
+      newLocks[lockId] = {
+        lockId: lockId,
         secret: "",
         hashedSecret: event.returnValues.hashedSecret,
         buyerAddressBuyChain: event.returnValues.sender.toLowerCase(),
@@ -248,7 +257,7 @@ async function load() {
     for (let event of events) {
       let buyLockId = event.returnValues.buyLockId;
       if (newLocks[buyLockId]) {
-        newLocks[buyLockId].sellLockId = event.returnValues.lockId;
+        newLocks[buyLockId].sellLockId = getLockId(event.returnValues);
         newLocks[buyLockId].sellLockState = "Locked";
         newLocks[buyLockId].sellLockTimeoutRaw = event.returnValues.timeout;
         newLocks[buyLockId].sellLockTimeout = new Date(parseInt(event.returnValues.timeout)).toLocaleString();
