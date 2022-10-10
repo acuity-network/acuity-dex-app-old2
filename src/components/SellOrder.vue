@@ -78,6 +78,30 @@ const buyChain = computed(() => {
   return $ethClient.chainsData[buyChainId.value].label
 });
 
+const sellAsset = computed(() => {
+  if (sellChainId.value == 0) {
+    return 'Acuity (ACU)';
+  }
+
+  let tokens = store.tokens[sellChainId.value];
+
+  return (sellToken.value == "0x0000000000000000000000000000000000000000") ?
+    ($ethClient.chainsData[sellChainId.value].label + ' (' + $ethClient.chainsData[sellChainId.value].symbol + ')') :
+    (tokens[sellToken.value].name + ' (' + tokens[sellToken.value].symbol + ')');
+});
+
+const buyAsset = computed(() => {
+  if (buyChainId.value == 0) {
+    return 'Acuity (ACU)';
+  }
+
+  let tokens = store.tokens[buyChainId.value];
+
+  return (buyToken.value == "0x0000000000000000000000000000000000000000") ?
+    ($ethClient.chainsData[buyChainId.value].label + ' (' + $ethClient.chainsData[buyChainId.value].symbol + ')') :
+    (tokens[buyToken.value].name + ' (' + tokens[buyToken.value].symbol + ')');
+});
+
 async function loadName(address: string): Promise<string> {
   try {
     let result = await $acuityClient.api.query.identity.identityOf(address);
@@ -669,9 +693,9 @@ async function unlockBuyLock(lock: any) {
       <v-col cols="12" md="10">
         <v-text-field readonly v-model="sellerName" label="Seller" hint="Who is selling." persistent-hint></v-text-field>
         <v-text-field readonly v-model="sellChain" label="Sell chain" persistent-hint></v-text-field>
-        <v-text-field readonly v-model="sellToken" label="Sell asset" hint="Asset being sold." persistent-hint></v-text-field>
+        <v-text-field readonly v-model="sellAsset" label="Sell asset" hint="Asset being sold." persistent-hint></v-text-field>
         <v-text-field readonly v-model="buyChain" label="Buy chain" persistent-hint></v-text-field>
-        <v-text-field readonly v-model="buyToken" label="Buy asset" hint="Asset to pay with." persistent-hint></v-text-field>
+        <v-text-field readonly v-model="buyAsset" label="Buy asset" hint="Asset to pay with." persistent-hint></v-text-field>
         <v-text-field readonly v-model="price" label="Price" :suffix="buySymbol + ' / ' + sellSymbol" hint="Price asset is being sold for." persistent-hint></v-text-field>
         <v-text-field readonly v-model="value" label="Value" :suffix="sellSymbol" hint="How much is for sale." persistent-hint></v-text-field>
         <v-text-field readonly v-model="total" label="Total" :suffix="buySymbol" hint="Maximum that can be paid." persistent-hint></v-text-field>
