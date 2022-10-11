@@ -71,8 +71,8 @@
 		},
 		"contracts": {
 			"account": "0x74Bf54A07F3c971Bd9e2F9DFb577af78899efa5f",
-			"atomicSwap": "0x3C64D61A0655BEc959dE0669Ac0b3e5063Dcc30E",
-			"atomicSwapERC20": "0xe0702D7922565C4BAA13f33D338a757E2cBef880",
+			"atomicSwap": "0xFA32fA464EA2F885B2e142a65ea1A86Ba498Cf53",
+			"atomicSwapERC20": "0x4057d489B2C03935Ce312B19DAd9513e48E63fF2",
 			"acuityRPC": "0x43bb576EC865a38e7C40554032f3Bf48Cf492ce7"
 		},
 		"rpcs": [
@@ -308,8 +308,8 @@
 		},
 		"contracts": {
 			"account": "0x74Bf54A07F3c971Bd9e2F9DFb577af78899efa5f",
-			"atomicSwap": "0x3C64D61A0655BEc959dE0669Ac0b3e5063Dcc30E",
-			"atomicSwapERC20": "0xe0702D7922565C4BAA13f33D338a757E2cBef880",
+			"atomicSwap": "0xC43747959ad95513eb22E1485a26744Ecedfa45B",
+			"atomicSwapERC20": "0xFA32fA464EA2F885B2e142a65ea1A86Ba498Cf53",
 			"acuityRPC": "0x43bb576EC865a38e7C40554032f3Bf48Cf492ce7"
 		},
 		"rpcs": [
@@ -415,8 +415,8 @@
 		},
 		"contracts": {
 			"account": "0xC43747959ad95513eb22E1485a26744Ecedfa45B",
-			"atomicSwap": "0xFA32fA464EA2F885B2e142a65ea1A86Ba498Cf53",
-			"atomicSwapERC20": "0x4057d489B2C03935Ce312B19DAd9513e48E63fF2",
+			"atomicSwap": "0x5DAbc48C43109057E0d546cf6A16aD96c727Bc66",
+			"atomicSwapERC20": "0xdB176DB229Fc19D104fC6eF587604DFD2bC452E9",
 			"acuityRPC": "0xB21917D0569339368aCF4CF864137eaeC167B99e"
 		},
 		"rpcs": [
