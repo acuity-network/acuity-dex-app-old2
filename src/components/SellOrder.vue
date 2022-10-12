@@ -122,6 +122,15 @@ function getLockId(returnValues: any) {
   return $ethClient.web3.utils.keccak256('0x' + sender + recipient + hashedSecret + timeout);
 }
 
+function getTokenLockId(returnValues: any) {
+  let token = $ethClient.web3.utils.padLeft(returnValues.token, 64).slice(2);
+  let sender = $ethClient.web3.utils.padLeft(returnValues.sender, 64).slice(2);
+  let recipient = $ethClient.web3.utils.padLeft(returnValues.recipient, 64).slice(2);
+  let hashedSecret = returnValues.hashedSecret.slice(2);
+  let timeout = $ethClient.web3.utils.padLeft($ethClient.web3.utils.numberToHex(returnValues.timeout), 64).slice(2);
+  return $ethClient.web3.utils.keccak256('0x' + token + sender + recipient + hashedSecret + timeout);
+}
+
 async function load() {
   let newLocks: any = {};
 
@@ -198,12 +207,18 @@ async function load() {
 
     for (let event of events) {
       if ((event.returnValues.recipient.toLowerCase() != sellerAddressBuyChain.value.toLowerCase()) ||      // buy lock for seller
-        (event.returnValues.sellAssetId != route.params.sellAssetId) ||   // correct sell assetId
+        (event.returnValues.sellAssetId != (route.params.sellAssetId as string).toLowerCase()) ||   // correct sell assetId
         (event.returnValues.sellPrice != priceWei))                                                   // correct price
       {
         continue;
       }
-      let lockId = getLockId(event.returnValues);
+      let lockId;
+      if (buyType == 0) {
+        lockId = getLockId(event.returnValues);
+      }
+      else {
+        lockId = getTokenLockId(event.returnValues);
+      }
 
       let buyerAcuAddress = encodeAddress(await $ethClient.chains[buyChainId.value].account.methods.getAcuAccount(event.returnValues.sender).call());
 
@@ -261,7 +276,13 @@ async function load() {
     for (let event of events) {
       let buyLockId = event.returnValues.buyLockId;
       if (newLocks[buyLockId]) {
-        newLocks[buyLockId].sellLockId = getLockId(event.returnValues);
+        let lockId;
+        if (sellType == 0) {
+          newLocks[buyLockId].sellLockId = getLockId(event.returnValues);
+        }
+        else {
+          newLocks[buyLockId].sellLockId = getTokenLockId(event.returnValues);
+        }
         newLocks[buyLockId].sellLockState = "Locked";
         newLocks[buyLockId].sellLockTimeoutRaw = event.returnValues.timeout;
         newLocks[buyLockId].sellLockTimeout = new Date(parseInt(event.returnValues.timeout)).toLocaleString();
