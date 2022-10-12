@@ -250,7 +250,7 @@ async function load() {
           catch (e) {};
       }
 
-      if (store.buyChainId == "0") {
+      if (store.buyChainId == 0) {
         let result = await $acuityClient.api.query.system.account(store.activeAcu);
         buyBalance.value = $ethClient.formatWei(result.data.free);
       }

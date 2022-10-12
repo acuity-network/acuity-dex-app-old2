@@ -114,7 +114,7 @@ async function loadName(address: string): Promise<string> {
   }
 }
 
-function getLockId(returnValues) {
+function getLockId(returnValues: any) {
   let sender = $ethClient.web3.utils.padLeft(returnValues.sender, 64).slice(2);
   let recipient = $ethClient.web3.utils.padLeft(returnValues.recipient, 64).slice(2);
   let hashedSecret = returnValues.hashedSecret.slice(2);
@@ -198,7 +198,7 @@ async function load() {
 
     for (let event of events) {
       if ((event.returnValues.recipient.toLowerCase() != sellerAddressBuyChain.value.toLowerCase()) ||      // buy lock for seller
-        (event.returnValues.sellAssetId.toLowerCase() != route.params.sellAssetId.toLowerCase()) ||   // correct sell assetId
+        (event.returnValues.sellAssetId != route.params.sellAssetId) ||   // correct sell assetId
         (event.returnValues.sellPrice != priceWei))                                                   // correct price
       {
         continue;
@@ -346,9 +346,9 @@ onMounted(async () => {
   value.value = $ethClient.web3.utils.fromWei(result.value);
   total.value = price.value * value.value;
 
-  $acuityClient.api.query.system.events((events) => {
+  $acuityClient.api.query.system.events((events: any) => {
     // Loop through the Vec<EventRecord>
-    events.forEach((record) => {
+    events.forEach((record: any) => {
       // Extract the phase, event and the event types
       const { event, phase } = record;
       if (event.section == 'atomicSwap') {
