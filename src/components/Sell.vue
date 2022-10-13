@@ -225,7 +225,7 @@ async function load() {
       }
       else {
         try {
-          let token = new $ethClient.web3.eth.Contract(erc20Abi, polkadotBuyAsset.value);
+          let token = new $ethClient.chains[metaMaskChainId.value].web3.eth.Contract(erc20Abi, polkadotBuyAsset.value);
           buyBalance.value = $ethClient.formatWei(await token.methods
             .balanceOf(store.metaMaskAccount)
             .call());
@@ -245,7 +245,7 @@ async function load() {
       }
       else {
         try {
-          let token = new $ethClient.web3.eth.Contract(erc20Abi, metaMaskSellAsset.value);
+          let token = new $ethClient.chains[metaMaskChainId.value].web3.eth.Contract(erc20Abi, metaMaskSellAsset.value);
           sellBalance.value = $ethClient.formatWei(await token.methods
             .balanceOf(store.metaMaskAccount)
             .call());
