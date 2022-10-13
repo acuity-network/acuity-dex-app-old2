@@ -134,6 +134,7 @@ async function removeToken(address: string) {
   <v-container>
     <v-row>
       <v-col cols="12" md="10">
+        <v-text-field class="mb-10" v-model="store.metaMaskChainName" label="Chain" readonly hint="Select in MetaMask." persistent-hint></v-text-field>
         <v-table class="mb-10">
           <thead>
             <tr>

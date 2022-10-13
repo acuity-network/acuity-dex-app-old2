@@ -84,7 +84,7 @@ async function approve(event: any) {
   <v-container>
     <v-row>
       <v-col cols="12" md="10">
-        <v-text-field label="Chain"></v-text-field>
+        <v-text-field v-model="store.metaMaskChainName" label="Chain" readonly hint="Select in MetaMask." persistent-hint></v-text-field>
         <v-text-field label="Token"></v-text-field>
         <v-text-field v-model="allowance" label="Allowance" readonly></v-text-field>
 
