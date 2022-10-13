@@ -114,7 +114,7 @@ export default class EthClient {
 				}
 		  }
 
-      this.loadAcuAccount();
+      await this.loadAcuAccount();
     } else {
       console.log('Please install MetaMask!');
     }

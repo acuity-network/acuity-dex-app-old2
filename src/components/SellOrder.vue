@@ -18,6 +18,9 @@ let $ethClient: any = inject('$ethClient');
 let route = useRoute();
 let router = useRouter();
 
+import erc20AbiJson from '../lib/contracts/ERC20.abi.json'
+const erc20Abi: any = erc20AbiJson;
+
 const store = main();
 
 const locks: any = reactive({});
@@ -26,8 +29,10 @@ const sellerAccountId = ref("");
 const sellerName = ref("");
 const sellChainId = ref(0);
 const sellToken = ref("");
+const sellBalance = ref("");
 const buyChainId = ref(0);
 const buyToken = ref("");
+const buyBalance = ref("");
 const price = ref(0);
 const value = ref(0);
 const total = ref(0);
@@ -133,6 +138,51 @@ function getTokenLockId(returnValues: any) {
 
 async function load() {
   let newLocks: any = {};
+
+  sellBalance.value = '';
+  buyBalance.value = '';
+
+  let sellChainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellChainId.value), 16);
+  let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(store.activeAcu, sellChainIdHex)).unwrap();
+  let sellerAddressBuyChain = '0x' + Buffer.from(result).toString('hex').slice(24);
+  let sellToken = '0x' + route.params.sellAssetId.slice(26, 66);
+
+  if (sellToken == "0x0000000000000000000000000000000000000000") {
+    try {
+      sellBalance.value = $ethClient.formatWei(await $ethClient.chains[sellChainId.value].web3.eth.getBalance(sellerAddressSellChain));
+    }
+    catch (e) {};
+  }
+  else {
+    try {
+      let token = new $ethClient.chains[sellChainId.value].web3.eth.Contract(erc20Abi, sellToken);
+      sellBalance.value = $ethClient.formatWei(await token.methods
+        .balanceOf(sellerAddressBuyChain)
+        .call());
+      }
+      catch (e) {};
+  }
+
+  let buyChainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(buyChainId.value), 16);
+  result = (await $acuityClient.api.query.orderbook.accountForeignAccount(store.activeAcu, buyChainIdHex)).unwrap();
+  let buyerAddressBuyChain = '0x' + Buffer.from(result).toString('hex').slice(24);
+  let buyToken = '0x' + route.params.buyAssetId.slice(26, 66);
+
+  if (buyToken == "0x0000000000000000000000000000000000000000") {
+    try {
+      buyBalance.value = $ethClient.formatWei(await $ethClient.chains[buyChainId.value].web3.eth.getBalance(buyerAddressSellChain));
+    }
+    catch (e) {};
+  }
+  else {
+    try {
+      let token = new $ethClient.chains[buyChainId.value].web3.eth.Contract(erc20Abi, buyToken);
+      buyBalance.value = $ethClient.formatWei(await token.methods
+        .balanceOf(buyerAddressBuyChain)
+        .call());
+      }
+      catch (e) {};
+  }
 
   let buyHeight;
   let sellHeight;
@@ -724,8 +774,10 @@ async function unlockBuyLock(lock: any) {
         <v-text-field readonly v-model="sellerName" label="Seller" hint="Who is selling." persistent-hint></v-text-field>
         <v-text-field readonly v-model="sellChain" label="Sell chain" persistent-hint></v-text-field>
         <v-text-field readonly v-model="sellAsset" label="Sell asset" hint="Asset being sold." persistent-hint></v-text-field>
+        <v-text-field readonly v-model="sellBalance" label="Your sell asset balance" hint="Your current balance of the asset being sold." persistent-hint :suffix="sellSymbol"></v-text-field>
         <v-text-field readonly v-model="buyChain" label="Buy chain" persistent-hint></v-text-field>
         <v-text-field readonly v-model="buyAsset" label="Buy asset" hint="Asset to pay with." persistent-hint></v-text-field>
+        <v-text-field readonly v-model="buyBalance" label="Your buy asset balance" hint="Your current balance of the asset you can buy with." persistent-hint :suffix="buySymbol"></v-text-field>
         <v-text-field readonly v-model="price" label="Price" :suffix="buySymbol + ' / ' + sellSymbol" hint="Price asset is being sold for." persistent-hint></v-text-field>
         <v-text-field readonly v-model="value" label="Value" :suffix="sellSymbol" hint="How much is for sale." persistent-hint></v-text-field>
         <v-text-field readonly v-model="total" label="Total" :suffix="buySymbol" hint="Maximum that can be paid." persistent-hint></v-text-field>
