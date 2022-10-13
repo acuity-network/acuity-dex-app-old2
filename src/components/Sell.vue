@@ -186,7 +186,10 @@ const buySymbol = computed(() => {
     case 'polkadot':
       return (polkadotBuyAsset.value == "0") ? $ethClient.chainsData[metaMaskChainId.value]?.symbol : store.tokens[metaMaskChainId.value][polkadotBuyAsset.value].symbol;
     case 'metamask':
-      return (store.buyChainId == 0) ? "ACU" : (store.buyChainId ? $ethClient.chainsData[store.buyChainId]?.symbol : "")
+      if (store.buyChainId == 0) {
+        return "ACU";
+      }
+      return (metaMaskBuyAsset.value == "0") ? $ethClient.chainsData[store.buyChainId]?.symbol : store.tokens[store.buyChainId][metaMaskBuyAsset.value].symbol;
   }
 });
 
