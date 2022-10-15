@@ -144,12 +144,12 @@ async function load() {
 
   let sellChainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellChainId.value), 16);
   let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(store.activeAcu, sellChainIdHex)).unwrap();
-  let sellerAddressBuyChain = '0x' + Buffer.from(result).toString('hex').slice(24);
+  let buyerAddressSellChain = '0x' + Buffer.from(result).toString('hex').slice(24);
   let sellToken = '0x' + route.params.sellAssetId.slice(26, 66);
 
   if (sellToken == "0x0000000000000000000000000000000000000000") {
     try {
-      sellBalance.value = $ethClient.formatWei(await $ethClient.chains[sellChainId.value].web3.eth.getBalance(sellerAddressSellChain));
+      sellBalance.value = $ethClient.formatWei(await $ethClient.chains[sellChainId.value].web3.eth.getBalance(buyerAddressSellChain));
     }
     catch (e) {};
   }
@@ -157,7 +157,7 @@ async function load() {
     try {
       let token = new $ethClient.chains[sellChainId.value].web3.eth.Contract(erc20Abi, sellToken);
       sellBalance.value = $ethClient.formatWei(await token.methods
-        .balanceOf(sellerAddressBuyChain)
+        .balanceOf(buyerAddressSellChain)
         .call());
       }
       catch (e) {};
@@ -170,7 +170,7 @@ async function load() {
 
   if (buyToken == "0x0000000000000000000000000000000000000000") {
     try {
-      buyBalance.value = $ethClient.formatWei(await $ethClient.chains[buyChainId.value].web3.eth.getBalance(buyerAddressSellChain));
+      buyBalance.value = $ethClient.formatWei(await $ethClient.chains[buyChainId.value].web3.eth.getBalance(buyerAddressBuyChain));
     }
     catch (e) {};
   }
