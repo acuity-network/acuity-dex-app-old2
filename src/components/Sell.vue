@@ -379,8 +379,8 @@ async function goto(event: any) {
     name: 'sell-order',
     params: {
       accountId: store.activeAcu,
-      sellAssetId: sellAssetIdHex,
-      buyAssetId: buyAssetIdHex,
+      sellAssetId: sellAssetIdHex.value,
+      buyAssetId: buyAssetIdHex.value,
     },
   })
 }
