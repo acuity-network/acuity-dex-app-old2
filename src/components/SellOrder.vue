@@ -23,6 +23,7 @@ const erc20Abi: any = erc20AbiJson;
 
 const store = main();
 
+const time = ref(0);
 const locks: any = reactive({});
 
 const sellerAccountId = ref("");
@@ -137,6 +138,8 @@ function getTokenLockId(returnValues: any) {
 }
 
 async function load() {
+  time.value = Math.round(Date.now() / 1000);
+
   let newLocks: any = {};
 
   sellBalance.value = '';
@@ -291,7 +294,7 @@ async function load() {
         buyLockValue: $ethClient.formatWei(event.returnValues.value),
         buyLockState: "Locked",
         buyLockTimeoutRaw: event.returnValues.timeout,
-        buyLockTimeout: new Date(parseInt(event.returnValues.timeout)).toLocaleString(),
+        buyLockTimeout: new Date(parseInt(event.returnValues.timeout) * 1000).toLocaleString(),
         sellLockValueWei: sellLockValue,
         sellLockValue: $ethClient.formatWei(sellLockValue),
         sellLockState: "Not locked",
@@ -299,8 +302,12 @@ async function load() {
         createSellLockWaiting: false,
         unlockSellLockDisabled: false,
         unlockSellLockWaiting: false,
+        timeoutSellLockDisabled: false,
+        timeoutSellLockWaiting: false,
         unlockBuyLockDisabled: false,
         unlockBuyLockWaiting: false,
+        timeoutBuyLockDisabled: false,
+        timeoutBuyLockWaiting: false,
       };
     }
   }
@@ -335,7 +342,7 @@ async function load() {
         }
         newLocks[buyLockId].sellLockState = "Locked";
         newLocks[buyLockId].sellLockTimeoutRaw = event.returnValues.timeout;
-        newLocks[buyLockId].sellLockTimeout = new Date(parseInt(event.returnValues.timeout)).toLocaleString();
+        newLocks[buyLockId].sellLockTimeout = new Date(parseInt(event.returnValues.timeout) * 1000).toLocaleString();
       }
     }
 
@@ -363,6 +370,30 @@ async function load() {
       }
     }
 
+    if (sellType == 0) {
+      events = await $ethClient.chains[sellChainId.value].atomicSwap.getPastEvents('Timeout', {
+        fromBlock: Math.max(sellHeight - 2000, 0),
+      });
+    }
+    else {
+      events = await $ethClient.chains[sellChainId.value].atomicSwapERC20.getPastEvents('Timeout', {
+        fromBlock: Math.max(sellHeight - 2000, 0),
+      });
+    }
+
+    for (let event of events) {
+      // Is it the sell lock?
+      if (event.returnValues.sender.toLowerCase() == sellerAddressSellChain.value) {
+        // Find the buy lock.
+        for (let lockId in newLocks) {
+          if (newLocks[lockId].sellLockId == event.returnValues.lockId) {
+            newLocks[lockId].secret = event.returnValues.secret;
+            newLocks[lockId].sellLockState = "Timed out";
+          }
+        }
+      }
+    }
+
     if (buyType == 0) {
       events = await $ethClient.chains[buyChainId.value].atomicSwap.getPastEvents('UnlockByRecipient', {
         fromBlock: Math.max(buyHeight - 2000, 0),
@@ -379,6 +410,26 @@ async function load() {
       if (event.returnValues.recipient.toLowerCase() == sellerAddressBuyChain.value) {
         if (newLocks[event.returnValues.lockId]) {
           newLocks[event.returnValues.lockId].buyLockState = "Unlocked";
+        }
+      }
+    }
+
+    if (buyType == 0) {
+      events = await $ethClient.chains[buyChainId.value].atomicSwap.getPastEvents('Timeout', {
+        fromBlock: Math.max(buyHeight - 2000, 0),
+      });
+    }
+    else {
+      events = await $ethClient.chains[buyChainId.value].atomicSwapERC20.getPastEvents('Timeout', {
+        fromBlock: Math.max(buyHeight - 2000, 0),
+      });
+    }
+
+    for (let event of events) {
+      // Is it the buy lock?
+      if (event.returnValues.recipient.toLowerCase() == sellerAddressBuyChain.value) {
+        if (newLocks[event.returnValues.lockId]) {
+          newLocks[event.returnValues.lockId].buyLockState = "Timed out";
         }
       }
     }
@@ -470,7 +521,7 @@ async function createBuyLock(event: any) {
   let secret = $ethClient.web3.utils.randomHex(32);
   let hashedSecret = $ethClient.web3.utils.keccak256(secret);
   $db.put('/secrets/' + hashedSecret, secret);
-  let timeout = Date.now() + 60 * 60 * 3 * 1000;   // 3 hours
+  let timeout = Math.round(Date.now() / 1000) + 60 * 60 * 3;   // 3 hours
   let value = $ethClient.web3.utils.fromWei((BigInt($ethClient.web3.utils.toWei(buyValue.value)) * BigInt(priceWei)).toString()).split('.')[0];
   let sellAssetId = route.params.sellAssetId
   let sellPrice = priceWei.toHex();
@@ -555,7 +606,7 @@ async function createSellLock(lock: any) {
 
   let recipient = lock.buyerAddressSellChain;
   let hashedSecret = lock.hashedSecret;
-  let timeout = Date.now() + 60 * 60 * 2 * 1000;   // 2 hours
+  let timeout = Math.round(Date.now() / 1000) + 60 * 60 * 2;   // 2 hours
   let buyAssetId = route.params.buyAssetId;
   let value = $ethClient.web3.utils.numberToHex(lock.sellLockValueWei);
   let buyLockId = lock.lockId;
@@ -703,6 +754,108 @@ async function unlockBuyLock(lock: any) {
   }
 }
 
+/**
+ * Called by buyer.
+ */
+async function timeoutBuyLock(lock: any) {
+  locks[lock.lockId].timeoutBuyLockDisabled = true;
+
+  let recipient = sellerAddressBuyChain.value;
+  let hashedSecret = lock.hashedSecret;
+  let timeout = lock.buyLockTimeoutRaw;
+
+  let type = $ethClient.web3.utils.hexToNumber('0x' + route.params.buyAssetId.slice(18, 22));
+
+  if (type == 0) {
+    console.log({recipient, hashedSecret, timeout});
+
+    $ethClient.atomicSwap.methods
+      .timeoutBySender(recipient, hashedSecret, timeout)
+      .send({from: store.metaMaskAccount})
+      .on('transactionHash', function(payload: any) {
+        locks[lock.lockId].timeoutBuyLockWaiting = true;
+      })
+      .on('receipt', function(receipt: any) {
+        locks[lock.lockId].timeoutBuyLockWaiting = false;
+        locks[lock.lockId].timeoutBuyLockDisabled = false;
+      })
+      .on('error', function(error: any) {
+        locks[lock.lockId].timeoutBuyLockWaiting = false;
+        locks[lock.lockId].timeoutBuyLockDisabled = false;
+      });
+  }
+  else {
+    let token = '0x' + route.params.buyAssetId.slice(26, 66);
+    console.log({token, recipient, hashedSecret, timeout});
+
+    $ethClient.atomicSwapERC20.methods
+      .timeoutBySender(recipient, hashedSecret, timeout)
+      .send({from: store.metaMaskAccount})
+      .on('transactionHash', function(payload: any) {
+        locks[lock.lockId].timeoutBuyLockWaiting = true;
+      })
+      .on('receipt', function(receipt: any) {
+        locks[lock.lockId].timeoutBuyLockWaiting = false;
+        locks[lock.lockId].timeoutBuyLockDisabled = false;
+      })
+      .on('error', function(error: any) {
+        locks[lock.lockId].timeoutBuyLockWaiting = false;
+        locks[lock.lockId].timeoutBuyLockDisabled = false;
+      });
+  }
+}
+
+/**
+ * Called by seller.
+ */
+async function timeoutSellLock(lock: any) {
+  locks[lock.lockId].timeoutSellLockDisabled = true;
+
+  let recipient = lock.buyerAddressSellChain;
+  let hashedSecret = lock.hashedSecret;
+  let timeout = lock.sellLockTimeoutRaw;
+
+  let type = $ethClient.web3.utils.hexToNumber('0x' + route.params.buyAssetId.slice(18, 22));
+
+  if (type == 0) {
+    console.log({recipient, hashedSecret, timeout});
+
+    $ethClient.atomicSwap.methods
+      .timeoutBySender(recipient, hashedSecret, timeout)
+      .send({from: store.metaMaskAccount})
+      .on('transactionHash', function(payload: any) {
+        locks[lock.lockId].timeoutSellLockWaiting = true;
+      })
+      .on('receipt', function(receipt: any) {
+        locks[lock.lockId].timeoutSellLockWaiting = false;
+        locks[lock.lockId].timeoutSellLockDisabled = false;
+      })
+      .on('error', function(error: any) {
+        locks[lock.lockId].timeoutSellLockWaiting = false;
+        locks[lock.lockId].timeoutSellLockDisabled = false;
+      });
+  }
+  else {
+    let token = '0x' + route.params.buyAssetId.slice(26, 66);
+    console.log({token, recipient, hashedSecret, timeout});
+
+    $ethClient.atomicSwapERC20.methods
+      .timeoutBySender(recipient, hashedSecret, timeout)
+      .send({from: store.metaMaskAccount})
+      .on('transactionHash', function(payload: any) {
+        locks[lock.lockId].timeoutSellLockWaiting = true;
+      })
+      .on('receipt', function(receipt: any) {
+        locks[lock.lockId].timeoutSellLockWaiting = false;
+        locks[lock.lockId].timeoutSellLockDisabled = false;
+      })
+      .on('error', function(error: any) {
+        locks[lock.lockId].timeoutSellLockWaiting = false;
+        locks[lock.lockId].timeoutSellLockDisabled = false;
+      });
+  }
+}
+
 </script>
 
 <template>
@@ -749,6 +902,10 @@ async function unlockBuyLock(lock: any) {
                   <v-icon size="small" v-if="!lock.unlockBuyLockWaiting">mdi-lock-open-variant</v-icon>
                   <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                 </v-btn>
+                <v-btn v-if="lock.buyLockState == 'Locked' && lock.buyLockTimeoutRaw < time && store.metaMaskChainId == sellChainId && store.metaMaskAccount == sellerAddressSellChain" size="small" @click="timeoutBuyLock(lock)" :disabled="lock.timeoutBuyLockDisabled">
+                  <v-icon size="small" v-if="!lock.timeoutBuyLockWaiting">mdi-archive-clock</v-icon>
+                  <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
+                </v-btn>
               </td>
               <td style="background-color: rgb(18, 18, 18);"></td>
               <td>{{ lock.sellLockValue }}</td>
@@ -761,6 +918,10 @@ async function unlockBuyLock(lock: any) {
                 </v-btn>
                 <v-btn v-if="lock.sellLockState == 'Locked' && store.metaMaskChainId == sellChainId && store.metaMaskAccount == lock.buyerAddressSellChain" size="small" @click="unlockSellLock(lock)" :disabled="lock.unlockSellLockDisabled">
                   <v-icon size="small" v-if="!lock.unlockSellLockWaiting">mdi-lock-open-variant</v-icon>
+                  <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
+                </v-btn>
+                <v-btn v-if="lock.sellLockState == 'Locked' && lock.sellLockTimeoutRaw < time && store.metaMaskChainId == sellChainId && store.metaMaskAccount == sellerAddressSellChain" size="small" @click="timeoutSellLock(lock)" :disabled="lock.timeoutSellLockDisabled">
+                  <v-icon size="small" v-if="!lock.timeoutSellLockWaiting">mdi-archive-clock</v-icon>
                   <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                 </v-btn>
               </td>
