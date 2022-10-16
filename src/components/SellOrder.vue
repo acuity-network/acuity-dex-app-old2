@@ -898,12 +898,12 @@ async function timeoutSellLock(lock: any) {
               <td>{{ lock.buyLockState }}</td>
               <td>{{ lock.buyLockTimeout }}</td>
               <td>
-                <v-btn v-if="lock.buyLockState == 'Locked' && lock.sellLockState == 'Unlocked' && store.metaMaskChainId == buyChainId && store.metaMaskAccount == sellerAddressSellChain" size="small" @click="unlockBuyLock(lock)" :disabled="lock.unlockBuyLockDisabled">
-                  <v-icon size="small" v-if="!lock.unlockBuyLockWaiting">mdi-lock-open-variant</v-icon>
+                <v-btn v-if="lock.buyLockState == 'Locked' && lock.sellLockState == 'Unlocked' && store.metaMaskChainId == buyChainId && store.metaMaskAccount == sellerAddressBuyChain" size="small" @click="unlockBuyLock(lock)" :disabled="lock.unlockBuyLockDisabled">
+                  <v-icon v-if="!lock.unlockBuyLockWaiting">mdi-lock-open-variant</v-icon>
                   <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                 </v-btn>
-                <v-btn v-if="lock.buyLockState == 'Locked' && lock.buyLockTimeoutRaw < time && store.metaMaskChainId == sellChainId && store.metaMaskAccount == sellerAddressSellChain" size="small" @click="timeoutBuyLock(lock)" :disabled="lock.timeoutBuyLockDisabled">
-                  <v-icon size="small" v-if="!lock.timeoutBuyLockWaiting">mdi-archive-clock</v-icon>
+                <v-btn v-if="lock.buyLockState == 'Locked' && lock.buyLockTimeoutRaw < time && store.metaMaskChainId == buyChainId && store.metaMaskAccount == lock.buyerAddressBuyChain" size="small" @click="timeoutBuyLock(lock)" :disabled="lock.timeoutBuyLockDisabled">
+                  <v-icon v-if="!lock.timeoutBuyLockWaiting">mdi-timer-lock-open-outline</v-icon>
                   <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                 </v-btn>
               </td>
@@ -913,15 +913,15 @@ async function timeoutSellLock(lock: any) {
               <td>{{ lock.sellLockTimeout }}</td>
               <td>
                 <v-btn v-if="lock.sellLockState == 'Not locked' && store.metaMaskChainId == sellChainId && store.metaMaskAccount == sellerAddressSellChain" size="small" @click="createSellLock(lock)" :disabled="lock.createSellLockDisabled">
-                  <v-icon size="small" v-if="!lock.createSellLockWaiting">mdi-lock</v-icon>
+                  <v-icon v-if="!lock.createSellLockWaiting">mdi-lock</v-icon>
                   <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                 </v-btn>
                 <v-btn v-if="lock.sellLockState == 'Locked' && store.metaMaskChainId == sellChainId && store.metaMaskAccount == lock.buyerAddressSellChain" size="small" @click="unlockSellLock(lock)" :disabled="lock.unlockSellLockDisabled">
-                  <v-icon size="small" v-if="!lock.unlockSellLockWaiting">mdi-lock-open-variant</v-icon>
+                  <v-icon v-if="!lock.unlockSellLockWaiting">mdi-lock-open-variant</v-icon>
                   <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                 </v-btn>
                 <v-btn v-if="lock.sellLockState == 'Locked' && lock.sellLockTimeoutRaw < time && store.metaMaskChainId == sellChainId && store.metaMaskAccount == sellerAddressSellChain" size="small" @click="timeoutSellLock(lock)" :disabled="lock.timeoutSellLockDisabled">
-                  <v-icon size="small" v-if="!lock.timeoutSellLockWaiting">mdi-archive-clock</v-icon>
+                  <v-icon v-if="!lock.timeoutSellLockWaiting">mdi-archive-clock</v-icon>
                   <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                 </v-btn>
               </td>
