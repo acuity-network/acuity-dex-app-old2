@@ -67,8 +67,15 @@ export default class EthClient {
       this.formatWei = (wei: string, decimals: number = 18) => {
         let divisor = BigInt(10) ** BigInt(decimals);
         let integer = (BigInt(wei) / divisor).toLocaleString();
-        let decimal = this.web3.utils.padLeft((BigInt(wei) % divisor).toString(), decimals).slice(0, 3);
-        return integer + ((decimal == '0') ? '' : ('.' + decimal));
+        let decimal = this.web3.utils.padLeft((BigInt(wei) % divisor).toString(), decimals);
+        let displayDecimals = decimal.length;
+
+        while(displayDecimals != 0 && decimal[displayDecimals - 1] == '0') {
+          displayDecimals--;
+        }
+
+        decimal = decimal.slice(0, displayDecimals);
+        return integer + ((decimal == '') ? '' : ('.' + decimal));
       }
 
       this.unformatWei = (formatted: string) => {
