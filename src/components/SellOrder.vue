@@ -256,17 +256,22 @@ async function load() {
     if (buyType == 0) {
       events = await $ethClient.chains[buyChainId.value].atomicSwap.getPastEvents('BuyLock', {
         fromBlock: Math.max(buyHeight - 2000, 0),
+        filter: {
+          recipient: sellerAddressBuyChain.value,
+        },
       });
     }
     else {
       events = await $ethClient.chains[buyChainId.value].atomicSwapERC20.getPastEvents('BuyLock', {
         fromBlock: Math.max(buyHeight - 2000, 0),
+        filter: {
+          recipient: sellerAddressBuyChain.value,
+        },
       });
     }
 
     for (let event of events) {
-      if ((event.returnValues.recipient.toLowerCase() != sellerAddressBuyChain.value.toLowerCase()) ||      // buy lock for seller
-        (event.returnValues.sellAssetId != (route.params.sellAssetId as string).toLowerCase()) ||   // correct sell assetId
+      if ((event.returnValues.sellAssetId != (route.params.sellAssetId as string).toLowerCase()) ||   // correct sell assetId
         (event.returnValues.sellPrice != sellPriceWei.toString()))                                                   // correct price
       {
         continue;
@@ -327,11 +332,17 @@ async function load() {
     if (sellType == 0) {
       events = await $ethClient.chains[sellChainId.value].atomicSwap.getPastEvents('SellLock', {
         fromBlock: Math.max(sellHeight - 2000, 0),
+        filter: {
+          sender: sellerAddressSellChain.value,
+        },
       });
     }
     else {
       events = await $ethClient.chains[sellChainId.value].atomicSwapERC20.getPastEvents('SellLock', {
         fromBlock: Math.max(sellHeight - 2000, 0),
+        filter: {
+          sender: sellerAddressSellChain.value,
+        },
       });
     }
 
@@ -359,23 +370,26 @@ async function load() {
     if (sellType == 0) {
       events = await $ethClient.chains[sellChainId.value].atomicSwap.getPastEvents('UnlockByRecipient', {
         fromBlock: Math.max(sellHeight - 2000, 0),
+        filter: {
+          sender: sellerAddressSellChain.value,
+        },
       });
     }
     else {
       events = await $ethClient.chains[sellChainId.value].atomicSwapERC20.getPastEvents('UnlockByRecipient', {
         fromBlock: Math.max(sellHeight - 2000, 0),
+        filter: {
+          sender: sellerAddressSellChain.value,
+        },
       });
     }
 
     for (let event of events) {
-      // Is it the sell lock?
-      if (event.returnValues.sender.toLowerCase() == sellerAddressSellChain.value) {
-        // Find the buy lock.
-        for (let lockId in newLocks) {
-          if (newLocks[lockId].sellLockId == event.returnValues.lockId) {
-            newLocks[lockId].secret = event.returnValues.secret;
-            newLocks[lockId].sellLockState = "Unlocked";
-          }
+      // Find the buy lock.
+      for (let lockId in newLocks) {
+        if (newLocks[lockId].sellLockId == event.returnValues.lockId) {
+          newLocks[lockId].secret = event.returnValues.secret;
+          newLocks[lockId].sellLockState = "Unlocked";
         }
       }
     }
@@ -383,23 +397,26 @@ async function load() {
     if (sellType == 0) {
       events = await $ethClient.chains[sellChainId.value].atomicSwap.getPastEvents('Timeout', {
         fromBlock: Math.max(sellHeight - 2000, 0),
+        filter: {
+          sender: sellerAddressSellChain.value,
+        },
       });
     }
     else {
       events = await $ethClient.chains[sellChainId.value].atomicSwapERC20.getPastEvents('Timeout', {
         fromBlock: Math.max(sellHeight - 2000, 0),
+        filter: {
+          sender: sellerAddressSellChain.value,
+        },
       });
     }
 
     for (let event of events) {
-      // Is it the sell lock?
-      if (event.returnValues.sender.toLowerCase() == sellerAddressSellChain.value) {
-        // Find the buy lock.
-        for (let lockId in newLocks) {
-          if (newLocks[lockId].sellLockId == event.returnValues.lockId) {
-            newLocks[lockId].secret = event.returnValues.secret;
-            newLocks[lockId].sellLockState = "Timed out";
-          }
+      // Find the buy lock.
+      for (let lockId in newLocks) {
+        if (newLocks[lockId].sellLockId == event.returnValues.lockId) {
+          newLocks[lockId].secret = event.returnValues.secret;
+          newLocks[lockId].sellLockState = "Timed out";
         }
       }
     }
@@ -407,40 +424,46 @@ async function load() {
     if (buyType == 0) {
       events = await $ethClient.chains[buyChainId.value].atomicSwap.getPastEvents('UnlockByRecipient', {
         fromBlock: Math.max(buyHeight - 2000, 0),
+        filter: {
+          recipient: sellerAddressBuyChain.value,
+        },
       });
     }
     else {
       events = await $ethClient.chains[buyChainId.value].atomicSwapERC20.getPastEvents('UnlockByRecipient', {
         fromBlock: Math.max(buyHeight - 2000, 0),
+        filter: {
+          recipient: sellerAddressBuyChain.value,
+        },
       });
     }
 
     for (let event of events) {
-      // Is it the buy lock?
-      if (event.returnValues.recipient.toLowerCase() == sellerAddressBuyChain.value) {
-        if (newLocks[event.returnValues.lockId]) {
-          newLocks[event.returnValues.lockId].buyLockState = "Unlocked";
-        }
+      if (newLocks[event.returnValues.lockId]) {
+        newLocks[event.returnValues.lockId].buyLockState = "Unlocked";
       }
     }
 
     if (buyType == 0) {
       events = await $ethClient.chains[buyChainId.value].atomicSwap.getPastEvents('Timeout', {
         fromBlock: Math.max(buyHeight - 2000, 0),
+        filter: {
+          recipient: sellerAddressBuyChain.value,
+        },
       });
     }
     else {
       events = await $ethClient.chains[buyChainId.value].atomicSwapERC20.getPastEvents('Timeout', {
         fromBlock: Math.max(buyHeight - 2000, 0),
+        filter: {
+          recipient: sellerAddressBuyChain.value,
+        },
       });
     }
 
     for (let event of events) {
-      // Is it the buy lock?
-      if (event.returnValues.recipient.toLowerCase() == sellerAddressBuyChain.value) {
-        if (newLocks[event.returnValues.lockId]) {
-          newLocks[event.returnValues.lockId].buyLockState = "Timed out";
-        }
+      if (newLocks[event.returnValues.lockId]) {
+        newLocks[event.returnValues.lockId].buyLockState = "Timed out";
       }
     }
   }
