@@ -186,9 +186,13 @@ async function load() {
 
     let result = (await $acuityClient.api.query.orderbook.accountPairOrder(acuAddress, sellAssetIdHex.value, buyAssetIdHex.value)).unwrap();
 
-    let price = $ethClient.web3.utils.fromWei(result.price);
-    let value = $ethClient.web3.utils.fromWei(result.value);
-    let total = price * value;
+    let sellPriceWei = BigInt(result.price);
+    let sellValueWei = BigInt(result.value);
+    let buyValueWei = (sellValueWei * sellPriceWei) / (BigInt(10) ** BigInt(18));
+
+    let price = $ethClient.web3.utils.fromWei(sellPriceWei.toString());
+    let value = $ethClient.web3.utils.fromWei(sellValueWei.toString());
+    let total = $ethClient.web3.utils.fromWei(buyValueWei.toString());
 
     sellOrders.value.push({
       account: acuAddress,

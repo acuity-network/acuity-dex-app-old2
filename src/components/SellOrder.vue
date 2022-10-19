@@ -34,18 +34,24 @@ const sellBalance = ref("");
 const buyChainId = ref(0);
 const buyToken = ref("");
 const buyBalance = ref("");
-const price = ref(0);
-const value = ref(0);
-const total = ref(0);
-const buyValue = ref(0);
+const price = ref("");
+const value = ref("");
+const total = ref("");
+const buyValue = ref("");
+
+let sellPriceWei = BigInt(0);
+let sellValueWei = BigInt(0);
+
 
 const buyDisabled = ref(false);
 const buyWaiting = ref(false);
 
 const buyCost = computed(() => {
-  if (price.value && buyValue.value) {
-    return price.value * buyValue.value;
-  }
+
+  let buyValueWei = BigInt($ethClient.web3.utils.toWei((buyValue.value != '') ? buyValue.value : '0'));
+  let buyCostWei = (buyValueWei * sellPriceWei) / (BigInt(10) ** BigInt(18));
+
+  return $ethClient.web3.utils.fromWei(buyCostWei.toString());
 });
 
 let sellerAddressBuyChain = ref("");
@@ -261,7 +267,7 @@ async function load() {
     for (let event of events) {
       if ((event.returnValues.recipient.toLowerCase() != sellerAddressBuyChain.value.toLowerCase()) ||      // buy lock for seller
         (event.returnValues.sellAssetId != (route.params.sellAssetId as string).toLowerCase()) ||   // correct sell assetId
-        (event.returnValues.sellPrice != priceWei))                                                   // correct price
+        (event.returnValues.sellPrice != sellPriceWei.toString()))                                                   // correct price
       {
         continue;
       }
@@ -280,9 +286,8 @@ async function load() {
       let sellAddress = '0x' + Buffer.from(result).toString('hex').slice(24);
 
       // Calculate how much value the sell lock should have.
-      let sellLockValue = (parseFloat(event.returnValues.value) / price.value).toString();
-
-      //this.$arbitrumClient.web3.utils.fromWei((BigInt(this.$arbitrumClient.web3.utils.toWei(lock.buyLockValue.toString())) / BigInt(this.priceWei)).toString()),
+      let buyLockValueWei = BigInt(event.returnValues.value);
+      let sellLockValueWei = (buyLockValueWei * (BigInt(10) ** BigInt(18))) / sellPriceWei;
 
       newLocks[lockId] = {
         lockId: lockId,
@@ -295,8 +300,8 @@ async function load() {
         buyLockState: "Locked",
         buyLockTimeoutRaw: event.returnValues.timeout,
         buyLockTimeout: new Date(parseInt(event.returnValues.timeout) * 1000).toLocaleString(),
-        sellLockValueWei: sellLockValue,
-        sellLockValue: $ethClient.formatWei(sellLockValue),
+        sellLockValueWei: sellLockValueWei,
+        sellLockValue: $ethClient.formatWei(sellLockValueWei.toString()),
         sellLockState: "Not locked",
         createSellLockDisabled: false,
         createSellLockWaiting: false,
@@ -463,10 +468,13 @@ onMounted(async () => {
 
   result = (await $acuityClient.api.query.orderbook.accountPairOrder(route.params.accountId, route.params.sellAssetId, route.params.buyAssetId)).unwrap();
 
-  priceWei = result.price;
-  price.value = $ethClient.web3.utils.fromWei(result.price);
-  value.value = $ethClient.web3.utils.fromWei(result.value);
-  total.value = price.value * value.value;
+  sellPriceWei = BigInt(result.price);
+  sellValueWei = BigInt(result.value);
+  let buyValueWei = (sellValueWei * sellPriceWei) / (BigInt(10) ** BigInt(18));
+
+  price.value = $ethClient.web3.utils.fromWei(sellPriceWei.toString());
+  value.value = $ethClient.web3.utils.fromWei(sellValueWei.toString());
+  total.value = $ethClient.web3.utils.fromWei(buyValueWei.toString());
 
   $acuityClient.api.query.system.events((events: any) => {
     // Loop through the Vec<EventRecord>
@@ -522,13 +530,16 @@ async function createBuyLock(event: any) {
   let hashedSecret = $ethClient.web3.utils.keccak256(secret);
   $db.put('/secrets/' + hashedSecret, secret);
   let timeout = Math.round(Date.now() / 1000) + 60 * 60 * 3;   // 3 hours
-  let value = $ethClient.web3.utils.fromWei((BigInt($ethClient.web3.utils.toWei(buyValue.value)) * BigInt(priceWei)).toString()).split('.')[0];
+
+  let buyValueWei = BigInt($ethClient.web3.utils.toWei(buyValue.value));
+  let value = ((buyValueWei * sellPriceWei) / (BigInt(10) ** BigInt(18))).toString();
+
   let sellAssetId = route.params.sellAssetId
-  let sellPrice = priceWei.toHex();
+  let sellPrice = sellPriceWei.toString();
 
   if (buyChainId.value == 0) {
     let recipient = sellerAccountId.value;
-    console.log({recipient, hashedSecret, timeout, value, sellAssetId, sellPrice});
+    console.log({recipient, hashedSecret, timeout, value, sellAssetId, sellPriceWei});
     const injector = await web3FromAddress(store.activeAcu);
     try {
       const unsub = await $acuityClient.api.tx.atomicSwap
@@ -608,7 +619,8 @@ async function createSellLock(lock: any) {
   let hashedSecret = lock.hashedSecret;
   let timeout = Math.round(Date.now() / 1000) + 60 * 60 * 2;   // 2 hours
   let buyAssetId = route.params.buyAssetId;
-  let value = $ethClient.web3.utils.numberToHex(lock.sellLockValueWei);
+//  let value = $ethClient.web3.utils.numberToHex(lock.sellLockValueWei);
+  let value = lock.sellLockValueWei.toString();
   let buyLockId = lock.lockId;
 
   let type = $ethClient.web3.utils.hexToNumber('0x' + route.params.sellAssetId.slice(18, 22));

@@ -196,9 +196,16 @@ const buySymbol = computed(() => {
 const setDisabled = ref(false);
 const setWaiting = ref(false);
 
-const sellValue = ref(null);
-const sellPrice = ref(null);
-const sellTotal = computed(() => (sellValue.value ?? 0) * (sellPrice.value ?? 0));
+const sellValue = ref("");
+const sellPrice = ref("");
+const sellTotal = computed(() => {
+
+  let sellValueWei = BigInt($ethClient.web3.utils.toWei((sellValue.value != '') ? sellValue.value : '0'));
+  let sellPriceWei = BigInt($ethClient.web3.utils.toWei((sellPrice.value != '') ? sellPrice.value : '0'));
+  let buyValueWei = (sellValueWei * sellPriceWei) / (BigInt(10) ** BigInt(18));
+
+  return $ethClient.web3.utils.fromWei(buyValueWei.toString());
+});
 
 let emitter;
 
