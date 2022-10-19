@@ -54,6 +54,7 @@ async function load() {
     tokens.push({
       symbol: info.symbol,
       name: info.name,
+      decimals: info.decimals,
       address: address,
       balance: '',
       allowance: '',
@@ -74,7 +75,7 @@ async function load() {
   $ethClient.chains[store.metaMaskChainId].rpc.methods.getAccountTokenAllowances(store.metaMaskAccount, contract, tokenList).call();
 
   for (let i in allowances) {
-    if (allowances[i] == '115792089237316195423570985008687907853269984665640564039457584007913129639935') {
+    if (BigInt(allowances[i]) > BigInt(2) ** BigInt(254)) {
       tokens[i].allowance = "unlimited";
     }
     else {
@@ -145,6 +146,9 @@ async function removeToken(address: string) {
                 Name
               </th>
               <th class="text-right">
+                Decimals
+              </th>
+              <th class="text-right">
                 Balance
               </th>
               <th class="text-right">
@@ -157,6 +161,7 @@ async function removeToken(address: string) {
             <tr v-for="token in tokens">
               <td>{{ token.symbol }}</td>
               <td>{{ token.name }}</td>
+              <td class="text-right">{{ token.decimals }}</td>
               <td class="text-right">{{ token.balance }}</td>
               <td class="text-right">{{ token.allowance }}</td>
               <td>
