@@ -338,6 +338,11 @@ async function load() {
     for (let event of events) {
       let buyLockId = event.returnValues.buyLockId;
       if (newLocks[buyLockId]) {
+        if (newLocks[buyLockId].sellLockValueWei != BigInt(event.returnValues.value)) {
+          console.log("Sell lock has incorrect value.")
+          continue;
+        }
+
         let lockId;
         if (sellType == 0) {
           newLocks[buyLockId].sellLockId = getLockId(event.returnValues);
