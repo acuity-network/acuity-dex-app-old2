@@ -75,7 +75,7 @@ async function load() {
   $ethClient.chains[store.metaMaskChainId].rpc.methods.getAccountTokenAllowances(store.metaMaskAccount, contract, tokenList).call();
 
   for (let i in allowances) {
-    if (BigInt(allowances[i]) > BigInt(2) ** BigInt(254)) {
+    if (BigInt(allowances[i]) > BigInt(2) ** BigInt(57)) {
       tokens[i].allowance = "unlimited";
     }
     else {
