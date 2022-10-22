@@ -190,9 +190,9 @@ async function load() {
     let sellValueWei = BigInt(result.value);
     let buyValueWei = (sellValueWei * sellPriceWei) / (BigInt(10) ** BigInt(18));
 
-    let price = $ethClient.web3.utils.fromWei(sellPriceWei.toString());
-    let value = $ethClient.web3.utils.fromWei(sellValueWei.toString());
-    let total = $ethClient.web3.utils.fromWei(buyValueWei.toString());
+    let price = $ethClient.formatWei(sellPriceWei.toString());
+    let value = $ethClient.formatWei(sellValueWei.toString());
+    let total = $ethClient.formatWei(buyValueWei.toString());
 
     sellOrders.value.push({
       account: acuAddress,

@@ -200,11 +200,11 @@ const sellValue = ref("");
 const sellPrice = ref("");
 const sellTotal = computed(() => {
 
-  let sellValueWei = BigInt($ethClient.web3.utils.toWei((sellValue.value != '') ? sellValue.value : '0'));
-  let sellPriceWei = BigInt($ethClient.web3.utils.toWei((sellPrice.value != '') ? sellPrice.value : '0'));
+  let sellValueWei = BigInt($ethClient.unformatWei((sellValue.value != '') ? sellValue.value : '0'));
+  let sellPriceWei = BigInt($ethClient.unformatWei((sellPrice.value != '') ? sellPrice.value : '0'));
   let buyValueWei = (sellValueWei * sellPriceWei) / (BigInt(10) ** BigInt(18));
 
-  return $ethClient.web3.utils.fromWei(buyValueWei.toString());
+  return $ethClient.formatWei(buyValueWei.toString());
 });
 
 let emitter;
@@ -289,8 +289,8 @@ async function load() {
     try {
       let result = (await $acuityClient.api.query.orderbook.accountPairOrder(store.activeAcu, sellAssetIdHex.value, buyAssetIdHex.value)).unwrap();
 
-      sellPrice.value = $ethClient.web3.utils.fromWei(result.price);
-      sellValue.value = $ethClient.web3.utils.fromWei(result.value);
+      sellPrice.value = $ethClient.formatWei(result.price);
+      sellValue.value = $ethClient.formatWei(result.value);
     }
     catch (e) {};
   }
@@ -353,8 +353,8 @@ watch(polkadotBuyAsset, async (newValue, oldValue) => {
 async function set(event: any) {
   setDisabled.value = true;
   const injector = await web3FromAddress(store.activeAcu);
-  let price = $ethClient.web3.utils.toWei(sellPrice.value);
-  let value = $ethClient.web3.utils.toWei(sellValue.value);
+  let price = $ethClient.unformatWei(sellPrice.value);
+  let value = $ethClient.unformatWei(sellValue.value);
 
   try {
     const unsub = await $acuityClient.api.tx.orderbook

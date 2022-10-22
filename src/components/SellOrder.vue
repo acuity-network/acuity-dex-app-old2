@@ -48,10 +48,10 @@ const buyWaiting = ref(false);
 
 const buyCost = computed(() => {
 
-  let buyValueWei = BigInt($ethClient.web3.utils.toWei((buyValue.value != '') ? buyValue.value : '0'));
+  let buyValueWei = BigInt($ethClient.unformatWei((buyValue.value != '') ? buyValue.value : '0'));
   let buyCostWei = (buyValueWei * sellPriceWei) / (BigInt(10) ** BigInt(18));
 
-  return $ethClient.web3.utils.fromWei(buyCostWei.toString());
+  return $ethClient.formatWei(buyCostWei.toString());
 });
 
 let sellerAddressBuyChain = ref("");
@@ -506,9 +506,9 @@ onMounted(async () => {
   sellValueWei = BigInt(result.value);
   let buyValueWei = (sellValueWei * sellPriceWei) / (BigInt(10) ** BigInt(18));
 
-  price.value = $ethClient.web3.utils.fromWei(sellPriceWei.toString());
-  value.value = $ethClient.web3.utils.fromWei(sellValueWei.toString());
-  total.value = $ethClient.web3.utils.fromWei(buyValueWei.toString());
+  price.value = $ethClient.formatWei(result.price);
+  value.value = $ethClient.formatWei(result.value);
+  total.value = $ethClient.formatWei(buyValueWei.toString());
 
   $acuityClient.api.query.system.events((events: any) => {
     // Loop through the Vec<EventRecord>
@@ -565,7 +565,7 @@ async function createBuyLock(event: any) {
   $db.put('/secrets/' + hashedSecret, secret);
   let timeout = Math.round(Date.now() / 1000) + 60 * 60 * 3;   // 3 hours
 
-  let buyValueWei = BigInt($ethClient.web3.utils.toWei(buyValue.value));
+  let buyValueWei = BigInt($ethClient.unformatWei(buyValue.value));
   let value = ((buyValueWei * sellPriceWei) / (BigInt(10) ** BigInt(18))).toString();
 
   let sellAssetId = route.params.sellAssetId

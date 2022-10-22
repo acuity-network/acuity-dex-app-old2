@@ -78,8 +78,19 @@ export default class EthClient {
         return integer + ((decimal == '') ? '' : ('.' + decimal));
       }
 
-      this.unformatWei = (formatted: string) => {
+      this.unformatWei = (formatted: string, decimals: number = 18) => {
+        let result = formatted.split('.', 2);
+        let integer = result[0];
+        let decimal = result[1];
+        if (!decimal) decimal = '';
+        if (decimal.length > decimals) return BigInt(0);
 
+        try {
+          return BigInt(integer) * (BigInt(10) ** BigInt(decimals)) + BigInt(this.web3.utils.padRight(decimal, decimals));
+        }
+        catch (e) {
+          return BigInt(0);
+        }
       }
 
       (window.ethereum as any)
