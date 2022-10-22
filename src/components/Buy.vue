@@ -97,6 +97,22 @@ const buySymbol = computed(() => {
   return (buyAsset.value == "0") ? $ethClient.chainsData[store.buyChainId]?.symbol : store.tokens[store.buyChainId][buyAsset.value].symbol;
 });
 
+const sellDecimals = computed(() => {
+  if (store.sellChainId == 0) {
+    return 18;
+  }
+
+  return (sellAsset.value == "0") ? 18 : store.tokens[store.sellChainId][sellAsset.value].decimals;
+});
+
+const buyDecimals = computed(() => {
+  if (store.buyChainId == 0) {
+    return 18;
+  }
+
+  return (buyAsset.value == "0") ? 18 : store.tokens[store.buyChainId][buyAsset.value].decimals;
+});
+
 const sellOrders: Ref<any[]> = ref([]);
 
 
@@ -188,11 +204,11 @@ async function load() {
 
     let sellPriceWei = BigInt(result.price);
     let sellValueWei = BigInt(result.value);
-    let buyValueWei = (sellValueWei * sellPriceWei) / (BigInt(10) ** BigInt(18));
+    let buyValueWei = (sellValueWei * sellPriceWei) / (BigInt(10) ** BigInt(sellDecimals.value));
 
-    let price = $ethClient.formatWei(sellPriceWei.toString());
-    let value = $ethClient.formatWei(sellValueWei.toString());
-    let total = $ethClient.formatWei(buyValueWei.toString());
+    let price = $ethClient.formatWei(sellPriceWei.toString(), buyDecimals.value);
+    let value = $ethClient.formatWei(sellValueWei.toString(), sellDecimals.value);
+    let total = $ethClient.formatWei(buyValueWei.toString(), buyDecimals.value);
 
     sellOrders.value.push({
       account: acuAddress,

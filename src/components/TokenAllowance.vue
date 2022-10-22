@@ -35,13 +35,17 @@ const sellSymbol = ref("");
 const allowanceWaiting = ref(false);
 const allowanceDisabled = ref(false);
 
+let decimals = 18;
+
 async function load() {
 
   let token = new $ethClient.chains[store.metaMaskChainId].web3.eth.Contract(erc20Abi, route.params.address);
   let contractAddress = $ethClient.chainsData[store.metaMaskChainId].contracts.atomicSwapERC20;
 
+  decimals = store.tokens[store.metaMaskChainId][route.params.address].decimals;
+
   let allowanceWei = await token.methods.allowance(store.metaMaskAccount, contractAddress).call();
-  allowance.value = $ethClient.formatWei(allowanceWei, 18);
+  allowance.value = $ethClient.formatWei(allowanceWei, decimals);
 }
 
 onMounted(async () => {
@@ -58,7 +62,7 @@ async function approve(event: any) {
   let token = new $ethClient.web3.eth.Contract(erc20Abi, route.params.address);
   let contractAddress = $ethClient.chainsData[store.metaMaskChainId].contracts.atomicSwapERC20;
   // "0x8000000000000000000000000000000000000000000000000000000000000000"
-  let allowance = unlimited.value ? "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" : allowanceNew.value;
+  let allowance = unlimited.value ? "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" : $ethClient.unformatWei(allowanceNew.value, decimals);
   allowanceDisabled.value = true;
   token.methods
     .approve(contractAddress, allowance)

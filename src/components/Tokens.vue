@@ -42,7 +42,6 @@ async function load() {
 
   tokens.length = 0;
   let tokenList = [];
-  let tokenDecimals = [];
 
   for await (const [key, json] of $db.iterator({
     gt: '/tokens/' + store.metaMaskChainId + '/',
@@ -60,14 +59,13 @@ async function load() {
       allowance: '',
     });
     tokenList.push(address);
-    tokenDecimals.push(info.decimals);
   }
 
   let balances: [] = await
   $ethClient.chains[store.metaMaskChainId].rpc.methods.getAccountTokenBalances(store.metaMaskAccount, tokenList).call();
 
   for (let i in balances) {
-    tokens[i].balance = $ethClient.formatWei(balances[i]);
+    tokens[i].balance = $ethClient.formatWei(balances[i], tokens[i].decimals);
   }
 
   let contract = $ethClient.chainsData[store.metaMaskChainId].contracts.atomicSwapERC20;
@@ -79,7 +77,7 @@ async function load() {
       tokens[i].allowance = "unlimited";
     }
     else {
-      tokens[i].allowance = $ethClient.formatWei(allowances[i], tokenDecimals[i]);
+      tokens[i].allowance = $ethClient.formatWei(allowances[i], tokens[i].decimals);
     }
   }
 }

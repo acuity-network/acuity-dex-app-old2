@@ -48,10 +48,10 @@ const buyWaiting = ref(false);
 
 const buyCost = computed(() => {
 
-  let buyValueWei = BigInt($ethClient.unformatWei((buyValue.value != '') ? buyValue.value : '0'));
-  let buyCostWei = (buyValueWei * sellPriceWei) / (BigInt(10) ** BigInt(18));
+  let buyValueWei = BigInt($ethClient.unformatWei((buyValue.value != '') ? buyValue.value : '0', sellDecimals.value));
+  let buyCostWei = (buyValueWei * sellPriceWei) / (BigInt(10) ** BigInt(sellDecimals.value));
 
-  return $ethClient.formatWei(buyCostWei.toString());
+  return $ethClient.formatWei(buyCostWei.toString(), buyDecimals.value);
 });
 
 let sellerAddressBuyChain = ref("");
@@ -72,6 +72,22 @@ const buySymbol = computed(() => {
   }
 
   return (buyToken.value == "0x0000000000000000000000000000000000000000") ? $ethClient.chainsData[buyChainId.value]?.symbol : store.tokens[buyChainId.value][buyToken.value].symbol;
+});
+
+const sellDecimals = computed(() => {
+  if (sellChainId.value == 0) {
+    return 18;
+  }
+
+  return (sellToken.value == "0x0000000000000000000000000000000000000000") ? 18 : store.tokens[sellChainId.value][sellToken.value].decimals;
+});
+
+const buyDecimals = computed(() => {
+  if (buyChainId.value == 0) {
+    return 18;
+  }
+
+  return (buyToken.value == "0x0000000000000000000000000000000000000000") ? 18 : store.tokens[buyChainId.value][buyToken.value].decimals;
 });
 
 const sellChain = computed(() => {
@@ -158,7 +174,7 @@ async function load() {
 
   if (sellToken == "0x0000000000000000000000000000000000000000") {
     try {
-      sellBalance.value = $ethClient.formatWei(await $ethClient.chains[sellChainId.value].web3.eth.getBalance(buyerAddressSellChain));
+      sellBalance.value = $ethClient.formatWei(await $ethClient.chains[sellChainId.value].web3.eth.getBalance(buyerAddressSellChain), sellDecimals.value);
     }
     catch (e) {};
   }
@@ -167,7 +183,7 @@ async function load() {
       let token = new $ethClient.chains[sellChainId.value].web3.eth.Contract(erc20Abi, sellToken);
       sellBalance.value = $ethClient.formatWei(await token.methods
         .balanceOf(buyerAddressSellChain)
-        .call());
+        .call(), sellDecimals.value);
       }
       catch (e) {};
   }
@@ -179,7 +195,7 @@ async function load() {
 
   if (buyToken == "0x0000000000000000000000000000000000000000") {
     try {
-      buyBalance.value = $ethClient.formatWei(await $ethClient.chains[buyChainId.value].web3.eth.getBalance(buyerAddressBuyChain));
+      buyBalance.value = $ethClient.formatWei(await $ethClient.chains[buyChainId.value].web3.eth.getBalance(buyerAddressBuyChain), buyDecimals.value);
     }
     catch (e) {};
   }
@@ -188,7 +204,7 @@ async function load() {
       let token = new $ethClient.chains[buyChainId.value].web3.eth.Contract(erc20Abi, buyToken);
       buyBalance.value = $ethClient.formatWei(await token.methods
         .balanceOf(buyerAddressBuyChain)
-        .call());
+        .call(), buyDecimals.value);
       }
       catch (e) {};
   }
@@ -230,12 +246,12 @@ async function load() {
               hashedSecret: $ethClient.web3.utils.bytesToHex(event.event.data[2]),
               buyerAddressSellChain: $ethClient.web3.utils.bytesToHex(event.event.data[0]),
               buyerName: await loadName(encodeAddress(event.event.data[0])),
-              buyLockValue: $ethClient.formatWei(event.event.data[4]),
+              buyLockValue: $ethClient.formatWei(event.event.data[4], buyDecimals.value),
               buyLockState: "Locked",
               buyLockTimeoutRaw: event.event.data[3],
               buyLockTimeout: new Date(parseInt(event.event.data[3])).toLocaleString(),
               sellLockValueWei: sellLockValue,
-              sellLockValue: $ethClient.formatWei(sellLockValue),
+              sellLockValue: $ethClient.formatWei(sellLockValue, sellDecimals.value),
               sellLockState: "Not locked",
               createSellLockDisabled: false,
               createSellLockWaiting: false,
@@ -293,7 +309,7 @@ async function load() {
 
       // Calculate how much value the sell lock should have.
       let buyLockValueWei = BigInt(event.returnValues.value);
-      let sellLockValueWei = (buyLockValueWei * (BigInt(10) ** BigInt(18))) / sellPriceWei;
+      let sellLockValueWei = (buyLockValueWei * (BigInt(10) ** BigInt(sellDecimals.value))) / sellPriceWei;
 
       newLocks[lockId] = {
         lockId: lockId,
@@ -302,12 +318,12 @@ async function load() {
         buyerAddressBuyChain: event.returnValues.sender.toLowerCase(),
         buyerAddressSellChain: sellAddress,
         buyerName: await loadName(buyerAcuAddress),
-        buyLockValue: $ethClient.formatWei(event.returnValues.value),
+        buyLockValue: $ethClient.formatWei(event.returnValues.value, buyDecimals.value),
         buyLockState: "Locked",
         buyLockTimeoutRaw: event.returnValues.timeout,
         buyLockTimeout: new Date(parseInt(event.returnValues.timeout) * 1000).toLocaleString(),
         sellLockValueWei: sellLockValueWei,
-        sellLockValue: $ethClient.formatWei(sellLockValueWei.toString()),
+        sellLockValue: $ethClient.formatWei(sellLockValueWei.toString(), sellDecimals.value),
         sellLockState: "Not locked",
         createSellLockDisabled: false,
         createSellLockWaiting: false,
@@ -504,11 +520,11 @@ onMounted(async () => {
 
   sellPriceWei = BigInt(result.price);
   sellValueWei = BigInt(result.value);
-  let buyValueWei = (sellValueWei * sellPriceWei) / (BigInt(10) ** BigInt(18));
+  let buyValueWei = (sellValueWei * sellPriceWei) / (BigInt(10) ** BigInt(sellDecimals.value));
 
-  price.value = $ethClient.formatWei(result.price);
-  value.value = $ethClient.formatWei(result.value);
-  total.value = $ethClient.formatWei(buyValueWei.toString());
+  price.value = $ethClient.formatWei(result.price, buyDecimals.value);
+  value.value = $ethClient.formatWei(result.value, sellDecimals.value);
+  total.value = $ethClient.formatWei(buyValueWei.toString(), buyDecimals.value);
 
   $acuityClient.api.query.system.events((events: any) => {
     // Loop through the Vec<EventRecord>
@@ -565,8 +581,8 @@ async function createBuyLock(event: any) {
   $db.put('/secrets/' + hashedSecret, secret);
   let timeout = Math.round(Date.now() / 1000) + 60 * 60 * 3;   // 3 hours
 
-  let buyValueWei = BigInt($ethClient.unformatWei(buyValue.value));
-  let value = ((buyValueWei * sellPriceWei) / (BigInt(10) ** BigInt(18))).toString();
+  let buyValueWei = BigInt($ethClient.unformatWei(buyValue.value, sellDecimals.value));
+  let value = ((buyValueWei * sellPriceWei) / (BigInt(10) ** BigInt(sellDecimals.value))).toString();
 
   let sellAssetId = route.params.sellAssetId
   let sellPrice = sellPriceWei.toString();

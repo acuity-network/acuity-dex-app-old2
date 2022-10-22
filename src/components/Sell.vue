@@ -193,6 +193,27 @@ const buySymbol = computed(() => {
   }
 });
 
+const sellDecimals = computed(() => {
+  switch(wallet.value) {
+    case 'polkadot':
+      return 18;
+    case 'metamask':
+      return (metaMaskSellAsset.value == "0") ? 18 : store.tokens[metaMaskChainId.value][metaMaskSellAsset.value].decimals;
+  }
+});
+
+const buyDecimals = computed(() => {
+  switch(wallet.value) {
+    case 'polkadot':
+      return (polkadotBuyAsset.value == "0") ? 18 : store.tokens[metaMaskChainId.value][polkadotBuyAsset.value].decimals;
+    case 'metamask':
+      if (store.buyChainId == 0) {
+        return 18;
+      }
+      return (metaMaskBuyAsset.value == "0") ? 18 : store.tokens[store.buyChainId][metaMaskBuyAsset.value].decimals;
+  }
+});
+
 const setDisabled = ref(false);
 const setWaiting = ref(false);
 
@@ -200,11 +221,11 @@ const sellValue = ref("");
 const sellPrice = ref("");
 const sellTotal = computed(() => {
 
-  let sellValueWei = BigInt($ethClient.unformatWei((sellValue.value != '') ? sellValue.value : '0'));
-  let sellPriceWei = BigInt($ethClient.unformatWei((sellPrice.value != '') ? sellPrice.value : '0'));
-  let buyValueWei = (sellValueWei * sellPriceWei) / (BigInt(10) ** BigInt(18));
+  let sellValueWei = BigInt($ethClient.unformatWei((sellValue.value != '') ? sellValue.value : '0', sellDecimals.value));
+  let sellPriceWei = BigInt($ethClient.unformatWei((sellPrice.value != '') ? sellPrice.value : '0', buyDecimals.value));
+  let buyValueWei = (sellValueWei * sellPriceWei) / (BigInt(10) ** BigInt(sellDecimals.value));
 
-  return $ethClient.formatWei(buyValueWei.toString());
+  return $ethClient.formatWei(buyValueWei.toString(), buyDecimals.value);
 });
 
 let emitter;
@@ -220,12 +241,12 @@ async function load() {
   switch(wallet.value) {
     case 'polkadot':
       let result = await $acuityClient.api.query.system.account(store.activeAcu);
-      sellBalance.value = $ethClient.formatWei(result.data.free);
+      sellBalance.value = $ethClient.formatWei(result.data.free, sellDecimals.value);
 
       if (polkadotBuyAsset.value == "0") {
         if (metaMaskChainId.value) {
           try {
-            buyBalance.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].web3.eth.getBalance(store.metaMaskAccount));
+            buyBalance.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].web3.eth.getBalance(store.metaMaskAccount), buyDecimals.value);
           }
           catch (e) {};
         }
@@ -235,7 +256,7 @@ async function load() {
           let token = new $ethClient.chains[metaMaskChainId.value].web3.eth.Contract(erc20Abi, polkadotBuyAsset.value);
           buyBalance.value = $ethClient.formatWei(await token.methods
             .balanceOf(store.metaMaskAccount)
-            .call());
+            .call(), buyDecimals.value);
           }
           catch (e) {};
       }
@@ -245,7 +266,7 @@ async function load() {
       if (metaMaskSellAsset.value == "0") {
         if (metaMaskChainId.value) {
           try {
-            sellBalance.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].web3.eth.getBalance(store.metaMaskAccount));
+            sellBalance.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].web3.eth.getBalance(store.metaMaskAccount), sellDecimals.value);
           }
           catch (e) {};
         }
@@ -255,20 +276,20 @@ async function load() {
           let token = new $ethClient.chains[metaMaskChainId.value].web3.eth.Contract(erc20Abi, metaMaskSellAsset.value);
           sellBalance.value = $ethClient.formatWei(await token.methods
             .balanceOf(store.metaMaskAccount)
-            .call());
+            .call(), sellDecimals.value);
           }
           catch (e) {};
       }
 
       if (store.buyChainId == 0) {
         let result = await $acuityClient.api.query.system.account(store.activeAcu);
-        buyBalance.value = $ethClient.formatWei(result.data.free);
+        buyBalance.value = $ethClient.formatWei(result.data.free, buyDecimals.value);
       }
       else {
         if (metaMaskBuyAsset.value == "0") {
           if (store.buyChainId) {
             try {
-              buyBalance.value = $ethClient.formatWei(await $ethClient.chains[store.buyChainId].web3.eth.getBalance(store.metaMaskAccount));
+              buyBalance.value = $ethClient.formatWei(await $ethClient.chains[store.buyChainId].web3.eth.getBalance(store.metaMaskAccount), buyDecimals.value);
             }
             catch (e) {};
           }
@@ -278,7 +299,7 @@ async function load() {
             let token = new $ethClient.chains[store.buyChainId].web3.eth.Contract(erc20Abi, metaMaskBuyAsset.value);
             buyBalance.value = $ethClient.formatWei(await token.methods
               .balanceOf(store.metaMaskAccount)
-              .call());
+              .call(), buyDecimals.value);
             }
             catch (e) {};
         }
@@ -289,8 +310,8 @@ async function load() {
     try {
       let result = (await $acuityClient.api.query.orderbook.accountPairOrder(store.activeAcu, sellAssetIdHex.value, buyAssetIdHex.value)).unwrap();
 
-      sellPrice.value = $ethClient.formatWei(result.price);
-      sellValue.value = $ethClient.formatWei(result.value);
+      sellPrice.value = $ethClient.formatWei(result.price, buyDecimals.value);
+      sellValue.value = $ethClient.formatWei(result.value, sellDecimals.value);
     }
     catch (e) {};
   }
@@ -353,8 +374,8 @@ watch(polkadotBuyAsset, async (newValue, oldValue) => {
 async function set(event: any) {
   setDisabled.value = true;
   const injector = await web3FromAddress(store.activeAcu);
-  let price = $ethClient.unformatWei(sellPrice.value);
-  let value = $ethClient.unformatWei(sellValue.value);
+  let price = $ethClient.unformatWei(sellPrice.value, buyDecimals.value);
+  let value = $ethClient.unformatWei(sellValue.value, sellDecimals.value);
 
   try {
     const unsub = await $acuityClient.api.tx.orderbook
