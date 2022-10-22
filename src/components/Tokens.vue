@@ -61,23 +61,25 @@ async function load() {
     tokenList.push(address);
   }
 
-  let balances: [] = await
-  $ethClient.chains[store.metaMaskChainId].rpc.methods.getAccountTokenBalances(store.metaMaskAccount, tokenList).call();
+  if ($ethClient.chains[store.metaMaskChainId].rpc) {
+    let balances: [] = await
+    $ethClient.chains[store.metaMaskChainId].rpc.methods.getAccountTokenBalances(store.metaMaskAccount, tokenList).call();
 
-  for (let i in balances) {
-    tokens[i].balance = $ethClient.formatWei(balances[i], tokens[i].decimals);
-  }
-
-  let contract = $ethClient.chainsData[store.metaMaskChainId].contracts.atomicSwapERC20;
-  let allowances: [] = await
-  $ethClient.chains[store.metaMaskChainId].rpc.methods.getAccountTokenAllowances(store.metaMaskAccount, contract, tokenList).call();
-
-  for (let i in allowances) {
-    if (BigInt(allowances[i]) > BigInt(2) ** BigInt(57)) {
-      tokens[i].allowance = "unlimited";
+    for (let i in balances) {
+      tokens[i].balance = $ethClient.formatWei(balances[i], tokens[i].decimals);
     }
-    else {
-      tokens[i].allowance = $ethClient.formatWei(allowances[i], tokens[i].decimals);
+
+    let contract = $ethClient.chainsData[store.metaMaskChainId].contracts.atomicSwapERC20;
+    let allowances: [] = await
+    $ethClient.chains[store.metaMaskChainId].rpc.methods.getAccountTokenAllowances(store.metaMaskAccount, contract, tokenList).call();
+
+    for (let i in allowances) {
+      if (BigInt(allowances[i]) > BigInt(2) ** BigInt(57)) {
+        tokens[i].allowance = "unlimited";
+      }
+      else {
+        tokens[i].allowance = $ethClient.formatWei(allowances[i], tokens[i].decimals);
+      }
     }
   }
 }

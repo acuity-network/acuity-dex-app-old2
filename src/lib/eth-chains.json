@@ -3,6 +3,27 @@
 		"label": "Ethereum",
 		"symbol": "ETH",
 		"genesis": "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3",
+		"tokens": {
+			"0xdac17f958d2ee523a2206206994597c13d831ec7": "Tether USD (USDT)",
+			"0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48": "USD Coin (USDC)",
+			"0xB8c77482e45F1F44dE1745F52C74426C631bDD52": "BNB",
+			"0x4fabb145d64652a948d72533023f6e7a623c7c53": "Binance USD (BUSD)",
+			"0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0": "Matic Token (MATIC)",
+			"0x95aD61b0a150d79219dCF64E1E6Cc01f0B64C4cE": "SHIBA INU (SHIB)",
+			"0x6b175474e89094c44da98b954eedeac495271d0f": "Dai Stablecoin (DAI)",
+			"0x2b591e99afe9f32eaa6214f7b7629768c40eeb39": "HEX",
+			"0x3883f5e181fccaf8410fa61e12b59bad963fb645": "Theta Token (THETA)",
+			"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599": "Wrapped BTC (WBTC)",
+			"0x1f9840a85d5af5bf1d1762f925bdaddc4201f984": "Uniswap (UNI)",
+			"0x75231f58b43240c9718dd58b4967c5114342a86c": "OKB",
+			"0x2af5d2ad76741191d15dfe7bf6ac92d4bd912ca3": "Bitfinex LEO Token (LEO)",
+			"0x514910771af9ca656af840dff83e8264ecf986ca": "ChainLink Token (LINK)",
+			"0xa0b73e1ff0b80914ab6fe0444e65848c4c34450b": "CRO",
+			"0x4a220e6096b25eadb88358cb44068a3248254675": "Quant (QNT)",
+			"0x85f17cf997934a597031b2e18a9ab6ebd4b9f6a4": "NEAR",
+			"0xd850942ef8811f2a866692a623011bde52a462c1": "VeChain Token (VEN)",
+			"0x4d224452801aced8b2f0aebe155379bb5d594381": "ApeCoin (APE)"
+		},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -33,6 +54,7 @@
 		"label": "Expanse",
 		"symbol": "EXP",
 		"genesis": "0x2fe75cf9ba10cb1105e1750d872911e75365ba24fdd5db7f099445c901fea895",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -49,6 +71,7 @@
 		"label": "Optimism",
 		"symbol": "ETH",
 		"genesis": "0x7ca38a1916c42007829c55e69d3e9a73265554b586a499015373241b8a3fa48b",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -68,6 +91,7 @@
 		"label": "Flare Songbird",
 		"symbol": "SGB",
 		"genesis": "0x703ccf62df9fa51265d239a6bb8afb6f2fff2831dac0c2df6208dd254a57585b",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -83,6 +107,7 @@
 		"label": "Elastos",
 		"symbol": "ELA",
 		"genesis": "0x6afc2eb01956dfe192dc4cd065efdf6c3c80448776ca367a7246d279e228ff0a",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -99,6 +124,7 @@
 		"label": "Cronos",
 		"symbol": "CRO",
 		"genesis": "0xa7f4e603aa51239a15e0a3fafb15c6e4c6d6f2c39c55770330efd2fa5afc12a9",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -116,6 +142,7 @@
 		"label": "RSK",
 		"symbol": "RBTC",
 		"genesis": "0xf88529d4ab262c0f4d042e9d8d3f2472848eaafe1a9b7213f57617eb40a9f9e0",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -131,6 +158,7 @@
 		"label": "Telos",
 		"symbol": "TLOS",
 		"genesis": "0x044852b2a670ade5407e78fb2863c51de9fcb96542a07186fe3aeda6bb8a116d",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -156,6 +184,7 @@
 		"label": "CoinEx Smart Chain",
 		"symbol": "CET",
 		"genesis": "0xc74aefd3e2a21f39e44bd840f4a125a4c2439d2623985c67d80766d899c9af72",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -175,6 +204,7 @@
 		"label": "Binance Smart Chain",
 		"symbol": "BNB",
 		"genesis": "0x6d3c66c5357ec91d5c43af47e234a939b22557cbb552dc45bebbceeed90fbe34",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -210,6 +240,7 @@
 		"label": "Syscoin",
 		"symbol": "SYS",
 		"genesis": "0x2112327cad6deec6ada8bd7e5d33d263b57742a8495f3b641faa326b55b1c666",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -226,6 +257,7 @@
 		"label": "EOS",
 		"symbol": "EOS",
 		"genesis": "0x0000000000000000000000000000000000000000000000000000000000000000",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -241,6 +273,7 @@
 		"label": "Ethereum Classic",
 		"symbol": "ETC",
 		"genesis": "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -258,6 +291,7 @@
 		"label": "OKC (OKX)",
 		"symbol": "OKC",
 		"genesis": "0x30cbd6fb908537c789e78a366ea3871b99d6af869c13c9b310fc487ec82635e1",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -273,6 +307,7 @@
 		"label": "Hoo Smart Chain",
 		"symbol": "HOO",
 		"genesis": "0x7eb442ecda3db6ae27376de2b34dfae802d3ab13ebba7544eba103ca619e32ed",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -288,6 +323,7 @@
 		"label": "Gnosis Chain (formerly xDai)",
 		"symbol": "xDAI",
 		"genesis": "0x4f1dd23188aab3a76b463e4af801b52b1248ef073c648cbdc4c9333d3da79756",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -313,6 +349,7 @@
 		"label": "ThunderCore",
 		"symbol": "TT",
 		"genesis": "0xfb3c2d5d6a223d4e0d712408cc90c31604d7781d9518698301c82be66b81a7e0",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -334,6 +371,7 @@
 		"label": "Fuse",
 		"symbol": "FUSE",
 		"genesis": "0x6e778e9491576a28bd06fac93844d8494be1f153e60ba7d29b4b51d991d4f830",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -350,6 +388,7 @@
 		"label": "HECO Chain",
 		"symbol": "HT",
 		"genesis": "0x5751d1772ebc82d52d19d96157bb3f13ca8417217e3c0913adf15f04eb4cb144",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -367,6 +406,7 @@
 		"label": "Polygon",
 		"symbol": "MATIC",
 		"genesis": "0xa9c28ce2141b56c474f1dc504bee9b01eb1bd7d1a507580d5519d4437a97de1b",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -393,6 +433,7 @@
 	"200": {
 		"label": "Arbitrum on xDai",
 		"symbol": "xDAI",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -409,6 +450,7 @@
 		"label": "Energy Web Chain",
 		"symbol": "EWT",
 		"genesis": "",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -426,6 +468,7 @@
 		"label": "Fantom",
 		"symbol": "FTM",
 		"genesis": "0x00000000000003e83fddf1e9330f0a8691d9f0b2af57b38c3bb85488488a40df",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -449,6 +492,7 @@
 	"288": {
 		"label": "Boba Network",
 		"symbol": "ETH",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -467,6 +511,7 @@
 		"label": "Kucoin Community Chain",
 		"symbol": "KCS",
 		"genesis": "0xd179bc170ecd216166ba440a2cff697ba1ed4e203ddcb51214e52773906ca3fc",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -482,6 +527,7 @@
 		"label": "Shiden",
 		"symbol": "SDN",
 		"genesis": "0x63144bd58eb8304c8316dfeede3bc69700edf97b3f167a9cf3767262e50fc38e",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -501,6 +547,7 @@
 		"label": "Theta",
 		"symbol": "TFUEL",
 		"genesis": "0xd8836c6cf3c3ccea0b015b4ed0f9efb0ffe6254db793a515843c9d0f68cbab65",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -517,6 +564,7 @@
 		"label": "Astar",
 		"symbol": "ASTR",
 		"genesis": "0x0d28a86ac0fe37871285bd1dac45d83a4b3833e01a37571a1ac4f0a44c64cdc2",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -535,6 +583,7 @@
 		"label": "Karura",
 		"symbol": "KAR",
 		"genesis": "",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -553,6 +602,7 @@
 		"label": "Acala",
 		"symbol": "ACA",
 		"genesis": "",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -571,6 +621,7 @@
 		"label": "Callisto",
 		"symbol": "CLO",
 		"genesis": "0x82270b80fc90beb005505a9ef95039639968a0e81b2904ad30128c93d713d2c4",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -586,6 +637,7 @@
 		"label": "Wanchain",
 		"symbol": "WAN",
 		"genesis": "0x0376899c001618fc7d5ab4f31cfd7f57ca3a896ccc1581a57d8f129ecf40b840",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -601,6 +653,7 @@
 		"label": "Clover",
 		"symbol": "CLV",
 		"genesis": "",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -617,6 +670,7 @@
 		"label": "Metis",
 		"symbol": "METIS",
 		"genesis": "0x9e3354e081a54a57190bdb8948a597c840ea5dd496b0322864d4585f4a716892",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -632,6 +686,7 @@
 		"label": "Moonbeam",
 		"symbol": "GLMR",
 		"genesis": "0x7e6b3bbed86828a558271c9c9f62354b1d8b5aa15ff85fd6f1e7cbe9af9dde7e",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -652,6 +707,7 @@
 		"label": "Moonriver",
 		"symbol": "MOVR",
 		"genesis": "0xce24348303f7a60c4d2d3c82adddf55ca57af89cd9e2cd4b863906ef53b89b3c",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -671,6 +727,7 @@
 	"2021": {
 		"label": "Edgeware",
 		"symbol": "EDG",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -706,6 +763,7 @@
 		"label": "Echelon",
 		"symbol": "ECH",
 		"genesis": "",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -722,6 +780,7 @@
 		"label": "IoTeX",
 		"symbol": "IOTX",
 		"genesis": "0xb337983730981c2d50f114eed5da9dd20b83c8c5e130beefdb3001dc858cfe8b",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -742,6 +801,7 @@
 		"label": "Nahmii 2.0",
 		"symbol": "ETH",
 		"genesis": "0xfed46abde4cd498e15a510de5eeaf69770cafa78646fbf72bae52d647c82a4c8",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -758,6 +818,7 @@
 		"label": "Klaytn",
 		"symbol": "KLAY",
 		"genesis": "0xc72e5293c3c3ba38ed8ae910f780e4caaa9fb95e79784f7ab74c3c262ea7137e",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -773,6 +834,7 @@
 		"label": "Evmos",
 		"symbol": "EVMOS",
 		"genesis": "",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -790,6 +852,7 @@
 		"label": "smartBCH",
 		"symbol": "BCH",
 		"genesis": "0x0000000000000000000000000000000000000000000000000000000000000000",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -807,10 +870,25 @@
 			"https://www.smartscan.cash/"
 		]
 	},
+	"10001": {
+		"label": "Ethereum POW",
+		"symbol": "ETHW",
+		"tokens": {},
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": ""
+		},
+		"rpcs": [
+		],
+		"explorers": [
+		]
+	},
 	"32659": {
 		"label": "Fusion",
 		"symbol": "FSN",
 		"genesis": "0xc2422b1d9d16331be2a5b207c0783027d4419498003f729f4b9e9c5c1838623a",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -828,6 +906,7 @@
 		"label": "Arbitrum One",
 		"symbol": "ETH",
 		"genesis": "0x7ee576b35482195fc49205cec9af72ce14f003b9ae69f6ba0faef4514be8b442",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -845,6 +924,7 @@
 		"label": "Arbitrum Nova",
 		"symbol": "ETH",
 		"genesis": "",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -861,6 +941,7 @@
 		"label": "Celo",
 		"symbol": "CELO",
 		"genesis": "0x19ea3339d3c8cda97235bc8293240d5b9dadcdfbb5d4b0b90ee731cac1bd11c3",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -877,6 +958,7 @@
 		"label": "Emerald ParaTime (Oasis)",
 		"symbol": "ROSE",
 		"genesis": "0x5a8686e9694a4ffb2b1648ec6ff9b181e547658abeea6ad9781e459a3cdfedd5",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -892,6 +974,7 @@
 		"label": "Avalanche",
 		"symbol": "AVAX",
 		"genesis": "0x31ced5b9beb7f8782b014660da0cb18cc409f121f408186886e1ca3e8eeca96b",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -911,6 +994,7 @@
 		"label": "Aurora",
 		"symbol": "AURORA",
 		"genesis": "0x8058d7fe544fdcac6836faa5f84c68291da1773594216957374708a7109a6336",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -926,6 +1010,7 @@
 		"label": "Harmony",
 		"symbol": "ONE",
 		"genesis": "0xb4d158b82ac8a653c42b78697ab1cd0c6a0d9a15ab3bc34130f0b719fb174d2a",
+		"tokens": {},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",

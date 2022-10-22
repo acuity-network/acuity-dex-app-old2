@@ -49,9 +49,11 @@ export default class EthClient {
   chainsData: any = ethChainsDataJson;
 
   async loadAcuAccount() {
-    if (this.chains.hasOwnProperty(store.metaMaskChainId)) {
-      let mappedAcuAddress = encodeAddress(await this.chains[store.metaMaskChainId].account.methods.getAcuAccount(store.metaMaskAccount).call());
-      store.activeAcuSet(mappedAcuAddress);
+    if (this.chains[store.metaMaskChainId].account) {
+      if (this.chains.hasOwnProperty(store.metaMaskChainId)) {
+        let mappedAcuAddress = encodeAddress(await this.chains[store.metaMaskChainId].account.methods.getAcuAccount(store.metaMaskAccount).call());
+        store.activeAcuSet(mappedAcuAddress);
+      }
     }
   }
 
