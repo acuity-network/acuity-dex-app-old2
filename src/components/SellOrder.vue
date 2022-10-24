@@ -167,46 +167,54 @@ async function load() {
   sellBalance.value = '';
   buyBalance.value = '';
 
-  let sellChainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellChainId.value), 16);
-  let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(store.activeAcu, sellChainIdHex)).unwrap();
-  let buyerAddressSellChain = '0x' + Buffer.from(result).toString('hex').slice(24);
-  let sellToken = '0x' + route.params.sellAssetId.slice(26, 66);
-
-  if (sellToken == "0x0000000000000000000000000000000000000000") {
-    try {
-      sellBalance.value = $ethClient.formatWei(await $ethClient.chains[sellChainId.value].web3.eth.getBalance(buyerAddressSellChain), sellDecimals.value);
-    }
-    catch (e) {};
+  if (sellChainId.value == 0) {
   }
   else {
-    try {
-      let token = new $ethClient.chains[sellChainId.value].web3.eth.Contract(erc20Abi, sellToken);
-      sellBalance.value = $ethClient.formatWei(await token.methods
-        .balanceOf(buyerAddressSellChain)
-        .call(), sellDecimals.value);
+    let sellChainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellChainId.value), 16);
+    let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(store.activeAcu, sellChainIdHex)).unwrap();
+    let buyerAddressSellChain = '0x' + Buffer.from(result).toString('hex').slice(24);
+    let sellToken = '0x' + route.params.sellAssetId.slice(26, 66);
+
+    if (sellToken == "0x0000000000000000000000000000000000000000") {
+      try {
+        sellBalance.value = $ethClient.formatWei(await $ethClient.chains[sellChainId.value].web3.eth.getBalance(buyerAddressSellChain), sellDecimals.value);
       }
       catch (e) {};
+    }
+    else {
+      try {
+        let token = new $ethClient.chains[sellChainId.value].web3.eth.Contract(erc20Abi, sellToken);
+        sellBalance.value = $ethClient.formatWei(await token.methods
+          .balanceOf(buyerAddressSellChain)
+          .call(), sellDecimals.value);
+        }
+        catch (e) {};
+    }
   }
 
-  let buyChainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(buyChainId.value), 16);
-  result = (await $acuityClient.api.query.orderbook.accountForeignAccount(store.activeAcu, buyChainIdHex)).unwrap();
-  let buyerAddressBuyChain = '0x' + Buffer.from(result).toString('hex').slice(24);
-  let buyToken = '0x' + route.params.buyAssetId.slice(26, 66);
-
-  if (buyToken == "0x0000000000000000000000000000000000000000") {
-    try {
-      buyBalance.value = $ethClient.formatWei(await $ethClient.chains[buyChainId.value].web3.eth.getBalance(buyerAddressBuyChain), buyDecimals.value);
-    }
-    catch (e) {};
+  if (buyChainId.value == 0) {
   }
   else {
-    try {
-      let token = new $ethClient.chains[buyChainId.value].web3.eth.Contract(erc20Abi, buyToken);
-      buyBalance.value = $ethClient.formatWei(await token.methods
-        .balanceOf(buyerAddressBuyChain)
-        .call(), buyDecimals.value);
+    let buyChainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(buyChainId.value), 16);
+    result = (await $acuityClient.api.query.orderbook.accountForeignAccount(store.activeAcu, buyChainIdHex)).unwrap();
+    let buyerAddressBuyChain = '0x' + Buffer.from(result).toString('hex').slice(24);
+    let buyToken = '0x' + route.params.buyAssetId.slice(26, 66);
+
+    if (buyToken == "0x0000000000000000000000000000000000000000") {
+      try {
+        buyBalance.value = $ethClient.formatWei(await $ethClient.chains[buyChainId.value].web3.eth.getBalance(buyerAddressBuyChain), buyDecimals.value);
       }
       catch (e) {};
+    }
+    else {
+      try {
+        let token = new $ethClient.chains[buyChainId.value].web3.eth.Contract(erc20Abi, buyToken);
+        buyBalance.value = $ethClient.formatWei(await token.methods
+          .balanceOf(buyerAddressBuyChain)
+          .call(), buyDecimals.value);
+        }
+        catch (e) {};
+    }
   }
 
   let buyHeight;
@@ -227,43 +235,52 @@ async function load() {
     let blockNumbers = await $acuityClient.api.rpc.atomicSwap.getIndexBlocks(route.params.accountId);
 
     for (let blockNumber of blockNumbers) {
-      try {
-        const blockHash = await $acuityClient.api.rpc.chain.getBlockHash(blockNumber);
-        const apiAt = await $acuityClient.api.at(blockHash);
-        const events = await apiAt.query.system.events();
+      const blockHash = await $acuityClient.api.rpc.chain.getBlockHash(blockNumber);
+      const apiAt = await $acuityClient.api.at(blockHash);
+      const events = await apiAt.query.system.events();
 
-        for (let event of events) {
-          if (event.event.section == 'atomicSwap' && event.event.method == 'BuyLock') {
-            console.log(event.event.data);
+      for (let event of events) {
+        if (event.event.section == 'atomicSwap' && event.event.method == 'BuyLock') {
+          console.log(event.event.data);
 
-            let lockId = $ethClient.web3.utils.bytesToHex(event.event.data[5]);
+          let lockId = $ethClient.web3.utils.bytesToHex(event.event.data[5]);
 
-            let sellLockValue = (parseFloat(event.event.data[4]) / price.value).toString();
+          let sellChainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellChainId.value), 16);
+          let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(encodeAddress(event.event.data[0]), sellChainIdHex)).unwrap();
+          let sellAddress = '0x' + Buffer.from(result).toString('hex').slice(24);
 
-            newLocks[lockId] = {
-              lockId: lockId,
-              secret: "",
-              hashedSecret: $ethClient.web3.utils.bytesToHex(event.event.data[2]),
-              buyerAddressSellChain: $ethClient.web3.utils.bytesToHex(event.event.data[0]),
-              buyerName: await loadName(encodeAddress(event.event.data[0])),
-              buyLockValue: $ethClient.formatWei(event.event.data[4], buyDecimals.value),
-              buyLockState: "Locked",
-              buyLockTimeoutRaw: event.event.data[3],
-              buyLockTimeout: new Date(parseInt(event.event.data[3])).toLocaleString(),
-              sellLockValueWei: sellLockValue,
-              sellLockValue: $ethClient.formatWei(sellLockValue, sellDecimals.value),
-              sellLockState: "Not locked",
-              createSellLockDisabled: false,
-              createSellLockWaiting: false,
-              unlockSellLockDisabled: false,
-              unlockSellLockWaiting: false,
-              unlockBuyLockDisabled: false,
-              unlockBuyLockWaiting: false,
-            };
-          }
+          // Calculate how much value the sell lock should have.
+          let buyLockValueWei = BigInt(event.event.data[4]);
+          let sellLockValueWei = (buyLockValueWei * (BigInt(10) ** BigInt(sellDecimals.value))) / sellPriceWei;
+
+          newLocks[lockId] = {
+            lockId: lockId,
+            secret: "",
+            hashedSecret: $ethClient.web3.utils.bytesToHex(event.event.data[2]),
+            buyerAddressBuyChain: encodeAddress(event.event.data[0]),
+            buyerAddressSellChain: sellAddress,
+            buyerName: await loadName(encodeAddress(event.event.data[0])),
+            buyLockValue: $ethClient.formatWei(event.event.data[4], buyDecimals.value),
+            buyLockState: "Locked",
+            buyLockTimeoutRaw: parseInt(event.event.data[3]),
+            buyLockTimeout: new Date(parseInt(event.event.data[3])).toLocaleString(),
+            sellLockValueWei: sellLockValueWei,
+            sellLockValue: $ethClient.formatWei(sellLockValueWei.toString(), sellDecimals.value),
+            sellLockState: "Not locked",
+            createSellLockDisabled: false,
+            createSellLockWaiting: false,
+            unlockSellLockDisabled: false,
+            unlockSellLockWaiting: false,
+            timeoutSellLockDisabled: false,
+            timeoutSellLockWaiting: false,
+            unlockBuyLockDisabled: false,
+            unlockBuyLockWaiting: false,
+            timeoutBuyLockDisabled: false,
+            timeoutBuyLockWaiting: false,
+          };
+
         }
       }
-      catch (e) {}
     }
   }
   else {
@@ -303,8 +320,8 @@ async function load() {
 
       let buyerAcuAddress = encodeAddress(await $ethClient.chains[buyChainId.value].account.methods.getAcuAccount(event.returnValues.sender).call());
 
-      let buyChainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(buyChainId.value), 16);
-      let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(buyerAcuAddress, buyChainIdHex)).unwrap();
+      let sellChainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellChainId.value), 16);
+      let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(buyerAcuAddress, sellChainIdHex)).unwrap();
       let sellAddress = '0x' + Buffer.from(result).toString('hex').slice(24);
 
       // Calculate how much value the sell lock should have.
@@ -343,7 +360,7 @@ async function load() {
   let sellType = $ethClient.web3.utils.hexToNumber('0x' + route.params.sellAssetId.slice(18, 22));
   let events;
 
-  if (buyChainId.value == 0) {
+  if (sellChainId.value == 0) {
   }
   else {
     if (sellType == 0) {
@@ -440,7 +457,28 @@ async function load() {
         }
       }
     }
+  }
 
+  if (buyChainId.value == 0) {
+    let blockNumbers = await $acuityClient.api.rpc.atomicSwap.getIndexBlocks(sellerAddressBuyChain.value);
+
+    for (let blockNumber of blockNumbers) {
+      const blockHash = await $acuityClient.api.rpc.chain.getBlockHash(blockNumber);
+      const apiAt = await $acuityClient.api.at(blockHash);
+      const events = await apiAt.query.system.events();
+
+      for (let event of events) {
+        if (event.event.section == 'atomicSwap' && event.event.method == 'UnlockByRecipient') {
+          let lockId = $ethClient.web3.utils.bytesToHex(event.event.data[2]);
+
+          if (newLocks[lockId]) {
+            newLocks[lockId].buyLockState = "Unlocked";
+          }
+        }
+      }
+    }
+  }
+  else {
     if (buyType == 0) {
       events = await $ethClient.chains[buyChainId.value].atomicSwap.getPastEvents('UnlockByRecipient', {
         fromBlock: Math.max(buyHeight - 2000, 0),
@@ -508,15 +546,25 @@ onMounted(async () => {
   buyChainId.value = $ethClient.web3.utils.hexToNumber('0x' + route.params.buyAssetId.slice(6, 18));
   buyToken.value = '0x' + route.params.buyAssetId.slice(26, 66);
 
-  let chainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellChainId.value), 16);
-  let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(sellerAccountId.value, chainIdHex)).unwrap();
-  sellerAddressSellChain.value = '0x' + Buffer.from(result).toString('hex').slice(24);
+  if (sellChainId.value == 0) {
+    sellerAddressSellChain.value = sellerAccountId.value;
+  }
+  else {
+    let chainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellChainId.value), 16);
+    let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(sellerAccountId.value, chainIdHex)).unwrap();
+    sellerAddressSellChain.value = '0x' + Buffer.from(result).toString('hex').slice(24);
+  }
 
-  chainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(buyChainId.value), 16);
-  result = (await $acuityClient.api.query.orderbook.accountForeignAccount(sellerAccountId.value, chainIdHex)).unwrap();
-  sellerAddressBuyChain.value = '0x' + Buffer.from(result).toString('hex').slice(24);
+  if (buyChainId.value == 0) {
+    sellerAddressBuyChain.value = sellerAccountId.value;
+  }
+  else {
+    let chainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(buyChainId.value), 16);
+    let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(sellerAccountId.value, chainIdHex)).unwrap();
+    sellerAddressBuyChain.value = '0x' + Buffer.from(result).toString('hex').slice(24);
+  }
 
-  result = (await $acuityClient.api.query.orderbook.accountPairOrder(route.params.accountId, route.params.sellAssetId, route.params.buyAssetId)).unwrap();
+  let result = (await $acuityClient.api.query.orderbook.accountPairOrder(route.params.accountId, route.params.sellAssetId, route.params.buyAssetId)).unwrap();
 
   sellPriceWei = BigInt(result.price);
   sellValueWei = BigInt(result.value);
@@ -576,10 +624,11 @@ watch(() => store.metaMaskAccount, async (newValue, oldValue) => {
 async function createBuyLock(event: any) {
   buyDisabled.value = true;
 
+  let recipient = sellerAddressBuyChain.value;
   let secret = $ethClient.web3.utils.randomHex(32);
   let hashedSecret = $ethClient.web3.utils.keccak256(secret);
   $db.put('/secrets/' + hashedSecret, secret);
-  let timeout = Math.round(Date.now() / 1000) + 60 * 60 * 3;   // 3 hours
+  let timeout = BigInt(Date.now()) + BigInt(60 * 60 * 3 * 1000);   // 3 hours
 
   let buyValueWei = BigInt($ethClient.unformatWei(buyValue.value, sellDecimals.value));
   let value = ((buyValueWei * sellPriceWei) / (BigInt(10) ** BigInt(sellDecimals.value))).toString();
@@ -588,7 +637,6 @@ async function createBuyLock(event: any) {
   let sellPrice = sellPriceWei.toString();
 
   if (buyChainId.value == 0) {
-    let recipient = sellerAccountId.value;
     console.log({recipient, hashedSecret, timeout, value, sellAssetId, sellPriceWei});
     const injector = await web3FromAddress(store.activeAcu);
     try {
@@ -615,8 +663,8 @@ async function createBuyLock(event: any) {
     return;
   }
 
-  let recipient = sellerAddressBuyChain.value;
   let type = $ethClient.web3.utils.hexToNumber('0x' + route.params.buyAssetId.slice(18, 22));
+  timeout /= BigInt(1000);
 
   if (type == 0) {
     console.log({recipient, hashedSecret, timeout, sellAssetId, sellPrice, value});
@@ -673,6 +721,10 @@ async function createSellLock(lock: any) {
   let value = lock.sellLockValueWei.toString();
   let buyLockId = lock.lockId;
 
+  if (sellChainId.value == 0) {
+    return;
+  }
+
   let type = $ethClient.web3.utils.hexToNumber('0x' + route.params.sellAssetId.slice(18, 22));
 
   if (type == 0) {
@@ -723,6 +775,10 @@ async function unlockSellLock(lock: any) {
   let sender = sellerAddressSellChain.value;
   let secret = await $db.get('/secrets/' + lock.hashedSecret);
   let timeout = lock.sellLockTimeoutRaw;
+
+  if (sellChainId.value == 0) {
+    return;
+  }
 
   let type = $ethClient.web3.utils.hexToNumber('0x' + route.params.sellAssetId.slice(18, 22));
 
@@ -775,6 +831,33 @@ async function unlockBuyLock(lock: any) {
   let secret = lock.secret;
   let timeout = lock.buyLockTimeoutRaw;
 
+  if (buyChainId.value == 0) {
+    console.log({sender, secret, timeout});
+    const injector = await web3FromAddress(store.activeAcu);
+    try {
+      const unsub = await $acuityClient.api.tx.atomicSwap
+        .unlockByRecipient(sender, secret, timeout)
+        .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
+          console.log(result);
+          if (!result.status.isInBlock) {
+            locks[lock.lockId].unlockBuyLockWaiting = true;
+          }
+          else {
+            unsub();
+            load();
+            locks[lock.lockId].unlockBuyLockWaiting = false;
+            locks[lock.lockId].unlockBuyLockDisabled = false;
+          }
+        });
+    }
+    catch (e) {
+      locks[lock.lockId].unlockBuyLockWaiting = false;
+      locks[lock.lockId].unlockBuyLockDisabled = false;
+    }
+
+    return;
+  }
+
   let type = $ethClient.web3.utils.hexToNumber('0x' + route.params.buyAssetId.slice(18, 22));
 
   if (type == 0) {
@@ -826,6 +909,10 @@ async function timeoutBuyLock(lock: any) {
   let hashedSecret = lock.hashedSecret;
   let timeout = lock.buyLockTimeoutRaw;
 
+  if (buyChainId.value == 0) {
+    return;
+  }
+
   let type = $ethClient.web3.utils.hexToNumber('0x' + route.params.buyAssetId.slice(18, 22));
 
   if (type == 0) {
@@ -876,6 +963,10 @@ async function timeoutSellLock(lock: any) {
   let recipient = lock.buyerAddressSellChain;
   let hashedSecret = lock.hashedSecret;
   let timeout = lock.sellLockTimeoutRaw;
+
+  if (sellChainId.value == 0) {
+    return;
+  }
 
   let type = $ethClient.web3.utils.hexToNumber('0x' + route.params.buyAssetId.slice(18, 22));
 
@@ -960,7 +1051,7 @@ async function timeoutSellLock(lock: any) {
               <td>{{ lock.buyLockState }}</td>
               <td>{{ lock.buyLockTimeout }}</td>
               <td>
-                <v-btn v-if="lock.buyLockState == 'Locked' && lock.sellLockState == 'Unlocked' && store.metaMaskChainId == buyChainId && store.metaMaskAccount == sellerAddressBuyChain" size="small" @click="unlockBuyLock(lock)" :disabled="lock.unlockBuyLockDisabled">
+                <v-btn v-if="lock.buyLockState == 'Locked' && lock.sellLockState == 'Unlocked' && (buyChainId == 0 || store.metaMaskChainId == buyChainId && store.metaMaskAccount == sellerAddressBuyChain)" size="small" @click="unlockBuyLock(lock)" :disabled="lock.unlockBuyLockDisabled">
                   <v-icon v-if="!lock.unlockBuyLockWaiting">mdi-lock-open-variant</v-icon>
                   <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                 </v-btn>
