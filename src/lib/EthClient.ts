@@ -81,7 +81,7 @@ export default class EthClient {
       }
 
       this.unformatWei = (formatted: string, decimals: number = 18) => {
-        let result = formatted.split('.', 2);
+        let result = formatted.replaceAll(',', '').split('.', 2);
         let integer = result[0];
         let decimal = result[1];
         if (!decimal) decimal = '';
