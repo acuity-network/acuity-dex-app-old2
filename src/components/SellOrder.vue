@@ -166,6 +166,8 @@ async function load() {
   buyBalance.value = '';
 
   if (sellChainId.value == 0) {
+    let result = await $acuityClient.api.query.system.account(store.activeAcu);
+    sellBalance.value = $ethClient.formatWei(result.data.free, sellDecimals.value);
   }
   else {
     let sellChainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellChainId.value), 16);
@@ -191,6 +193,8 @@ async function load() {
   }
 
   if (buyChainId.value == 0) {
+    let result = await $acuityClient.api.query.system.account(store.activeAcu);
+    buyBalance.value = $ethClient.formatWei(result.data.free, sellDecimals.value);
   }
   else {
     let buyChainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(buyChainId.value), 16);
