@@ -127,6 +127,7 @@
 			"https://eth-mainnet.public.blastapi.io"
 		],
 		"explorers": [
+			"https://etherscan.io/"
 		]
 	},
 	"2": {
@@ -150,7 +151,34 @@
 		"label": "Optimism",
 		"symbol": "ETH",
 		"genesis": "0x7ca38a1916c42007829c55e69d3e9a73265554b586a499015373241b8a3fa48b",
-		"tokens": {},
+		"tokens": {
+			"0x94b008aa00579c1307b0ef2c499ad98a8ce58e58": "Tether USD (USDT)",
+			"0x7f5c764cbc14f9669b88837ca1490cca17c31607": "USD Coin (USDC)",
+			"0xda10009cbd5d07dd0cecc66161fc93d7c9000da1": "Dai Stablecoin (DAI)",
+			"0x68f180fcce6836688e9084f035309e29bf0a2095": "Wrapped BTC (WBTC)",
+			"0x350a791bfc2c21f9ed5d10980dad2e2638ffa7f6": "ChainLink Token (LINK)",
+			"0x2e3d870790dc77a83dd1d18184acc7439a53f475": "Frax (FRAX)",
+			"0xfdb794692724153d1488ccdbe0c56c252596735f": "Lido DAO Token (LDO)",
+			"0xC22885e06cd8507c5c74a948C59af853AEd1Ea5C": "Decentralized USD (USDD)",
+			"0x8700daec35af8ff88c16bdf0418774cb3d7599b4": "Synthetix Network Token (SNX)",
+			"0x67ccea5bb16181e7b4109c9c2143c24a1c2205be": "Frax Share (FXS)",
+			"0xfb21b70922b9f6e3c6274bcd6cb1aa8a0fe20b80": "TerraUSD (UST)",
+			"0x4200000000000000000000000000000000000042": "Optimism (OP)",
+			"0xa00e3a3511aac35ca78530c85007afcd31753819": "Kyber Network Crystal v2 (KNC)",
+			"0x8c6f28f2f1a3c87f0f938b96d27520d9751ec8d9": "Synth sUSD (sUSD)",
+			"0x4e720dd3ac5cfe1e1fbde4935f386bb1c66f4642": "beefy.finance (BIFI)",
+			"0xe405de8f52ba7559f9df3c368500b6e6ae6cee49": "Synth sETH (sETH)",
+			"0xb548f63d4405466b36c0c0ac3318a22fdcec711a": "Rari Governance Token (RGT)",
+			"0x217d47011b23bb961eb6d93ca9945b7501a5bb11": "Thales DAO Token (THALES)",
+			"0x298b9b95708152ff6968aafd889c6586e9169f1d": "Synth sBTC (sBTC)",
+			"0xee9801669c6138e84bd50deb500827b776777d28": "O3 Swap Token (O3)",
+			"0xb0b195aefa3650a6908f15cdac7d92f8a5791b0b": "BOB (BOB)",
+			"0x1da650c3b2daa8aa9ff6f661d4156ce24d08a062": "Dentacoin (DCN)",
+			"0xc5db22719a06418028a40a9b5e9a7c02959d0d08": "Synth sLINK (sLINK)",
+			"0x0c5b4c92c948691EEBf185C17eeB9c230DC019E9": "PickleToken (PICKLE)",
+			"0xb12c13e66ade1f72f71834f2fc5082db8c091358": "ROOBEE (ROOBEE)",
+			"0x00a35fd824c717879bf370e70ac6868b95870dfb": "IronBank (IB)"
+		},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -163,7 +191,7 @@
 			"https://mainnet.optimism.io"
 		],
 		"explorers": [
-			"https://optimistic.ethereum.io"
+			"https://optimistic.etherscan.io/"
 		]
 	},
 	"19": {
@@ -768,6 +796,7 @@
 			"https://fantom-mainnet.public.blastapi.io"
 		],
 		"explorers": [
+			"https://ftmscan.com/"
 		]
 	},
 	"288": {
