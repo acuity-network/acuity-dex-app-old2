@@ -229,6 +229,15 @@ async function load() {
     sellHeight = await $ethClient.chains[sellChainId.value].web3.eth.getBlockNumber();
   }
 
+
+  for await (const [key, json] of $db.iterator({
+    gt: '/locks/' + route.params.accountId + '/' + route.params.sellAssetId + '/' + route.params.buyAssetId + '/',
+    lt: '/locks/' + route.params.accountId + '/' + route.params.sellAssetId + '/' + route.params.buyAssetId + '/z',
+  })) {
+    let lock = JSON.parse(json);
+    newLocks[lock.lockId] = lock;
+  }
+
   // 0 for base coin, otherwise ERC20
   let buyType = $ethClient.web3.utils.hexToNumber('0x' + route.params.buyAssetId.slice(18, 22));
 
@@ -243,9 +252,9 @@ async function load() {
 
       for (let event of events) {
         if (event.event.section == 'atomicSwap' && event.event.method == 'BuyLock') {
-          console.log(event.event.data);
-
           let lockId = $ethClient.web3.utils.bytesToHex(event.event.data[5]);
+
+          if (lockId in newLocks) continue;
 
           let sellChainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellChainId.value), 16);
           let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(encodeAddress(event.event.data[0]), sellChainIdHex)).unwrap();
@@ -268,7 +277,7 @@ async function load() {
             buyLockState: "Locked",
             buyLockTimeoutRaw: parseInt(event.event.data[3]),
             buyLockTimeout: new Date(parseInt(event.event.data[3])).toLocaleString(),
-            sellLockValueWei: sellLockValueWei,
+            sellLockValueWei: sellLockValueWei.toString(),
             sellLockValue: $ethClient.formatWei(sellLockValueWei.toString(), sellDecimals.value),
             sellLockState: "Not locked",
             createSellLockDisabled: false,
@@ -349,7 +358,7 @@ async function load() {
         buyLockState: "Locked",
         buyLockTimeoutRaw: event.returnValues.timeout,
         buyLockTimeout: new Date(parseInt(event.returnValues.timeout) * 1000).toLocaleString(),
-        sellLockValueWei: sellLockValueWei,
+        sellLockValueWei: sellLockValueWei.toString(),
         sellLockValue: $ethClient.formatWei(sellLockValueWei.toString(), sellDecimals.value),
         sellLockState: "Not locked",
         createSellLockDisabled: false,
@@ -583,6 +592,7 @@ async function load() {
 
   for (let lockId in newLocks) {
     locks[lockId] = newLocks[lockId];
+    $db.put('/locks/' + route.params.accountId + '/' + route.params.sellAssetId + '/' + route.params.buyAssetId + '/' + lockId, JSON.stringify(newLocks[lockId]));
   }
 }
 
