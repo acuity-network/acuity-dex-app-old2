@@ -1654,7 +1654,16 @@
 		"label": "Aurora",
 		"symbol": "AURORA",
 		"genesis": "0x8058d7fe544fdcac6836faa5f84c68291da1773594216957374708a7109a6336",
-		"tokens": {},
+		"tokens": {
+			"0xe4b9e004389d91e4134a28f19bd833cba1d994b6": "Frax (FRAX)",
+			"0xbb8831701e68b99616bf940b7dafbeb4cdb23e0b": "Frax Share (FXS)",
+			"0x8bec47865ade3b172a928df8f990bc7f2a3b9f79": "Aurora (AURORA)",
+			"0x2bae00c8bc1868a5f7a216e881bae9e662630111": "Allbridge (ABR)",
+			"0x7ca1c28663b76cfde424a9494555b94846205585": "Chronicle (XNL)",
+			"0x7faa64faf54750a2e3ee621166635feaf406ab22": "WannaSwap (WANNA)",
+			"0xc42c30ac6cc15fac9bd938618bcaa1a1fae8501d": "NEAR (NEAR)",
+			"0x34f291934b88c7870b7a17835b926b264fc13a81": "SmartPad token (PAD)"
+		},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -1664,6 +1673,7 @@
 			"https://mainnet.aurora.dev"
 		],
 		"explorers": [
+			"https://aurorascan.dev/"
 		]
 	},
 	"1666600000": {
