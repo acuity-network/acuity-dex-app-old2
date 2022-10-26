@@ -903,7 +903,22 @@
 	"288": {
 		"label": "Boba Network",
 		"symbol": "ETH",
-		"tokens": {},
+		"tokens": {
+			"0x5de1677344d3cb0d7d465c10b72a8f60699c062d": "Tether USD (USDT)",
+			"0x68ac1623acf9eb9f88b65b5f229fe3e2c0d5789e": "BNB (BNB)",
+			"0x352f2fdf653a194b42e3311f869237c66309b69e": "Binance USD (BUSD)",
+			"0x26b664736217407e0fa252b4578db23b1e3819f3": "Matic Token (MATIC)",
+			"0xdbde1347fed5dc03c74059010d571a16417d307e": "Uniswap (UNI)",
+			"0xd5d5030831ee83e22a2c9a5cf99931a50c676433": "ChainLink Token (LINK)",
+			"0xab2af3a98d229b7daed7305bb88ad0ba2c42f9ca": "Frax (FRAX)",
+			"0xdc1664458d2f0b6090bea60a8793a4e66c2f1c00": "Frax Share (FXS)",
+			"0x5ffccc55c0d2fd6d3ac32c26c020b3267e933f1b": "SushiToken (SUSHI)",
+			"0xe1e2ec9a85c607092668789581251115bcbd20de": "OMGToken (OMG)",
+			"0x780f33ad21314d9a1ffb6867fe53d48a76ec0d16": "UMA Voting Token v1 (UMA)",
+			"0xa18bf3994c0cc6e3b63ac420308e5383f53120d7": "Boba Token (BOBA)",
+			"0x5747a93c87943a9567c6db00b38f1e78bf14b7c0": "xBOBA Token (xBOBA)",
+			"0x572c5b5bf34f75fb62c39b9bfe9a75bb0bb47984": "DODO bird (DODO)"
+		},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -916,6 +931,7 @@
 			"https://lightning-replica.boba.network/"
 		],
 		"explorers": [
+			"https://bobascan.com/"
 		]
 	},
 	"321": {
