@@ -1500,7 +1500,24 @@
 		"label": "Celo",
 		"symbol": "CELO",
 		"genesis": "0x19ea3339d3c8cda97235bc8293240d5b9dadcdfbb5d4b0b90ee731cac1bd11c3",
-		"tokens": {},
+		"tokens": {
+			"0xef4229c8c3250c675f21bcefa42f58efbff6002a": "USD Coin (USDC)",
+			"0xd629eb00deced2a080b7ec630ef6ac117e614f1b": "Wrapped Bitcoin (BTC)",
+			"0x471ece3750da237f93b8e339c536989b8978a438": "Celo native asset (CELO)",
+			"0x29dfce9c22003a4999930382fd00f9fd6133acd1": "SushiToken (SUSHI)",
+			"0xb9c8f0d3254007ee4b98970b94544e473cd610ec": "Mai Stablecoin (MAI)",
+			"0x765de816845861e75a25fca122bb6898b8b1282a": "Celo Dollar (cUSD)",
+			"0xd8763cba276a3738e6de85b4b3bf5fded6d6ca73": "Celo Euro (cEUR)",
+			"0xEe9801669C6138E84bD50dEB500827b776777d28": "O3 Swap Token (O3",
+			"0xf4361a8fbcf6b6a2402f1a1d6c4b945e59a29934": "PLASTIK Token (PLASTIK)",
+			"0x6e512bfc33be36f2666754e996ff103ad1680cc9": "Allbridge (ABR)",
+			"0x00be915b9dcf56a3cbe739d9b9c202ca692409ec": "Ubeswap (UBE)",
+			"0x9995cc8f20db5896943afc8ee0ba463259c931ed": "Ethix (Wormhole) (ETHIX)",
+			"0xe8537a3d056da446677b9e9d6c5db704eaab4787": "Celo Brazilian Real (cREAL)",
+			"0x5927fd244e11db1c7b1215619144d2aabac80a4f": "celoLaunch (cLA)",
+			"0xbaab46e28388d2779e6e31fd00cf0e5ad95e327b": "Wrapped BTC (WBTC)",
+			"0x122013fd7df1c6f636a5bb8f03108e876548b455": "Wrapped Ether (WETH)"
+		},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
@@ -1511,6 +1528,7 @@
 			"https://rpc.ankr.com/celo"
 		],
 		"explorers": [
+			"https://celoscan.io/"
 		]
 	},
 	"42262": {
