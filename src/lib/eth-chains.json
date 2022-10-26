@@ -1064,7 +1064,17 @@
 		"label": "Clover",
 		"symbol": "CLV",
 		"genesis": "",
-		"tokens": {},
+		"tokens": {
+			"0xf91193a62879279d6b8f209f89b6418e3c0e5cbf": "Tether USD (USDT)",
+			"0x60f46cb1c0fa3fcc5943667110de5f1e5fcb8408": "BNB (BNB)",
+			"0x4a52f069cb00905d996a0d7b811d78e60b4cb09e": "USD Coin (USDC)",
+			"0x3f5f32c36811ec5fb3398e3c68454e223269622c": "Binance USD (BUSD)",
+			"0x30bebbc0b6b357945ac30660e025c1532b9c7804": "Wrapped BTC (WBTC)",
+			"0x9fb9a33956351cf4fa040f65a13b835a3c8764e3": "Multichain (MULTI)",
+			"0x1376c97c5c512d2d6f9173a9a3a016b6140b4536": "Wrapped CLV (WCLV)",
+			"0xa1c3767c93e7b51ecb445fdbae1494dfc654e524": "Wrapped Ether (WETH)",
+			"0xc8330583f433073592b978d70ac1dce1fdc03123": "Dai Stablecoin (DAI)"
+		},
 		"contracts": {
 			"account": "",
 			"atomicSwap": "",
