@@ -42,7 +42,7 @@ async function load() {
   let token = new $ethClient.chains[store.metaMaskChainId].web3.eth.Contract(erc20Abi, route.params.address);
   let contractAddress = $ethClient.chainsData[store.metaMaskChainId].contracts.atomicSwapERC20;
 
-  decimals = store.tokens[store.metaMaskChainId][route.params.address].decimals;
+  decimals = store.tokens[store.metaMaskChainId][route.params.address as string].decimals;
 
   let allowanceWei = await token.methods.allowance(store.metaMaskAccount, contractAddress).call();
   allowance.value = $ethClient.formatWei(allowanceWei, decimals);
