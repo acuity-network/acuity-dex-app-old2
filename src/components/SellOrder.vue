@@ -783,11 +783,11 @@ async function createSellLock(lock: any) {
   if (sellChainId.value == 0) {
     let timeout = timeoutRaw.toString();
     console.log({recipient, hashedSecret, timeout, value, buyAssetId, buyLockId});
-    const injector = await web3FromAddress(store.activeAcu);
+    const injector = await web3FromAddress(sellerAddressSellChain.value);//
     try {
       const unsub = await $acuityClient.api.tx.atomicSwap
         .lockSell(recipient, hashedSecret, timeout, value, buyAssetId, buyLockId)
-        .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
+        .signAndSend(sellerAddressSellChain.value, { signer: injector.signer }, (result: any) => {
           console.log(result);
           if (!result.status.isInBlock) {
             locks[lock.lockId].createSellLockWaiting = true;
@@ -861,11 +861,11 @@ async function unlockSellLock(lock: any) {
 
   if (sellChainId.value == 0) {
     console.log({sender, secret, timeout});
-    const injector = await web3FromAddress(store.activeAcu);
+    const injector = await web3FromAddress(lock.buyerAddressSellChain);
     try {
       const unsub = await $acuityClient.api.tx.atomicSwap
         .unlock(sender, secret, timeout)
-        .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
+        .signAndSend(lock.buyerAddressSellChain, { signer: injector.signer }, (result: any) => {
           console.log(result);
           if (!result.status.isInBlock) {
             locks[lock.lockId].unlockSellLockWaiting = true;
@@ -939,12 +939,13 @@ async function unlockBuyLock(lock: any) {
   let timeout = lock.buyLockTimeoutRaw;
 
   if (buyChainId.value == 0) {
+    console.log(sellerAddressBuyChain.value);
     console.log({sender, secret, timeout});
-    const injector = await web3FromAddress(store.activeAcu);
+    const injector = await web3FromAddress(sellerAddressBuyChain.value);
     try {
       const unsub = await $acuityClient.api.tx.atomicSwap
         .unlock(sender, secret, timeout)
-        .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
+        .signAndSend(sellerAddressBuyChain.value, { signer: injector.signer }, (result: any) => {
           console.log(result);
           if (!result.status.isInBlock) {
             locks[lock.lockId].unlockBuyLockWaiting = true;
