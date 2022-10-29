@@ -158,7 +158,7 @@ function getTokenLockId(returnValues: any) {
 }
 
 async function load() {
-  time.value = Math.round(Date.now() / 1000);
+  time.value = Date.now();
 
   let newLocks: any = {};
 
@@ -276,6 +276,7 @@ async function load() {
             buyLockPrice: $ethClient.formatWei(event.event.data[7], buyDecimals.value),
             buyLockState: "Locked",
             buyLockTimeoutRaw: parseInt(event.event.data[3]),
+            buyLockTimeoutMS: parseInt(event.event.data[3]),
             buyLockTimeout: new Date(parseInt(event.event.data[3])).toLocaleString(),
             sellLockValueWei: sellLockValueWei.toString(),
             sellLockValue: $ethClient.formatWei(sellLockValueWei.toString(), sellDecimals.value),
@@ -355,8 +356,9 @@ async function load() {
         buyLockValue: $ethClient.formatWei(event.returnValues.value, buyDecimals.value),
         buyLockPrice: $ethClient.formatWei(event.returnValues.sellPrice, buyDecimals.value),
         buyLockState: "Locked",
-        buyLockTimeoutRaw: event.returnValues.timeout,
-        buyLockTimeout: new Date(parseInt(event.returnValues.timeout) * 1000).toLocaleString(),
+        buyLockTimeoutRaw: parseInt(event.returnValues.timeout),
+        buyLockTimeoutMS: parseInt(event.returnValues.timeout) * 1000,
+        buyLockTimeout: new Date(event.returnValues.timeout * 1000).toLocaleString(),
         sellLockValueWei: sellLockValueWei.toString(),
         sellLockValue: $ethClient.formatWei(sellLockValueWei.toString(), sellDecimals.value),
         sellLockState: "Not locked",
@@ -398,28 +400,28 @@ async function load() {
             newLocks[buyLockId].sellLockId = $ethClient.web3.utils.bytesToHex(event.event.data[5]);
             newLocks[buyLockId].sellLockState = "Locked";
             newLocks[buyLockId].sellLockTimeoutRaw = parseInt(event.event.data[3]);
+            newLocks[buyLockId].sellLockTimeoutMS = parseInt(event.event.data[3]);
             newLocks[buyLockId].sellLockTimeout = new Date(parseInt(event.event.data[3])).toLocaleString();
           }
         }
-      }
-    }
 
-    blockNumbers = await $acuityClient.api.rpc.atomicSwap.getIndexBlocks(sellerAddressSellChain.value);
-
-    for (let blockNumber of blockNumbers) {
-      const blockHash = await $acuityClient.api.rpc.chain.getBlockHash(blockNumber);
-      const apiAt = await $acuityClient.api.at(blockHash);
-      const events = await apiAt.query.system.events();
-
-      for (let event of events) {
         if (event.event.section == 'atomicSwap' && event.event.method == 'Unlock') {
-
           let sellLockId = $ethClient.web3.utils.bytesToHex(event.event.data[2]);
 
           for (let lockId in newLocks) {
             if (newLocks[lockId].sellLockId == sellLockId) {
               newLocks[lockId].secret = $ethClient.web3.utils.bytesToHex(event.event.data[3]);
               newLocks[lockId].sellLockState = "Unlocked";
+            }
+          }
+        }
+
+        if (event.event.section == 'atomicSwap' && event.event.method == 'Retrieve') {
+          let sellLockId = $ethClient.web3.utils.bytesToHex(event.event.data[2]);
+
+          for (let lockId in newLocks) {
+            if (newLocks[lockId].sellLockId == sellLockId) {
+              newLocks[lockId].sellLockState = "Timed out";
             }
           }
         }
@@ -464,7 +466,8 @@ async function load() {
           newLocks[buyLockId].sellLockId = getTokenLockId(event.returnValues);
         }
         newLocks[buyLockId].sellLockState = "Locked";
-        newLocks[buyLockId].sellLockTimeoutRaw = event.returnValues.timeout;
+        newLocks[buyLockId].sellLockTimeoutRaw = parseInt(event.returnValues.timeout);
+        newLocks[buyLockId].sellLockTimeoutMS = parseInt(event.returnValues.timeout) * 1000;
         newLocks[buyLockId].sellLockTimeout = new Date(parseInt(event.returnValues.timeout) * 1000).toLocaleString();
       }
     }
@@ -540,6 +543,14 @@ async function load() {
 
           if (newLocks[lockId]) {
             newLocks[lockId].buyLockState = "Unlocked";
+          }
+        }
+
+        if (event.event.section == 'atomicSwap' && event.event.method == 'Retrieve') {
+          let lockId = $ethClient.web3.utils.bytesToHex(event.event.data[2]);
+
+          if (newLocks[lockId]) {
+            newLocks[lockId].buyLockState = "Timed out";
           }
         }
       }
@@ -780,8 +791,6 @@ async function createBuyLock(event: any) {
 async function createSellLock(lock: any) {
   locks[lock.lockId].createSellLockDisabled = true;
 
-  console.log(lock);
-
   let recipient = lock.buyerAddressSellChain;
   let hashedSecret = lock.hashedSecret;
   let timeoutRaw = BigInt(Date.now()) + BigInt(60 * 60 * 2 * 1000);   // 2 hours
@@ -948,7 +957,6 @@ async function unlockBuyLock(lock: any) {
   let timeout = lock.buyLockTimeoutRaw;
 
   if (buyChainId.value == 0) {
-    console.log(sellerAddressBuyChain.value);
     console.log({sender, secret, timeout});
     const injector = await web3FromAddress(sellerAddressBuyChain.value);
     try {
@@ -1027,6 +1035,29 @@ async function timeoutBuyLock(lock: any) {
   let timeout = lock.buyLockTimeoutRaw;
 
   if (buyChainId.value == 0) {
+    console.log({recipient, hashedSecret, timeout});
+    const injector = await web3FromAddress(lock.buyerAddressBuyChain);
+    try {
+      const unsub = await $acuityClient.api.tx.atomicSwap
+        .retrieve(recipient, hashedSecret, timeout)
+        .signAndSend(lock.buyerAddressBuyChain, { signer: injector.signer }, (result: any) => {
+          console.log(result);
+          if (!result.status.isInBlock) {
+            locks[lock.lockId].timeoutBuyLockWaiting = false;
+          }
+          else {
+            unsub();
+            load();
+            locks[lock.lockId].timeoutBuyLockWaiting = false;
+            locks[lock.lockId].timeoutBuyLockDisabled = false;
+          }
+        });
+    }
+    catch (e) {
+      locks[lock.lockId].timeoutBuyLockWaiting = false;
+      locks[lock.lockId].timeoutBuyLockDisabled = false;
+    }
+
     return;
   }
 
@@ -1082,6 +1113,29 @@ async function timeoutSellLock(lock: any) {
   let timeout = lock.sellLockTimeoutRaw;
 
   if (sellChainId.value == 0) {
+    console.log({recipient, hashedSecret, timeout});
+    const injector = await web3FromAddress(sellerAddressSellChain.value);
+    try {
+      const unsub = await $acuityClient.api.tx.atomicSwap
+        .retrieve(recipient, hashedSecret, timeout)
+        .signAndSend(sellerAddressSellChain.value, { signer: injector.signer }, (result: any) => {
+          console.log(result);
+          if (!result.status.isInBlock) {
+            locks[lock.lockId].timeoutSellLockWaiting = false;
+          }
+          else {
+            unsub();
+            load();
+            locks[lock.lockId].timeoutSellLockWaiting = false;
+            locks[lock.lockId].timeoutSellLockDisabled = false;
+          }
+        });
+    }
+    catch (e) {
+      locks[lock.lockId].timeoutSellLockWaiting = false;
+      locks[lock.lockId].timeoutSellLockDisabled = false;
+    }
+
     return;
   }
 
@@ -1176,7 +1230,7 @@ async function timeoutSellLock(lock: any) {
                   <v-icon v-if="!lock.unlockBuyLockWaiting">mdi-lock-open-variant</v-icon>
                   <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                 </v-btn>
-                <v-btn v-if="lock.buyLockState == 'Locked' && lock.buyLockTimeoutRaw < time && store.metaMaskChainId == buyChainId && store.metaMaskAccount == lock.buyerAddressBuyChain" size="small" @click="timeoutBuyLock(lock)" :disabled="lock.timeoutBuyLockDisabled">
+                <v-btn v-if="lock.buyLockState == 'Locked' && lock.buyLockTimeoutMS < time && (buyChainId == 0 || (store.metaMaskChainId == buyChainId && store.metaMaskAccount == lock.buyerAddressBuyChain))" size="small" @click="timeoutBuyLock(lock)" :disabled="lock.timeoutBuyLockDisabled">
                   <v-icon v-if="!lock.timeoutBuyLockWaiting">mdi-timer-lock-open-outline</v-icon>
                   <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                 </v-btn>
@@ -1194,8 +1248,8 @@ async function timeoutSellLock(lock: any) {
                   <v-icon v-if="!lock.unlockSellLockWaiting">mdi-lock-open-variant</v-icon>
                   <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                 </v-btn>
-                <v-btn v-if="lock.sellLockState == 'Locked' && lock.sellLockTimeoutRaw < time && store.metaMaskChainId == sellChainId && store.metaMaskAccount == sellerAddressSellChain" size="small" @click="timeoutSellLock(lock)" :disabled="lock.timeoutSellLockDisabled">
-                  <v-icon v-if="!lock.timeoutSellLockWaiting">mdi-archive-clock</v-icon>
+                <v-btn v-if="lock.sellLockState == 'Locked' && lock.sellLockTimeoutMS < time && store.metaMaskChainId == sellChainId && store.metaMaskAccount == sellerAddressSellChain" size="small" @click="timeoutSellLock(lock)" :disabled="lock.timeoutSellLockDisabled">
+                  <v-icon v-if="!lock.timeoutSellLockWaiting">mdi-timer-lock-open-outline</v-icon>
                   <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                 </v-btn>
               </td>
