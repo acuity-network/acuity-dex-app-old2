@@ -249,6 +249,9 @@ async function load() {
 
       for (let event of events) {
         if (event.event.section == 'atomicSwap' && event.event.method == 'LockBuy') {
+          if (event.event.data[6] != (route.params.sellAssetId as string).toLowerCase()) {   // correct sell assetId
+            continue;
+          }
           let lockId = $ethClient.web3.utils.bytesToHex(event.event.data[5]);
 
           if (lockId in newLocks) continue;
@@ -385,6 +388,9 @@ async function load() {
 
       for (let event of events) {
         if (event.event.section == 'atomicSwap' && event.event.method == 'LockSell') {
+          if (event.event.data[6] != (route.params.buyAssetId as string).toLowerCase()) {   // correct sell assetId
+            continue;
+          }
 
           let buyLockId = $ethClient.web3.utils.bytesToHex(event.event.data[7]);
 
@@ -442,6 +448,9 @@ async function load() {
     for (let event of events) {
       let buyLockId = event.returnValues.buyLockId;
       if (newLocks[buyLockId]) {
+        if (event.returnValues.buyAssetId != (route.params.buyAssetId as string).toLowerCase()) {   // correct sell assetId
+          continue;
+        }
         if (newLocks[buyLockId].sellLockValueWei != BigInt(event.returnValues.value)) {
           console.log("Sell lock has incorrect value.")
           continue;
