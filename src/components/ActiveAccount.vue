@@ -43,6 +43,12 @@ const setAcuAccountWaiting = ref(false);
 async function load() {
   let result = await $acuityClient.api.query.identity.identityOf(acuAddress.value);
 
+  name.value = '';
+  web.value = '';
+  riot.value = '';
+  twitter.value = '';
+  telegram.value = '';
+
   try {
     let info = result.unwrap().info;
 
@@ -63,6 +69,11 @@ async function load() {
 
     try {
       twitter.value = $ethClient.web3.utils.hexToAscii(JSON.parse(info.twitter.toString()).raw);
+    }
+    catch (e) {}
+
+    try {
+      telegram.value = $ethClient.web3.utils.hexToAscii(JSON.parse(info.additional.toString())[0][1].raw);
     }
     catch (e) {}
   }
@@ -125,7 +136,7 @@ async function setIdentity(event: any) {
   const injector = await web3FromAddress(acuAddress.value);
 
   const identity = {
-    "additional": [],
+    "additional": [[encodeString("telegram"), encodeString(telegram.value)]],
     "display": encodeString(name.value),
     "legal": null,
     "web": encodeString(web.value),
