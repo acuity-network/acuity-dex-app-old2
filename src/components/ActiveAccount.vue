@@ -228,10 +228,12 @@ async function setAcuAccount(event: any) {
           </v-toolbar>
           <v-card-text>
             <v-text-field v-model="name" label="Name" hint="Enter your name."></v-text-field>
+<!--
             <v-text-field v-model="web" label="Website" hint="Enter your website address."></v-text-field>
             <v-text-field v-model="twitter" label="Twitter" hint="Enter your Twitter handle."></v-text-field>
             <v-text-field v-model="riot" label="Matrix" hint="Enter your Matrix ID."></v-text-field>
-            <v-text-field v-model="telegram" label="Telegram" hint="Enter your Telegram ID."></v-text-field>
+-->
+            <v-text-field v-model="telegram" label="Telegram" prefix="@" hint="Enter your Telegram ID."></v-text-field>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>

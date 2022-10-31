@@ -22,6 +22,7 @@ const accountsAcu = computed(() => store.accountsAcu);
 const addressesAcu = computed(() => store.addressesAcu);
 
 const name = ref("");
+const telegram = ref("");
 const trusted = ref(false);
 const trustsMe = ref(false);
 const trusts: Ref<any[]> = ref([]);
@@ -96,7 +97,23 @@ watch(() => store.activeAcu, async (newValue, oldValue) => {
 });
 
 async function load() {
-  name.value = await loadName(route.params.id as string);
+
+  name.value = '';
+  telegram.value = '';
+
+  try {
+    let result = await $acuityClient.api.query.identity.identityOf(route.params.id as string);
+    let info = result.unwrap().info;
+    try {
+      name.value = $ethClient.web3.utils.hexToAscii(JSON.parse(info.display.toString()).raw);
+    }
+    catch (e) {}
+    try {
+      telegram.value  = $ethClient.web3.utils.hexToAscii(JSON.parse(info.additional.toString())[0][1].raw);
+    }
+    catch (e) {}
+  }
+  catch (e) {}
 
   trusted.value = await $acuityClient.api.rpc.trustedAccounts.isTrusted(store.activeAcu, route.params.id);
 
@@ -166,6 +183,9 @@ onMounted(async () => {
 
         <div class="text-h6">Name</div>
         <p>{{ name }}</p>
+
+        <div class="text-h6">Telegram</div>
+        <p><a target="_blank" :href="'https://t.me/' + telegram " >{{ telegram }}</a></p>
 
         <div class="text-h6">Address</div>
         <p>{{ $route.params.id }}</p>
