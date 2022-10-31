@@ -50,6 +50,7 @@
 		]
 	},
 	"5": {
+		"disabled": "true",
 		"label": "Görli",
 		"symbol": "GoerliETH",
 		"tokens": {
@@ -307,10 +308,10 @@
 			"0x3d4e3573EBFeaCfADd62E41dA15f0EF1D04c0c10": "USDC"
 		},
 		"contracts": {
-			"account": "0x74Bf54A07F3c971Bd9e2F9DFb577af78899efa5f",
-			"atomicSwap": "0xC43747959ad95513eb22E1485a26744Ecedfa45B",
-			"atomicSwapERC20": "0xFA32fA464EA2F885B2e142a65ea1A86Ba498Cf53",
-			"acuityRPC": "0x43bb576EC865a38e7C40554032f3Bf48Cf492ce7"
+			"account": "0x4057d489B2C03935Ce312B19DAd9513e48E63fF2",
+			"atomicSwap": "0xB21917D0569339368aCF4CF864137eaeC167B99e",
+			"atomicSwapERC20": "0x5DAbc48C43109057E0d546cf6A16aD96c727Bc66",
+			"acuityRPC": "0xdB176DB229Fc19D104fC6eF587604DFD2bC452E9"
 		},
 		"rpcs": [
 			"wss://wss.api.moonbase.moonbeam.network",
@@ -414,10 +415,10 @@
 			"0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846": "ChainLink (LINK)"
 		},
 		"contracts": {
-			"account": "0xC43747959ad95513eb22E1485a26744Ecedfa45B",
-			"atomicSwap": "0x5DAbc48C43109057E0d546cf6A16aD96c727Bc66",
-			"atomicSwapERC20": "0xdB176DB229Fc19D104fC6eF587604DFD2bC452E9",
-			"acuityRPC": "0xB21917D0569339368aCF4CF864137eaeC167B99e"
+			"account": "0xE7f2A2bB9E5e2AE28031D8f694a536af9a81c7bd",
+			"atomicSwap": "0xD9e4a4ea97e8F1fc4AF667DEdEa9d1797B4Aef06",
+			"atomicSwapERC20": "0x18A8C7fa4198Fd50D28af9E65BD6bF3747c79b2d",
+			"acuityRPC": "0x7884b4981404B1e331665e285111fAEef532E7d5"
 		},
 		"rpcs": [
 			"wss://api.avax-test.network/ext/bc/C/ws",
@@ -428,13 +429,16 @@
 		]
 	},
 	"80001": {
-		"disabled": "true",
 		"label": "Polygon Mumbai",
 		"symbol": "MATIC",
 		"tokens": {
 			"0x326C977E6efc84E512bB9C30f76E30c160eD06FB": "ChainLink (LINK)"
 		},
 		"contracts": {
+			"account": "0x81e70D725bFfC99bAae32C783F4F05b993AacCFC",
+			"atomicSwap": "0xB4AB3B919AdC6A9725F9959580831F08D26DB493",
+			"atomicSwapERC20": "0x526799872C2ca387F52a684Ef4F7F17Dc619A127",
+			"acuityRPC": "0xBaf077f3feD80Fa2Dd7cA11D8da9E0e3393DfA1b"
 		},
 		"rpcs": [
 			"https://rpc-mumbai.maticvigil.com",

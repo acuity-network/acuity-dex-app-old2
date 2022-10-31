@@ -49,7 +49,32 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "sender",
+        "name": "creator",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "lockId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "Decline",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "creator",
         "type": "address"
       },
       {
@@ -89,7 +114,7 @@
         "type": "uint256"
       }
     ],
-    "name": "BuyLock",
+    "name": "LockBuy",
     "type": "event"
   },
   {
@@ -98,32 +123,7 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "sender",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "recipient",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "lockId",
-        "type": "bytes32"
-      }
-    ],
-    "name": "DeclineByRecipient",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "sender",
+        "name": "creator",
         "type": "address"
       },
       {
@@ -163,7 +163,7 @@
         "type": "bytes32"
       }
     ],
-    "name": "SellLock",
+    "name": "LockSell",
     "type": "event"
   },
   {
@@ -172,7 +172,7 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "sender",
+        "name": "creator",
         "type": "address"
       },
       {
@@ -188,7 +188,7 @@
         "type": "bytes32"
       }
     ],
-    "name": "Timeout",
+    "name": "Retrieve",
     "type": "event"
   },
   {
@@ -197,38 +197,7 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "sender",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "recipient",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "lockId",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "secret",
-        "type": "bytes32"
-      }
-    ],
-    "name": "UnlockByRecipient",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "sender",
+        "name": "creator",
         "type": "address"
       },
       {
@@ -250,14 +219,14 @@
         "type": "bytes32"
       }
     ],
-    "name": "UnlockBySender",
+    "name": "Unlock",
     "type": "event"
   },
   {
     "inputs": [
       {
         "internalType": "address",
-        "name": "sender",
+        "name": "creator",
         "type": "address"
       },
       {
@@ -271,7 +240,7 @@
         "type": "uint256"
       }
     ],
-    "name": "declineByRecipient",
+    "name": "decline",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -282,40 +251,6 @@
         "internalType": "bytes32",
         "name": "lockId",
         "type": "bytes32"
-      }
-    ],
-    "name": "getLockValue",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "value",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "sender",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "recipient",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "hashedSecret",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "timeout",
-        "type": "uint256"
       }
     ],
     "name": "getLockValue",
@@ -413,7 +348,7 @@
         "type": "uint256"
       }
     ],
-    "name": "timeoutBySender",
+    "name": "retrieve",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -422,7 +357,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "sender",
+        "name": "creator",
         "type": "address"
       },
       {
@@ -436,30 +371,7 @@
         "type": "uint256"
       }
     ],
-    "name": "unlockByRecipient",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "recipient",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "secret",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "timeout",
-        "type": "uint256"
-      }
-    ],
-    "name": "unlockBySender",
+    "name": "unlock",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
