@@ -101,7 +101,8 @@
 			"0x8ce9137d39326ad0cd6491fb5cc0cba0e089b6a9": "Swipe (SXP)",
 			"0x04Fa0d235C4abf4BcF4787aF4CF447DE572eF828": "UMA Voting Token v1 (UMA)",
 			"0xe28b3B32B6c345A34Ff64674606124Dd5Aceca30": "Injective Token (INJ)",
-			"0x081f67afa0ccf8c7b17540767bbe95df2ba8d97f": "CoinEx Token (CET)"
+			"0x081f67afa0ccf8c7b17540767bbe95df2ba8d97f": "CoinEx Token (CET)",
+			"0x03ab458634910AaD20eF5f1C8ee96F1D6ac54919": "Rai Reflex Index (RAI)"
 		},
 		"contracts": {
 			"account": "",
