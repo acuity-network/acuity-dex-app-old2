@@ -13,19 +13,6 @@ export default class MixClient {
 
 	async init() {
 
-		const allInjected = await web3Enable('Acuity DEX');
-
-	  let accountsAcu = await web3Accounts();
-
-		/*
-		  web3AccountsSubscribe(injectedAccounts => {
-		    vue.$store.commit('accountsAcuSet', injectedAccounts);
-		  });
-		*/
-
-		let store = main();
-		store.accountsAcuSet(accountsAcu);
-
 //    let acuityEndpoint = import.meta.env.DEV ? 'ws://127.0.0.1:9946' : 'wss://acuity.social:9961';
     let acuityEndpoint = 'wss://freemont.acuity.social';
 //    let acuityEndpoint = 'ws://127.0.0.1:9946';
@@ -214,6 +201,11 @@ export default class MixClient {
       this.api = api;
       await this.api.isReady
     });
+
+    const allInjected = await web3Enable('Acuity DEX');
+	  let accountsAcu = await web3Accounts();
+		let store = main();
+		store.accountsAcuSet(accountsAcu);
 
 		return this;
   }
