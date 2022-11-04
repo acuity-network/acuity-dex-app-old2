@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-import ethChainsDataJson from '../lib/eth-chains-testnets.json'
+import ethChainsDataJson from '../lib/eth-chains.json'
 const chainsData: any = ethChainsDataJson;
 
 export const main = defineStore('main', {

@@ -4,7 +4,7 @@ import { encodeAddress } from '@polkadot/keyring';
 import { main } from '../stores/index'
 let store: any;
 
-import ethChainsDataJson from '../lib/eth-chains-testnets.json'
+import ethChainsDataJson from '../lib/eth-chains.json'
 
 import accountAbiJson from '../lib/contracts/AcuityAccount.abi.json'
 const accountAbi: any = accountAbiJson;
