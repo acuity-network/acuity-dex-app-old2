@@ -27,6 +27,7 @@ import erc20AbiJson from '../lib/contracts/ERC20.abi.json'
 const erc20Abi: any = erc20AbiJson;
 
 
+const name = ref("");
 const allowance = ref("");
 const unlimited = ref(false);
 const allowanceNew = ref("");
@@ -42,6 +43,7 @@ async function load() {
   let token = new $ethClient.chains[store.metaMaskChainId].web3.eth.Contract(erc20Abi, route.params.address);
   let contractAddress = $ethClient.chainsData[store.metaMaskChainId].contracts.atomicSwapERC20;
 
+  name.value = store.tokens[store.metaMaskChainId][route.params.address as string].name;
   decimals = store.tokens[store.metaMaskChainId][route.params.address as string].decimals;
 
   let allowanceWei = await token.methods.allowance(store.metaMaskAccount, contractAddress).call();
@@ -89,7 +91,7 @@ async function approve(event: any) {
     <v-row>
       <v-col cols="12" md="10">
         <v-text-field v-model="store.metaMaskChainName" label="Chain" readonly hint="Select in MetaMask." persistent-hint></v-text-field>
-        <v-text-field label="Token"></v-text-field>
+        <v-text-field v-model="name" label="Token" readonly></v-text-field>
         <v-text-field v-model="allowance" label="Allowance" readonly></v-text-field>
 
         <v-card class="mb-10">
