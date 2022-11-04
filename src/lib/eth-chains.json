@@ -1,5 +1,6 @@
 {
 	"1": {
+		"disabled": "true",
 		"label": "Ethereum",
 		"symbol": "ETH",
 		"genesis": "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3",
@@ -132,6 +133,7 @@
 		]
 	},
 	"2": {
+		"disabled": "true",
 		"label": "Expanse",
 		"symbol": "EXP",
 		"genesis": "0x2fe75cf9ba10cb1105e1750d872911e75365ba24fdd5db7f099445c901fea895",
@@ -197,6 +199,7 @@
 		]
 	},
 	"19": {
+		"disabled": "true",
 		"label": "Flare Songbird",
 		"symbol": "SGB",
 		"genesis": "0x703ccf62df9fa51265d239a6bb8afb6f2fff2831dac0c2df6208dd254a57585b",
@@ -213,6 +216,7 @@
 		]
 	},
 	"20": {
+		"disabled": "true",
 		"label": "Elastos",
 		"symbol": "ELA",
 		"genesis": "0x6afc2eb01956dfe192dc4cd065efdf6c3c80448776ca367a7246d279e228ff0a",
@@ -230,6 +234,7 @@
 		]
 	},
 	"25": {
+		"disabled": "true",
 		"label": "Cronos",
 		"symbol": "CRO",
 		"genesis": "0xa7f4e603aa51239a15e0a3fafb15c6e4c6d6f2c39c55770330efd2fa5afc12a9",
@@ -311,6 +316,7 @@
 		]
 	},
 	"30": {
+		"disabled": "true",
 		"label": "RSK",
 		"symbol": "RBTC",
 		"genesis": "0xf88529d4ab262c0f4d042e9d8d3f2472848eaafe1a9b7213f57617eb40a9f9e0",
@@ -327,6 +333,7 @@
 		]
 	},
 	"40": {
+		"disabled": "true",
 		"label": "Telos",
 		"symbol": "TLOS",
 		"genesis": "0x044852b2a670ade5407e78fb2863c51de9fcb96542a07186fe3aeda6bb8a116d",
@@ -353,6 +360,7 @@
 		]
 	},
 	"52": {
+		"disabled": "true",
 		"label": "CoinEx Smart Chain",
 		"symbol": "CET",
 		"genesis": "0xc74aefd3e2a21f39e44bd840f4a125a4c2439d2623985c67d80766d899c9af72",
@@ -373,6 +381,7 @@
 		]
 	},
 	"56": {
+		"disabled": "true",
 		"label": "Binance Smart Chain",
 		"symbol": "BNB",
 		"genesis": "0x6d3c66c5357ec91d5c43af47e234a939b22557cbb552dc45bebbceeed90fbe34",
@@ -510,6 +519,7 @@
 		]
 	},
 	"57": {
+		"disabled": "true",
 		"label": "Syscoin",
 		"symbol": "SYS",
 		"genesis": "0x2112327cad6deec6ada8bd7e5d33d263b57742a8495f3b641faa326b55b1c666",
@@ -527,6 +537,7 @@
 		]
 	},
 	"59": {
+		"disabled": "true",
 		"label": "EOS",
 		"symbol": "EOS",
 		"genesis": "0x0000000000000000000000000000000000000000000000000000000000000000",
@@ -543,6 +554,7 @@
 		]
 	},
 	"61": {
+		"disabled": "true",
 		"label": "Ethereum Classic",
 		"symbol": "ETC",
 		"genesis": "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3",
@@ -561,6 +573,7 @@
 		]
 	},
 	"66": {
+		"disabled": "true",
 		"label": "OKC (OKX)",
 		"symbol": "OKC",
 		"genesis": "0x30cbd6fb908537c789e78a366ea3871b99d6af869c13c9b310fc487ec82635e1",
@@ -577,6 +590,7 @@
 		]
 	},
 	"70": {
+		"disabled": "true",
 		"label": "Hoo Smart Chain",
 		"symbol": "HOO",
 		"genesis": "0x7eb442ecda3db6ae27376de2b34dfae802d3ab13ebba7544eba103ca619e32ed",
@@ -593,6 +607,7 @@
 		]
 	},
 	"100": {
+		"disabled": "true",
 		"label": "Gnosis Chain (formerly xDai)",
 		"symbol": "xDAI",
 		"genesis": "0x4f1dd23188aab3a76b463e4af801b52b1248ef073c648cbdc4c9333d3da79756",
@@ -678,6 +693,7 @@
 		]
 	},
 	"108": {
+		"disabled": "true",
 		"label": "ThunderCore",
 		"symbol": "TT",
 		"genesis": "0xfb3c2d5d6a223d4e0d712408cc90c31604d7781d9518698301c82be66b81a7e0",
@@ -700,6 +716,7 @@
 		]
 	},
 	"122": {
+		"disabled": "true",
 		"label": "Fuse",
 		"symbol": "FUSE",
 		"genesis": "0x6e778e9491576a28bd06fac93844d8494be1f153e60ba7d29b4b51d991d4f830",
@@ -717,6 +734,7 @@
 		]
 	},
 	"128": {
+		"disabled": "true",
 		"label": "HECO Chain",
 		"symbol": "HT",
 		"genesis": "0x5751d1772ebc82d52d19d96157bb3f13ca8417217e3c0913adf15f04eb4cb144",
@@ -865,6 +883,7 @@
 		]
 	},
 	"199": {
+		"disabled": "true",
 		"label": "BitTorrent",
 		"symbol": "BTT",
 		"tokens": {
@@ -943,6 +962,7 @@
 		]
 	},
 	"200": {
+		"disabled": "true",
 		"label": "Arbitrum on xDai",
 		"symbol": "xDAI",
 		"tokens": {},
@@ -959,6 +979,7 @@
 		]
 	},
 	"246": {
+		"disabled": "true",
 		"label": "Energy Web Chain",
 		"symbol": "EWT",
 		"genesis": "",
@@ -977,6 +998,7 @@
 		]
 	},
 	"250": {
+		"disabled": "true",
 		"label": "Fantom",
 		"symbol": "FTM",
 		"genesis": "0x00000000000003e83fddf1e9330f0a8691d9f0b2af57b38c3bb85488488a40df",
@@ -1104,6 +1126,7 @@
 		]
 	},
 	"288": {
+		"disabled": "true",
 		"label": "Boba Network",
 		"symbol": "ETH",
 		"tokens": {
@@ -1138,6 +1161,7 @@
 		]
 	},
 	"321": {
+		"disabled": "true",
 		"label": "Kucoin Community Chain",
 		"symbol": "KCS",
 		"genesis": "0xd179bc170ecd216166ba440a2cff697ba1ed4e203ddcb51214e52773906ca3fc",
@@ -1154,6 +1178,7 @@
 		]
 	},
 	"336": {
+		"disabled": "true",
 		"label": "Shiden",
 		"symbol": "SDN",
 		"genesis": "0x63144bd58eb8304c8316dfeede3bc69700edf97b3f167a9cf3767262e50fc38e",
@@ -1174,6 +1199,7 @@
 		]
 	},
 	"361": {
+		"disabled": "true",
 		"label": "Theta",
 		"symbol": "TFUEL",
 		"genesis": "0xd8836c6cf3c3ccea0b015b4ed0f9efb0ffe6254db793a515843c9d0f68cbab65",
@@ -1191,6 +1217,7 @@
 		]
 	},
 	"592": {
+		"disabled": "true",
 		"label": "Astar",
 		"symbol": "ASTR",
 		"genesis": "0x0d28a86ac0fe37871285bd1dac45d83a4b3833e01a37571a1ac4f0a44c64cdc2",
@@ -1210,6 +1237,7 @@
 		]
 	},
 	"686": {
+		"disabled": "true",
 		"label": "Karura",
 		"symbol": "KAR",
 		"genesis": "",
@@ -1229,6 +1257,7 @@
 		]
 	},
 	"787": {
+		"disabled": "true",
 		"label": "Acala",
 		"symbol": "ACA",
 		"genesis": "",
@@ -1248,6 +1277,7 @@
 		]
 	},
 	"820": {
+		"disabled": "true",
 		"label": "Callisto",
 		"symbol": "CLO",
 		"genesis": "0x82270b80fc90beb005505a9ef95039639968a0e81b2904ad30128c93d713d2c4",
@@ -1264,6 +1294,7 @@
 		]
 	},
 	"888": {
+		"disabled": "true",
 		"label": "Wanchain",
 		"symbol": "WAN",
 		"genesis": "0x0376899c001618fc7d5ab4f31cfd7f57ca3a896ccc1581a57d8f129ecf40b840",
@@ -1280,6 +1311,7 @@
 		]
 	},
 	"1024": {
+		"disabled": "true",
 		"label": "Clover",
 		"symbol": "CLV",
 		"genesis": "",
@@ -1307,6 +1339,7 @@
 		]
 	},
 	"1088": {
+		"disabled": "true",
 		"label": "Metis",
 		"symbol": "METIS",
 		"genesis": "0x9e3354e081a54a57190bdb8948a597c840ea5dd496b0322864d4585f4a716892",
@@ -1323,6 +1356,7 @@
 		]
 	},
 	"1284": {
+		"disabled": "true",
 		"label": "Moonbeam",
 		"symbol": "GLMR",
 		"genesis": "0x7e6b3bbed86828a558271c9c9f62354b1d8b5aa15ff85fd6f1e7cbe9af9dde7e",
@@ -1375,6 +1409,7 @@
 		]
 	},
 	"1285": {
+		"disabled": "true",
 		"label": "Moonriver",
 		"symbol": "MOVR",
 		"genesis": "0xce24348303f7a60c4d2d3c82adddf55ca57af89cd9e2cd4b863906ef53b89b3c",
@@ -1412,6 +1447,7 @@
 		]
 	},
 	"2021": {
+		"disabled": "true",
 		"label": "Edgeware",
 		"symbol": "EDG",
 		"tokens": {},
@@ -1447,6 +1483,7 @@
 		]
 	},
 	"3000": {
+		"disabled": "true",
 		"label": "Echelon",
 		"symbol": "ECH",
 		"genesis": "",
@@ -1464,6 +1501,7 @@
 		]
 	},
 	"4689": {
+		"disabled": "true",
 		"label": "IoTeX",
 		"symbol": "IOTX",
 		"genesis": "0xb337983730981c2d50f114eed5da9dd20b83c8c5e130beefdb3001dc858cfe8b",
@@ -1485,6 +1523,7 @@
 		]
 	},
 	"5551": {
+		"disabled": "true",
 		"label": "Nahmii 2.0",
 		"symbol": "ETH",
 		"genesis": "0xfed46abde4cd498e15a510de5eeaf69770cafa78646fbf72bae52d647c82a4c8",
@@ -1502,6 +1541,7 @@
 		]
 	},
 	"8217": {
+		"disabled": "true",
 		"label": "Klaytn",
 		"symbol": "KLAY",
 		"genesis": "0xc72e5293c3c3ba38ed8ae910f780e4caaa9fb95e79784f7ab74c3c262ea7137e",
@@ -1518,6 +1558,7 @@
 		]
 	},
 	"9001": {
+		"disabled": "true",
 		"label": "Evmos",
 		"symbol": "EVMOS",
 		"genesis": "",
@@ -1536,6 +1577,7 @@
 		]
 	},
 	"10000": {
+		"disabled": "true",
 		"label": "smartBCH",
 		"symbol": "BCH",
 		"genesis": "0x0000000000000000000000000000000000000000000000000000000000000000",
@@ -1558,6 +1600,7 @@
 		]
 	},
 	"10001": {
+		"disabled": "true",
 		"label": "Ethereum POW",
 		"symbol": "ETHW",
 		"tokens": {},
@@ -1572,6 +1615,7 @@
 		]
 	},
 	"32659": {
+		"disabled": "true",
 		"label": "Fusion",
 		"symbol": "FSN",
 		"genesis": "0xc2422b1d9d16331be2a5b207c0783027d4419498003f729f4b9e9c5c1838623a",
@@ -1733,6 +1777,7 @@
 		]
 	},
 	"42220": {
+		"disabled": "true",
 		"label": "Celo",
 		"symbol": "CELO",
 		"genesis": "0x19ea3339d3c8cda97235bc8293240d5b9dadcdfbb5d4b0b90ee731cac1bd11c3",
@@ -1768,6 +1813,7 @@
 		]
 	},
 	"42262": {
+		"disabled": "true",
 		"label": "Emerald ParaTime (Oasis)",
 		"symbol": "ROSE",
 		"genesis": "0x5a8686e9694a4ffb2b1648ec6ff9b181e547658abeea6ad9781e459a3cdfedd5",
@@ -1906,6 +1952,7 @@
 		]
 	},
 	"1313161554": {
+		"disabled": "true",
 		"label": "Aurora",
 		"symbol": "AURORA",
 		"genesis": "0x8058d7fe544fdcac6836faa5f84c68291da1773594216957374708a7109a6336",
@@ -1932,6 +1979,7 @@
 		]
 	},
 	"1666600000": {
+		"disabled": "true",
 		"label": "Harmony",
 		"symbol": "ONE",
 		"genesis": "0xb4d158b82ac8a653c42b78697ab1cd0c6a0d9a15ab3bc34130f0b719fb174d2a",
