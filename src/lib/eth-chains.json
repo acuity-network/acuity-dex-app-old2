@@ -381,7 +381,6 @@
 		]
 	},
 	"56": {
-		"disabled": "true",
 		"label": "Binance Smart Chain",
 		"symbol": "BNB",
 		"genesis": "0x6d3c66c5357ec91d5c43af47e234a939b22557cbb552dc45bebbceeed90fbe34",
@@ -488,13 +487,14 @@
 			"0xad6caeb32cd2c308980a548bd0bc5aa4306c6c18": "Binance-Peg Band Protocol Token (BAND)"
 		},
 		"contracts": {
-			"account": "",
-			"atomicSwap": "",
-			"atomicSwapERC20": ""
+			"account": "0xA1E721BBAc783D2C8De29d189a7658efEe76a78C",
+			"atomicSwap": "0x2506Df51625C05E3c67AA48C3d4D7E1D8831F9Db",
+			"atomicSwapERC20": "0x7d96b4c8c8D02f383bCD3609dC0cEE9b58C8BA2D",
+			"rpc": "0x62B88b705EEEBE0692fE573EecC55669481125eD"
 		},
 		"rpcs": [
-			"wss://bsc-testnet.public.blastapi.io",
-			"https://bsc-testnet.public.blastapi.io",
+			"wss://bsc-mainnet.public.blastapi.io",
+			"https://bsc-mainnet.public.blastapi.io",
 			"https://bsc-dataseed.binance.org/",
 			"https://bsc-dataseed1.defibit.io/",
 			"https://bsc-dataseed1.ninicoin.io/",
