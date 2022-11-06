@@ -1446,6 +1446,29 @@
 			"https://moonriver.moonscan.io/"
 		]
 	},
+	"1294": {
+		"disabled": "true",
+		"label": "Bobabeam",
+		"symbol": "BOBA",
+		"genesis": "",
+		"tokens": {
+		},
+		"contracts": {
+			"account": "",
+			"atomicSwap": "",
+			"atomicSwapERC20": "",
+			"rpc": ""
+		},
+		"rpcs": [
+			"wss://wss.bobabeam.boba.network/",
+			"wss://replica-wss.bobabeam.boba.network/",
+			"https://bobabeam.boba.network/",
+			"https://replica.bobabeam.boba.network/"
+		],
+		"explorers": [
+			"https://blockexplorer.bobabeam.boba.network/"
+		]
+	},
 	"2021": {
 		"disabled": "true",
 		"label": "Edgeware",
