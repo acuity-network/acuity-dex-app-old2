@@ -998,7 +998,6 @@
 		]
 	},
 	"250": {
-		"disabled": "true",
 		"label": "Fantom",
 		"symbol": "FTM",
 		"genesis": "0x00000000000003e83fddf1e9330f0a8691d9f0b2af57b38c3bb85488488a40df",
@@ -1105,9 +1104,10 @@
 			"0x2e79205648b85485731cfe3025d66cf2d3b059c4": "SCARAB (SCARAB)"
 		},
 		"contracts": {
-			"account": "",
-			"atomicSwap": "",
-			"atomicSwapERC20": ""
+			"account": "0xA1E721BBAc783D2C8De29d189a7658efEe76a78C",
+			"atomicSwap": "0x2506Df51625C05E3c67AA48C3d4D7E1D8831F9Db",
+			"atomicSwapERC20": "0x7d96b4c8c8D02f383bCD3609dC0cEE9b58C8BA2D",
+			"rpc": "0x62B88b705EEEBE0692fE573EecC55669481125eD"
 		},
 		"rpcs": [
 			"wss://fantom-mainnet.public.blastapi.io",
