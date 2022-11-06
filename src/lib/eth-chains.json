@@ -1800,12 +1800,13 @@
 		]
 	},
 	"42220": {
-		"disabled": "true",
 		"label": "Celo",
 		"symbol": "CELO",
 		"genesis": "0x19ea3339d3c8cda97235bc8293240d5b9dadcdfbb5d4b0b90ee731cac1bd11c3",
 		"tokens": {
+			"0x617f3112bf5397D0467D315cC709EF968D9ba546": "Tether USD (USDT)",
 			"0xef4229c8c3250c675f21bcefa42f58efbff6002a": "USD Coin (USDC)",
+			"0x37f750B7cC259A2f741AF45294f6a16572CF5cAd": "USD Coin (Wormhole) (USDC)",
 			"0xd629eb00deced2a080b7ec630ef6ac117e614f1b": "Wrapped Bitcoin (BTC)",
 			"0x471ece3750da237f93b8e339c536989b8978a438": "Celo native asset (CELO)",
 			"0x29dfce9c22003a4999930382fd00f9fd6133acd1": "SushiToken (SUSHI)",
@@ -1823,11 +1824,13 @@
 			"0x122013fd7df1c6f636a5bb8f03108e876548b455": "Wrapped Ether (WETH)"
 		},
 		"contracts": {
-			"account": "",
-			"atomicSwap": "",
-			"atomicSwapERC20": ""
+			"account": "0xA1E721BBAc783D2C8De29d189a7658efEe76a78C",
+			"atomicSwap": "0x2506Df51625C05E3c67AA48C3d4D7E1D8831F9Db",
+			"atomicSwapERC20": "0x7d96b4c8c8D02f383bCD3609dC0cEE9b58C8BA2D",
+			"rpc": "0x62B88b705EEEBE0692fE573EecC55669481125eD"
 		},
 		"rpcs": [
+			"wss://forno.celo.org/ws",
 			"https://forno.celo.org",
 			"https://rpc.ankr.com/celo"
 		],
