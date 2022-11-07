@@ -95,7 +95,7 @@ export default class EthClient {
         }
       }
 
-      (window.ethereum as any)
+      this.provider
         .on('chainChanged', (chainIdHex: string) => {
           let chainId = parseInt(chainIdHex, 16);
           store.metaMaskChainIdSet(chainId);

@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@mdi/font': 7.0.96
-  '@metamask/detect-provider': ^1.2.0
+  '@metamask/detect-provider': ^2.0.0
   '@metamask/onboarding': ^1.0.1
   '@polkadot/api': ^7.15.1
   '@polkadot/extension-dapp': ^0.42.10
@@ -37,7 +37,7 @@ specifiers:
 
 dependencies:
   '@mdi/font': 7.0.96
-  '@metamask/detect-provider': 1.2.0
+  '@metamask/detect-provider': 2.0.0
   '@metamask/onboarding': 1.0.1
   '@polkadot/api': 7.15.1
   '@polkadot/extension-dapp': 0.42.10_wvzysgxjcwb5b5phcbwjph77la
@@ -346,9 +346,9 @@ packages:
     resolution: {integrity: sha512-rzlxTfR64hqY8yiBzDjmANfcd8rv+T5C0Yedv/TWk2QyAQYdc66e0kaN1ipmnYU3RukHRTRcBARHzzm+tIhL7w==}
     dev: false
 
-  /@metamask/detect-provider/1.2.0:
-    resolution: {integrity: sha512-ocA76vt+8D0thgXZ7LxFPyqw3H7988qblgzddTDA6B8a/yU0uKV42QR/DhA+Jh11rJjxW0jKvwb5htA6krNZDQ==}
-    engines: {node: '>= 10'}
+  /@metamask/detect-provider/2.0.0:
+    resolution: {integrity: sha512-sFpN+TX13E9fdBDh9lvQeZdJn4qYoRb/6QF2oZZK/Pn559IhCFacPMU1rMuqyXoFQF3JSJfii2l98B87QDPeCQ==}
+    engines: {node: '>=14.0.0'}
     dev: false
 
   /@metamask/onboarding/1.0.1:
