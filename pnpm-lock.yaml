@@ -11,7 +11,6 @@ specifiers:
   '@polkadot/util-crypto': ^10.1.11
   '@polkadot/wasm-crypto': ^6.3.1
   '@polkadot/x-randomvalues': ^10.1.11
-  '@types/bn.js': ^5.1.1
   '@vitejs/plugin-vue': ^3.2.0
   agent-base: ^6.0.2
   browserify-zlib: ^0.2.0
@@ -46,7 +45,6 @@ dependencies:
   '@polkadot/util-crypto': 10.1.11_@polkadot+util@10.1.11
   '@polkadot/wasm-crypto': 6.3.1_kq5krb3p4bzvrcxi3xa2lgyh6u
   '@polkadot/x-randomvalues': 10.1.11
-  '@types/bn.js': 5.1.1
   agent-base: 6.0.2
   browserify-zlib: 0.2.0
   events: 3.3.0
