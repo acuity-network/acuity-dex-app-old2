@@ -116,7 +116,7 @@ async function addMetaMask(event: any) {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="chain in chains">
+            <tr v-for="chain in chains" :bgcolor="(chain.chainId == store.metaMaskChainId) ? '#2196f3' : ''">
               <td>{{ chain.label }}</td>
               <td>{{ chain.uri }}</td>
               <td class="text-right">{{ chain.height }}</td>
