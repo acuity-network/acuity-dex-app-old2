@@ -94,6 +94,13 @@ async function onboardMetaMask(event: any) {
       <v-app-bar-title>Acuity DEX {{ blockNumber }}</v-app-bar-title>
     </v-app-bar>
     <v-main>
+      <v-container class="pt-0">
+        <v-row class="pt-0" >
+          <v-col cols="12" md="10" class="pt-0">
+            <v-alert type="info">Acuity DEX is undergoing beta testing. Don't attempt any large trades.</v-alert>
+          </v-col>
+        </v-row>
+      </v-container>
       <router-view></router-view>
     </v-main>
     <v-footer app>
