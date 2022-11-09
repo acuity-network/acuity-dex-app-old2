@@ -48,15 +48,6 @@ export default class EthClient {
 	chains: { [key: number]: any; } = {};
   chainsData: any = ethChainsDataJson;
 
-  async loadAcuAccount() {
-    if (this.chains[store.metaMaskChainId].account) {
-      if (this.chains.hasOwnProperty(store.metaMaskChainId)) {
-        let mappedAcuAddress = encodeAddress(await this.chains[store.metaMaskChainId].account.methods.getAcuAccount(store.metaMaskAccount).call());
-        store.activeAcuSet(mappedAcuAddress);
-      }
-    }
-  }
-
 	async init(db: any) {
     this.db = db;
     this.provider = await detectEthereumProvider();
@@ -104,11 +95,9 @@ export default class EthClient {
         		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
             this.atomicSwapERC20 = new this.web3.eth.Contract(atomicSwapERC20Abi, this.chainsData[chainId].contracts.atomicSwapERC20);
           }
-          this.loadAcuAccount();
         })
         .on('accountsChanged', (accounts: any) => {
   				store.metaMaskAccountSet(accounts[0].toLowerCase());
-          this.loadAcuAccount();
         });
 
       let chainId = await this.web3.eth.getChainId();
@@ -133,8 +122,6 @@ export default class EthClient {
           this.loadChain(chainId, uri);
 				}
 		  }
-
-      await this.loadAcuAccount();
     } else {
       console.log('Please install MetaMask!');
     }
