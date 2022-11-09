@@ -105,11 +105,11 @@ let polkadotBuyAssetItems: any = computed(() => {
   let assets = [];
 
   assets.push({
-    title: $ethClient.chainsData[metaMaskChainId.value]?.label + " (" + $ethClient.chainsData[metaMaskChainId.value]?.symbol + ")",
+    title: $ethClient.chainsData[store.buyChainId]?.label + " (" + $ethClient.chainsData[store.buyChainId]?.symbol + ")",
     value: "0",
   });
 
-  let tokens = store.tokens[metaMaskChainId.value];
+  let tokens = store.tokens[store.buyChainId];
 
   for (let address in tokens) {
 
@@ -161,7 +161,7 @@ let sellAssetIdHex: any = computed(() => {
 let buyAssetIdHex: any = computed(() => {
   switch (wallet.value) {
     case 'polkadot':
-      return getEthereumAssetId(metaMaskChainId.value, (metaMaskSellAsset.value == "0") ? null : metaMaskSellAsset.value);
+      return getEthereumAssetId(store.buyChainId, (polkadotBuyAsset.value == "0") ? null : polkadotBuyAsset.value);
     case 'metamask':
       if (store.buyChainId == 0) {
         return getSubstrateAssetId();
@@ -184,7 +184,7 @@ const sellSymbol = computed(() => {
 const buySymbol = computed(() => {
   switch(wallet.value) {
     case 'polkadot':
-      return (polkadotBuyAsset.value == "0") ? $ethClient.chainsData[metaMaskChainId.value]?.symbol : store.tokens[metaMaskChainId.value][polkadotBuyAsset.value].symbol;
+      return (polkadotBuyAsset.value == "0") ? $ethClient.chainsData[store.buyChainId]?.symbol : store.tokens[store.buyChainId][polkadotBuyAsset.value].symbol;
     case 'metamask':
       if (store.buyChainId == 0) {
         return "ACU";
@@ -205,7 +205,7 @@ const sellDecimals = computed(() => {
 const buyDecimals = computed(() => {
   switch(wallet.value) {
     case 'polkadot':
-      return (polkadotBuyAsset.value == "0") ? 18 : store.tokens[metaMaskChainId.value][polkadotBuyAsset.value].decimals;
+      return (polkadotBuyAsset.value == "0") ? 18 : store.tokens[store.buyChainId][polkadotBuyAsset.value].decimals;
     case 'metamask':
       if (store.buyChainId == 0) {
         return 18;
@@ -244,9 +244,9 @@ async function load() {
       sellBalance.value = $ethClient.formatWei(result.data.free, sellDecimals.value);
 
       if (polkadotBuyAsset.value == "0") {
-        if (metaMaskChainId.value) {
+        if (store.buyChainId) {
           try {
-            buyBalance.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].web3.eth.getBalance(store.metaMaskAccount), buyDecimals.value);
+            buyBalance.value = $ethClient.formatWei(await $ethClient.chains[store.buyChainId].web3.eth.getBalance(store.metaMaskAccount), buyDecimals.value);
           }
           catch (e) {};
         }
@@ -433,7 +433,7 @@ async function goto(event: any) {
           <v-select v-model="substrateChain" :items="substrateChains" label="Sell chain"></v-select>
           <v-text-field v-model="polkadotSellAsset" label="Sell asset" readonly></v-text-field>
           <v-text-field v-model="sellBalance" label="Sell balance" :suffix="sellSymbol" readonly></v-text-field>
-          <v-text-field v-model="store.metaMaskChainName" label="Buy chain" readonly hint="Select in MetaMask." persistent-hint></v-text-field>
+          <v-select v-model="store.buyChainId" :items="chainSelect" label="Buy chain"></v-select>
           <v-select v-model="polkadotBuyAsset" :items="polkadotBuyAssetItems" label="Buy asset"></v-select>
         </template>
 

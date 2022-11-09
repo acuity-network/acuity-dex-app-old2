@@ -27,7 +27,6 @@ const metaMaskAccount = computed(() => store.metaMaskAccount);
 const acuAccountForeignAccount = computed(() => store.acuAccountForeignAccount);
 const foreignAccountAcuAccount = computed(() => store.foreignAccountAcuAccount);
 
-const acuAddress = ref(store.addressesAcu[0]);
 const name = ref("");
 const web = ref("");
 const riot = ref("");
@@ -42,7 +41,7 @@ const setAcuAccountDisabled = ref(false);
 const setAcuAccountWaiting = ref(false);
 
 async function load() {
-  let result = await $acuityClient.api.query.identity.identityOf(acuAddress.value);
+  let result = await $acuityClient.api.query.identity.identityOf(store.activeAcu);
 
   name.value = '';
   web.value = '';
@@ -85,9 +84,9 @@ async function load() {
     let chainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(chainId), 16);
 
     try {
-      let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(acuAddress.value, chainIdHex)).unwrap();
+      let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(store.activeAcu, chainIdHex)).unwrap();
       let foreignAddress = '0x' + Buffer.from(result).toString('hex').slice(24);
-      store.acuAccountForeignAccountSet(chainId, acuAddress.value, foreignAddress);
+      store.acuAccountForeignAccountSet(chainId, store.activeAcu, foreignAddress);
 
       if ($ethClient.chains[chainId].account) {
         let mappedAcuAddress = encodeAddress(await $ethClient.chains[chainId].account.methods.getAcuAccount(foreignAddress).call());
@@ -121,7 +120,7 @@ onMounted(async () => {
   load();
 });
 
-watch(acuAddress, async (newValue, oldValue) => {
+watch(() => store.activeAcu, async (newValue, oldValue) => {
   load();
 });
 
@@ -134,7 +133,7 @@ function encodeString(text: string) {
 
 async function setIdentity(event: any) {
   setNameDisabled.value = true;
-  const injector = await web3FromAddress(acuAddress.value);
+  const injector = await web3FromAddress(store.activeAcu);
 
   const identity = {
     "additional": [[encodeString("telegram"), encodeString(telegram.value)]],
@@ -153,7 +152,7 @@ async function setIdentity(event: any) {
   try {
     const unsub = await $acuityClient.api.tx.identity
       .setIdentity(identity)
-      .signAndSend(acuAddress.value, { signer: injector.signer }, (result: any) => {
+      .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
         if (!result.status.isInBlock) {
           setNameWaiting.value = true;
         }
@@ -174,13 +173,13 @@ async function setIdentity(event: any) {
 
 async function setForeignAccount(event: any) {
   setForeignAccountDisabled.value = true;
-  const injector = await web3FromAddress(acuAddress.value);
+  const injector = await web3FromAddress(store.activeAcu);
   let chainId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.metaMaskChainId), 16);
   let foreignAccount = $ethClient.web3.utils.padLeft(store.metaMaskAccount, 64);
   try {
     const unsub = await $acuityClient.api.tx.orderbook
       .setForeignAccount(chainId, foreignAccount)
-      .signAndSend(acuAddress.value, { signer: injector.signer }, (result: any) => {
+      .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
         if (!result.status.isInBlock) {
           setForeignAccountWaiting.value = true;
         }
@@ -199,7 +198,7 @@ async function setForeignAccount(event: any) {
 
 async function setAcuAccount(event: any) {
   setAcuAccountDisabled.value = true;
-  let acuAddressHex = '0x' + Buffer.from(decodeAddress(acuAddress.value)).toString('hex');
+  let acuAddressHex = '0x' + Buffer.from(decodeAddress(store.activeAcu)).toString('hex');
   $ethClient.account.methods
     .setAcuAccount(acuAddressHex)
     .send({from: store.metaMaskAccount})
@@ -222,7 +221,6 @@ async function setAcuAccount(event: any) {
   <v-container>
     <v-row>
       <v-col cols="12" md="10">
-        <v-select v-model="acuAddress" :items="store.accountsAcu" label="Acuity account"></v-select>
         <v-card>
           <v-toolbar color="blue">
             <v-toolbar-title>Public Information</v-toolbar-title>
@@ -246,8 +244,8 @@ async function setAcuAccount(event: any) {
         <div v-for="chain in chains">
           <div class="text-h6">{{ chain.label }}</div>
           <div v-if="acuAccountForeignAccount[chain.chainId]">
-            {{ acuAccountForeignAccount[chain.chainId][acuAddress] }}
-            <span v-if="foreignAccountAcuAccount[chain.chainId] && (foreignAccountAcuAccount[chain.chainId][acuAccountForeignAccount[chain.chainId][acuAddress]] == acuAddress)"><v-icon icon="mdi-link-variant"></v-icon></span>
+            {{ acuAccountForeignAccount[chain.chainId][store.activeAcu] }}
+            <span v-if="foreignAccountAcuAccount[chain.chainId] && (foreignAccountAcuAccount[chain.chainId][acuAccountForeignAccount[chain.chainId][store.activeAcu]] == store.activeAcu)"><v-icon icon="mdi-link-variant"></v-icon></span>
           </div>
         </div>
         <div v-if="metaMaskChainId && chains[metaMaskChainId]" class="mt-10" >
