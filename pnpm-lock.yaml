@@ -12,6 +12,7 @@ specifiers:
   '@polkadot/wasm-crypto': ^6.3.1
   '@polkadot/x-randomvalues': ^10.1.11
   '@vitejs/plugin-vue': ^3.2.0
+  buffer: ^6.0.3
   events: ^3.3.0
   level: ^8.0.0
   pinia: ^2.0.23
@@ -39,6 +40,7 @@ dependencies:
   '@polkadot/util-crypto': 10.1.11_@polkadot+util@10.1.11
   '@polkadot/wasm-crypto': 6.3.1_kq5krb3p4bzvrcxi3xa2lgyh6u
   '@polkadot/x-randomvalues': 10.1.11
+  buffer: 6.0.3
   events: 3.3.0
   level: 8.0.0
   pinia: 2.0.23_lrjaoqkmph6q2hmgd3qeuy6rom

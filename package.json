@@ -19,6 +19,7 @@
     "@polkadot/util-crypto": "^10.1.11",
     "@polkadot/wasm-crypto": "^6.3.1",
     "@polkadot/x-randomvalues": "^10.1.11",
+    "buffer": "^6.0.3",
     "events": "^3.3.0",
     "level": "^8.0.0",
     "pinia": "^2.0.23",

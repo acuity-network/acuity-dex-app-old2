@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, inject, onMounted, computed, watch} from 'vue'
-
+import { Buffer } from "buffer";
 import { useRouter, useRoute } from 'vue-router'
 import {
   web3Accounts,
