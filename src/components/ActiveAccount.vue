@@ -221,9 +221,9 @@ async function setAcuAccount(event: any) {
   <v-container>
     <v-row>
       <v-col cols="12" md="10">
-        <v-card>
+        <v-card class="mb-10">
           <v-toolbar color="blue">
-            <v-toolbar-title>Public Information</v-toolbar-title>
+            <v-toolbar-title>Public Identity</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
             <v-text-field v-model="name" label="Name" hint="Enter your name."></v-text-field>
@@ -240,14 +240,33 @@ async function setAcuAccount(event: any) {
           </v-card-actions>
           <v-progress-linear :indeterminate="setNameWaiting" color="yellow darken-2"></v-progress-linear>
         </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12" md="10">
+        <v-table class="mb-10">
+          <thead>
+            <tr>
+              <th>
+                Chain
+              </th>
+              <th>
+                Address
+              </th>
+              <th>
+                Connected
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="chain in chains" :bgcolor="(chain.chainId == store.metaMaskChainId) ? '#2196f3' : ''">
+              <td>{{ chain.label }}</td>
+              <td><span v-if="acuAccountForeignAccount[chain.chainId]">{{ acuAccountForeignAccount[chain.chainId][store.activeAcu] }}</span></td>
+              <td><span v-if="foreignAccountAcuAccount[chain.chainId] && (foreignAccountAcuAccount[chain.chainId][acuAccountForeignAccount[chain.chainId][store.activeAcu]] == store.activeAcu)">yes</span></td>
+            </tr>
+          </tbody>
+        </v-table>
 
-        <div v-for="chain in chains">
-          <div class="text-h6">{{ chain.label }}</div>
-          <div v-if="acuAccountForeignAccount[chain.chainId]">
-            {{ acuAccountForeignAccount[chain.chainId][store.activeAcu] }}
-            <span v-if="foreignAccountAcuAccount[chain.chainId] && (foreignAccountAcuAccount[chain.chainId][acuAccountForeignAccount[chain.chainId][store.activeAcu]] == store.activeAcu)"><v-icon icon="mdi-link-variant"></v-icon></span>
-          </div>
-        </div>
         <div v-if="metaMaskChainId && chains[metaMaskChainId]" class="mt-10" >
           <v-btn class="mb-4" @click="setForeignAccount" :disabled="setForeignAccountDisabled">Set {{ metaMaskChainName }} Account on Acuity</v-btn>
           <v-progress-linear class="mb-10" :indeterminate="setForeignAccountWaiting" color="yellow darken-2"></v-progress-linear>
