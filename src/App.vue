@@ -57,13 +57,24 @@ onMounted(async () => {
   $acuityClient.api.rpc.chain.subscribeNewHeads((lastHeader: any) => {
     blockNumber.value = lastHeader.number.toString();
   });
+
+  try {
+    let activeAccount = await $db.get('/activeAccount');
+    console.log("Switched to account", activeAccount);
+    store.activeAcuSet(activeAccount);
+  }
+  catch (e) {}
 })
+
+watch(() => store.activeAcu, async (newValue, oldValue) => {
+  console.log("Switched to account", newValue);
+  $db.put('/activeAccount', newValue);
+});
 
 async function onboardMetaMask(event: any) {
   const onboarding = new MetaMaskOnboarding();
   onboarding.startOnboarding();
 }
-
 
 </script>
 
