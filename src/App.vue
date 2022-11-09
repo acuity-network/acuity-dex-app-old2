@@ -53,6 +53,8 @@ let $ethClient: any = inject('$ethClient');
 
 const blockNumber = ref(0)
 
+let balanceUnsub;
+
 onMounted(async () => {
   $acuityClient.api.rpc.chain.subscribeNewHeads((lastHeader: any) => {
     blockNumber.value = lastHeader.number.toString();
@@ -60,7 +62,6 @@ onMounted(async () => {
 
   try {
     let activeAccount = await $db.get('/activeAccount');
-    console.log("Switched to account", activeAccount);
     store.activeAcuSet(activeAccount);
   }
   catch (e) {}
@@ -69,6 +70,15 @@ onMounted(async () => {
 watch(() => store.activeAcu, async (newValue, oldValue) => {
   console.log("Switched to account", newValue);
   $db.put('/activeAccount', newValue);
+
+  try {
+    balanceUnsub()
+  }
+  catch (e) {}
+
+  balanceUnsub = $acuityClient.api.query.system.account(newValue, ({ data: { free: currentFree }, nonce: currentNonce }) => {
+    store.acuBalanceSet(newValue, $ethClient.formatWei(currentFree));
+  });
 });
 
 async function onboardMetaMask(event: any) {
@@ -95,6 +105,7 @@ async function onboardMetaMask(event: any) {
         </v-list-item>
       </v-list>
       <v-select v-model="store.activeAcu" :items="store.accountsAcu" label="Acuity account"></v-select>
+      <v-text-field v-model="store.acuBalance[store.activeAcu]" label="Balance" suffix="ACU" readonly></v-text-field>
       <v-btn block color="rgb(227, 126, 6)" class="my-2" target="_blank" href="https://polkadot.js.org/extension/">polkadot{.js}</v-btn>
       <v-btn block color="rgb(3, 125, 214)" class="my-2" @click="onboardMetaMask">MetaMask</v-btn>
     </v-navigation-drawer>

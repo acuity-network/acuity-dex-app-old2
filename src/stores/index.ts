@@ -7,6 +7,7 @@ export const main = defineStore('main', {
   state: () => ({
 		activeAcu: "" as string,
     activeAcuName: "" as string,
+    acuBalance: {} as any,
 		accountsAcu: [] as any[],
     addressesAcu: [] as string[],
     metaMaskChainId: 0 as number,
@@ -37,6 +38,9 @@ export const main = defineStore('main', {
           this.activeAcuName = account.title;
         }
       }
+		},
+    acuBalanceSet(address: string, balance: string) {
+			this.acuBalance[address] = balance;
 		},
 		accountsAcuSet(accounts: any[]) {
 			this.accountsAcu = [];
