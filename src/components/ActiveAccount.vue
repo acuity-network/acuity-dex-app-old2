@@ -81,7 +81,8 @@ async function load() {
 
   for (let chainIdKey of Object.keys(store.ethChains)) {
     let chainId = parseInt(chainIdKey);
-    let chainIdHex = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(chainId), 16);
+    let chainIdHex = '0x0002';
+    chainIdHex += $ethClient.web3.utils.stripHexPrefix($ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(chainId), 12));
 
     try {
       let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(store.activeAcu, chainIdHex)).unwrap();
@@ -174,7 +175,8 @@ async function setIdentity(event: any) {
 async function setForeignAccount(event: any) {
   setForeignAccountDisabled.value = true;
   const injector = await web3FromAddress(store.activeAcu);
-  let chainId = $ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.metaMaskChainId), 16);
+  let chainId = '0x0002';
+  chainId += $ethClient.web3.utils.stripHexPrefix($ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(store.metaMaskChainId), 12));
   let foreignAccount = $ethClient.web3.utils.padLeft(store.metaMaskAccount, 64);
   try {
     const unsub = await $acuityClient.api.tx.orderbook
