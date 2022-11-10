@@ -1969,7 +1969,6 @@
 			"rpc": "0x62B88b705EEEBE0692fE573EecC55669481125eD"
 		},
 		"rpcs": [
-			"wss://api.avax.network/ext/bc/C/ws",
 			"https://api.avax.network/ext/bc/C/rpc",
 			"wss://ava-mainnet.public.blastapi.io/ext/bc/C/ws",
 			"https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc"
