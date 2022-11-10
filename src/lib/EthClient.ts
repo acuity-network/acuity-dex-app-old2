@@ -4,7 +4,8 @@ import { encodeAddress } from '@polkadot/keyring';
 import { main } from '../stores/index'
 let store: any;
 
-import ethChainsDataJson from '../lib/eth-chains.json'
+import ethChainsDataJson from '../lib/eth-chains.json';
+import ethChainsDataTestnetsJson from '../lib/eth-chains-testnets.json';
 
 import accountAbiJson from '../lib/contracts/AcuityAccount.abi.json'
 const accountAbi: any = accountAbiJson;
@@ -46,7 +47,7 @@ export default class EthClient {
   atomicSwap: any;
   atomicSwapERC20: any;
 	chains: { [key: number]: any; } = {};
-  chainsData: any = ethChainsDataJson;
+  chainsData: any = import.meta.env.DEV ? ethChainsDataTestnetsJson : ethChainsDataJson;
 
 	async init(db: any) {
     this.db = db;
@@ -130,8 +131,8 @@ export default class EthClient {
   }
 
   async loadChain(chainId: number, uri: string) {
-    store.ethChainSet(chainId, this.chainsData[chainId].label, uri);
     try {
+      store.ethChainSet(chainId, this.chainsData[chainId].label, uri);
       let web3 = newEndpoint(chainId, uri);
       this.chains[chainId] = {};
       this.chains[chainId].web3 = web3;
