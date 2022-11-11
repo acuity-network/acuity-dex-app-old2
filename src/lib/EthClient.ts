@@ -138,7 +138,10 @@ export default class EthClient {
       store.ethChainSet(chain);
       if (chain.ws == '') return;
 
-      this.chains[chain.chainId] = {};
+      this.chains[chain.chainId] = {
+        ws: {},
+        rpc: {},
+      };
       let web3 = newEndpoint(chain.chainId, chain.ws);
       this.chains[chain.chainId].ws.web3 = web3;
       this.chains[chain.chainId].ws.account = new web3.eth.Contract(accountAbi, this.chainsData[chain.chainId].contracts.account);
@@ -158,7 +161,9 @@ export default class EthClient {
         this.chains[chain.chainId].rpc.rpc = new this.chains[chain.chainId].ws.web3.eth.Contract(rpcAbi, this.chainsData[chain.chainId].contracts.acuityRPC);
       }
     }
-    catch (e) {}
+    catch (e) {
+      console.error(e);
+    }
 
     // Load tokens from database.
     for await (const [key, json] of this.db.iterator({

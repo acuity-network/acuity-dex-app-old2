@@ -179,7 +179,9 @@ async function load() {
       try {
         sellBalance.value = $ethClient.formatWei(await $ethClient.chains[sellChainId.value].rpc.web3.eth.getBalance(buyerAddressSellChain), sellDecimals.value);
       }
-      catch (e) {};
+      catch (e) {
+        console.error(e);
+      };
     }
     else {
       try {
@@ -188,7 +190,9 @@ async function load() {
           .balanceOf(buyerAddressSellChain)
           .call(), sellDecimals.value);
         }
-        catch (e) {};
+        catch (e) {
+          console.error(e);
+        };
     }
   }
 
@@ -206,7 +210,9 @@ async function load() {
       try {
         buyBalance.value = $ethClient.formatWei(await $ethClient.chains[buyChainId.value].rpc.web3.eth.getBalance(buyerAddressBuyChain), buyDecimals.value);
       }
-      catch (e) {};
+      catch (e) {
+        console.error(e);
+      };
     }
     else {
       try {
@@ -215,7 +221,9 @@ async function load() {
           .balanceOf(buyerAddressBuyChain)
           .call(), buyDecimals.value);
         }
-        catch (e) {};
+        catch (e) {
+          console.error(e);
+        };
     }
   }
 
@@ -304,7 +312,7 @@ async function load() {
 
     if (buyType == 0) {
       events = await $ethClient.chains[buyChainId.value].rpc.atomicSwap.getPastEvents('LockBuy', {
-        fromBlock: Math.max(buyHeight - 2000, 0),
+        fromBlock: Math.max(buyHeight - 980, 0),
         filter: {
           recipient: sellerAddressBuyChain.value,
         },
@@ -312,7 +320,7 @@ async function load() {
     }
     else {
       events = await $ethClient.chains[buyChainId.value].rpc.atomicSwapERC20.getPastEvents('LockBuy', {
-        fromBlock: Math.max(buyHeight - 2000, 0),
+        fromBlock: Math.max(buyHeight - 980, 0),
         filter: {
           token: buyToken.value,
           recipient: sellerAddressBuyChain.value,
@@ -435,7 +443,7 @@ async function load() {
   else {
     if (sellType == 0) {
       events = await $ethClient.chains[sellChainId.value].rpc.atomicSwap.getPastEvents('LockSell', {
-        fromBlock: Math.max(sellHeight - 2000, 0),
+        fromBlock: Math.max(sellHeight - 980, 0),
         filter: {
           creator: sellerAddressSellChain.value,
         },
@@ -443,7 +451,7 @@ async function load() {
     }
     else {
       events = await $ethClient.chains[sellChainId.value].rpc.atomicSwapERC20.getPastEvents('LockSell', {
-        fromBlock: Math.max(sellHeight - 2000, 0),
+        fromBlock: Math.max(sellHeight - 980, 0),
         filter: {
           token: sellToken.value,
           creator: sellerAddressSellChain.value,
@@ -478,7 +486,7 @@ async function load() {
 
     if (sellType == 0) {
       events = await $ethClient.chains[sellChainId.value].rpc.atomicSwap.getPastEvents('Unlock', {
-        fromBlock: Math.max(sellHeight - 2000, 0),
+        fromBlock: Math.max(sellHeight - 980, 0),
         filter: {
           creator: sellerAddressSellChain.value,
         },
@@ -486,7 +494,7 @@ async function load() {
     }
     else {
       events = await $ethClient.chains[sellChainId.value].rpc.atomicSwapERC20.getPastEvents('Unlock', {
-        fromBlock: Math.max(sellHeight - 2000, 0),
+        fromBlock: Math.max(sellHeight - 980, 0),
         filter: {
           token: sellToken.value,
           creator: sellerAddressSellChain.value,
@@ -506,7 +514,7 @@ async function load() {
 
     if (sellType == 0) {
       events = await $ethClient.chains[sellChainId.value].rpc.atomicSwap.getPastEvents('Retrieve', {
-        fromBlock: Math.max(sellHeight - 2000, 0),
+        fromBlock: Math.max(sellHeight - 980, 0),
         filter: {
           creator: sellerAddressSellChain.value,
         },
@@ -514,7 +522,7 @@ async function load() {
     }
     else {
       events = await $ethClient.chains[sellChainId.value].rpc.atomicSwapERC20.getPastEvents('Retrieve', {
-        fromBlock: Math.max(sellHeight - 2000, 0),
+        fromBlock: Math.max(sellHeight - 980, 0),
         filter: {
           token: sellToken.value,
           creator: sellerAddressSellChain.value,
@@ -563,7 +571,7 @@ async function load() {
   else {
     if (buyType == 0) {
       events = await $ethClient.chains[buyChainId.value].rpc.atomicSwap.getPastEvents('Unlock', {
-        fromBlock: Math.max(buyHeight - 2000, 0),
+        fromBlock: Math.max(buyHeight - 980, 0),
         filter: {
           recipient: sellerAddressBuyChain.value,
         },
@@ -571,7 +579,7 @@ async function load() {
     }
     else {
       events = await $ethClient.chains[buyChainId.value].rpc.atomicSwapERC20.getPastEvents('Unlock', {
-        fromBlock: Math.max(buyHeight - 2000, 0),
+        fromBlock: Math.max(buyHeight - 980, 0),
         filter: {
           token: buyToken.value,
           recipient: sellerAddressBuyChain.value,
@@ -587,7 +595,7 @@ async function load() {
 
     if (buyType == 0) {
       events = await $ethClient.chains[buyChainId.value].rpc.atomicSwap.getPastEvents('Retrieve', {
-        fromBlock: Math.max(buyHeight - 2000, 0),
+        fromBlock: Math.max(buyHeight - 980, 0),
         filter: {
           recipient: sellerAddressBuyChain.value,
         },
@@ -595,7 +603,7 @@ async function load() {
     }
     else {
       events = await $ethClient.chains[buyChainId.value].rpc.atomicSwapERC20.getPastEvents('Retrieve', {
-        fromBlock: Math.max(buyHeight - 2000, 0),
+        fromBlock: Math.max(buyHeight - 980, 0),
         filter: {
           token: buyToken.value,
           recipient: sellerAddressBuyChain.value,
