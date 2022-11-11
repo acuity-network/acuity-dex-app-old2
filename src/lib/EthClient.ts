@@ -113,15 +113,15 @@ export default class EthClient {
       let accounts = await this.web3.eth.requestAccounts();
 			store.metaMaskAccountSet(accounts[0].toLowerCase());
 
-			for await (const [key, uri] of this.db.iterator({
+			for await (const [key, json] of this.db.iterator({
 		    gt: '/chains/',
         lt: '/chains/z',
 		  })) {
-		    let chainId = parseInt(key.slice(8));
-
-				if (Number.isInteger(chainId)) {
-          this.loadChain(chainId, uri);
-				}
+        try {
+          let chain = JSON.parse(json);
+          this.loadChain(chain);
+        }
+        catch (e) {}
 		  }
     } else {
       console.log('Please install MetaMask!');
@@ -130,42 +130,68 @@ export default class EthClient {
 		return this;
   }
 
-  async loadChain(chainId: number, uri: string) {
+  async loadChain(chain: any) {
     try {
-      store.ethChainSet(chainId, this.chainsData[chainId].label, uri);
-      let web3 = newEndpoint(chainId, uri);
-      this.chains[chainId] = {};
-      this.chains[chainId].web3 = web3;
-      if (this.chainsData[chainId].contracts.account) {
-        this.chains[chainId].account = new web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
+      chain.label = this.chainsData[chain.chainId].label;
+      store.ethChainSet(chain);
+      let web3 = newEndpoint(chain.chainId, chain.ws);
+      this.chains[chain.chainId] = {};
+      this.chains[chain.chainId].web3 = web3;
+      if (this.chainsData[chain.chainId].contracts.account) {
+        this.chains[chain.chainId].account = new web3.eth.Contract(accountAbi, this.chainsData[chain.chainId].contracts.account);
       }
-      if (this.chainsData[chainId].contracts.atomicSwap) {
-        this.chains[chainId].atomicSwap = new web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
+      if (this.chainsData[chain.chainId].contracts.atomicSwap) {
+        this.chains[chain.chainId].atomicSwap = new web3.eth.Contract(atomicSwapAbi, this.chainsData[chain.chainId].contracts.atomicSwap);
       }
-      if (this.chainsData[chainId].contracts.atomicSwapERC20) {
-        this.chains[chainId].atomicSwapERC20 = new web3.eth.Contract(atomicSwapERC20Abi, this.chainsData[chainId].contracts.atomicSwapERC20);
+      if (this.chainsData[chain.chainId].contracts.atomicSwapERC20) {
+        this.chains[chain.chainId].atomicSwapERC20 = new web3.eth.Contract(atomicSwapERC20Abi, this.chainsData[chain.chainId].contracts.atomicSwapERC20);
       }
-      if (this.chainsData[chainId].contracts.acuityRPC) {
-        this.chains[chainId].rpc = new web3.eth.Contract(rpcAbi, this.chainsData[chainId].contracts.acuityRPC);
+      if (this.chainsData[chain.chainId].contracts.acuityRPC) {
+        this.chains[chain.chainId].rpc = new web3.eth.Contract(rpcAbi, this.chainsData[chain.chainId].contracts.acuityRPC);
       }
     }
     catch (e) {}
 
     // Load tokens from database.
     for await (const [key, json] of this.db.iterator({
-      gt: '/tokens/' + chainId + '/',
-      lt: '/tokens/' + chainId + '/z',
+      gt: '/tokens/' + chain.chainId + '/',
+      lt: '/tokens/' + chain.chainId + '/z',
     })) {
       let address = key.split('/')[3];
       let info = JSON.parse(json);
 
-      store.tokenSet(chainId, address, info);
+      store.tokenSet(chain.chainId, address, info);
     }
   }
 
-  async addChain(chainId: number, uri: string) {
-    this.db.put('/chains/' + chainId, uri);
-    this.loadChain(chainId, uri);
+  async addChainWS(chainId: number, uri: string) {
+    let chain;
+    try {
+      chain = JSON.parse(await this.db.get('/chains/' + chainId));
+    } catch (e) {
+      chain = {
+        chainId: chainId,
+        rpc: '',
+      }
+    }
+    chain.ws = uri;
+    this.db.put('/chains/' + chainId, JSON.stringify(chain));
+    this.loadChain(chain);
+  }
+
+  async addChainRPC(chainId: number, uri: string) {
+    let chain: any;
+    try {
+      chain = JSON.parse(await this.db.get('/chains/' + chainId));
+    } catch (e) {
+      chain = {
+        chainId: chainId,
+        ws: '',
+      }
+    }
+    chain.rpc = uri;
+    this.db.put('/chains/' + chainId, JSON.stringify(chain));
+    this.loadChain(chain);
   }
 
   async removeChain(chainId: number) {

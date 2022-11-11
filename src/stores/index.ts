@@ -78,21 +78,22 @@ export const main = defineStore('main', {
     endpointHeightSet(endpoint: string, height: number) {
       this.endpoints[endpoint].height = BigInt(height).toLocaleString();
     },
-    ethChainSet(chainId: number, label: string, uri: string) {
-      if (!(chainId in this.ethChains)) {
+    ethChainSet(chain: any) {
+      if (!(chain.chainId in this.ethChains)) {
         this.chainSelect.push({
-          value: chainId,
-          title: label,
+          value: chain.chainId,
+          title: chain.label,
         });
       }
-      this.ethChains[chainId] = {
-        chainId: chainId,
-        label: label,
-        uri: uri,
+      this.ethChains[chain.chainId] = {
+        chainId: chain.chainId,
+        label: chain.label,
+        ws: chain.ws,
+        rpc: chain.rpc,
         height: null,
       };
     },
-    ethChainRemove(chainId: number, label: string, uri: string) {
+    ethChainRemove(chainId: number) {
       delete this.ethChains[chainId];
 
       for (let i in this.chainSelect) {

@@ -83,7 +83,13 @@ watch(chainId, async (newValue, oldValue) => {
 });
 
 async function addChain(event: any) {
-  $ethClient.addChain(chainId.value, uri.value);
+
+  if (uri.value.startsWith('ws://') || uri.value.startsWith('wss://')) {
+    $ethClient.addChainWS(chainId.value, uri.value);
+  }
+  else {
+    $ethClient.addChainRPC(chainId.value, uri.value);
+  }
 }
 
 async function deleteChain(chainId: number) {
@@ -107,7 +113,7 @@ async function addMetaMask(event: any) {
                 Chain
               </th>
               <th class="text-left">
-                URI
+                URIs
               </th>
               <th class="text-right">
                 Height
@@ -118,7 +124,7 @@ async function addMetaMask(event: any) {
           <tbody>
             <tr v-for="chain in chains" :bgcolor="(chain.chainId == store.metaMaskChainId) ? '#2196f3' : ''">
               <td>{{ chain.label }}</td>
-              <td>{{ chain.uri }}</td>
+              <td>{{ chain.ws }}<br />{{ chain.rpc }}</td>
               <td class="text-right">{{ chain.height }}</td>
               <td>
                 <div class="d-flex" style="gap: 1rem">
@@ -162,7 +168,7 @@ async function addMetaMask(event: any) {
           </v-table>
         </v-radio-group>
         <div class="d-flex mb-4" style="gap: 1rem">
-          <v-btn @click="addChain" :disabled="!(uri.startsWith('ws://') || uri.startsWith('wss://'))">Add to app</v-btn>
+          <v-btn @click="addChain" :disabled="uri == ''">Add to app</v-btn>
           <v-btn @click="addMetaMask" :disabled="!uri.startsWith('https://')">Add to MetaMask</v-btn>
         </div>
         <p>Select a wss:// URI for the app and a https:// one for MetaMask.</p>
