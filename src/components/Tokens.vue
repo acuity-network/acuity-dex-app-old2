@@ -63,7 +63,7 @@ async function load() {
 
   if ($ethClient.chains[store.metaMaskChainId].rpc) {
     let balances: [] = await
-    $ethClient.chains[store.metaMaskChainId].rpc.methods.getAccountTokenBalances(store.metaMaskAccount, tokenList).call();
+    $ethClient.chains[store.metaMaskChainId].rpc.rpc.methods.getAccountTokenBalances(store.metaMaskAccount, tokenList).call();
 
     for (let i in balances) {
       tokens[i].balance = $ethClient.formatWei(balances[i], tokens[i].decimals);
@@ -71,10 +71,10 @@ async function load() {
 
     let contract = $ethClient.chainsData[store.metaMaskChainId].contracts.atomicSwapERC20;
     let allowances: [] = await
-    $ethClient.chains[store.metaMaskChainId].rpc.methods.getAccountTokenAllowances(store.metaMaskAccount, contract, tokenList).call();
+    $ethClient.chains[store.metaMaskChainId].rpc.rpc.methods.getAccountTokenAllowances(store.metaMaskAccount, contract, tokenList).call();
 
     for (let i in allowances) {
-      if (BigInt(allowances[i]) > BigInt(2) ** BigInt(57)) {
+      if (BigInt(allowances[i]) / (BigInt(10) ** BigInt(tokens[i].decimals)) > BigInt(2) ** BigInt(57)) {
         tokens[i].allowance = "unlimited";
       }
       else {
@@ -97,7 +97,7 @@ watch(() => store.metaMaskAccount, async (newValue, oldValue) => {
 });
 
 async function addToken(event: any) {
-  let token = new $ethClient.chains[store.metaMaskChainId].web3.eth.Contract(erc20Abi, tokenAddress.value);
+  let token = new $ethClient.chains[store.metaMaskChainId].rpc.web3.eth.Contract(erc20Abi, tokenAddress.value);
 
   let result = await Promise.all([
     token.methods.name().call(),

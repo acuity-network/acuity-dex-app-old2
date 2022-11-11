@@ -131,23 +131,31 @@ export default class EthClient {
   }
 
   async loadChain(chain: any) {
+    if (!this.chainsData[chain.chainId]) return;
+
     try {
       chain.label = this.chainsData[chain.chainId].label;
       store.ethChainSet(chain);
-      let web3 = newEndpoint(chain.chainId, chain.ws);
+      if (chain.ws == '') return;
+
       this.chains[chain.chainId] = {};
-      this.chains[chain.chainId].web3 = web3;
-      if (this.chainsData[chain.chainId].contracts.account) {
-        this.chains[chain.chainId].account = new web3.eth.Contract(accountAbi, this.chainsData[chain.chainId].contracts.account);
+      let web3 = newEndpoint(chain.chainId, chain.ws);
+      this.chains[chain.chainId].ws.web3 = web3;
+      this.chains[chain.chainId].ws.account = new web3.eth.Contract(accountAbi, this.chainsData[chain.chainId].contracts.account);
+      this.chains[chain.chainId].ws.atomicSwap = new web3.eth.Contract(atomicSwapAbi, this.chainsData[chain.chainId].contracts.atomicSwap);
+      this.chains[chain.chainId].ws.atomicSwapERC20 = new web3.eth.Contract(atomicSwapERC20Abi, this.chainsData[chain.chainId].contracts.atomicSwapERC20);
+
+      if (chain.rpc != '') {
+        let web3 = newEndpoint(chain.chainId, chain.rpc);
+        this.chains[chain.chainId].rpc.web3 = web3;
+        this.chains[chain.chainId].rpc.account = new web3.eth.Contract(accountAbi, this.chainsData[chain.chainId].contracts.account);
+        this.chains[chain.chainId].rpc.atomicSwap = new web3.eth.Contract(atomicSwapAbi, this.chainsData[chain.chainId].contracts.atomicSwap);
+        this.chains[chain.chainId].rpc.atomicSwapERC20 = new web3.eth.Contract(atomicSwapERC20Abi, this.chainsData[chain.chainId].contracts.atomicSwapERC20);
+        this.chains[chain.chainId].rpc.rpc = new web3.eth.Contract(rpcAbi, this.chainsData[chain.chainId].contracts.acuityRPC);
       }
-      if (this.chainsData[chain.chainId].contracts.atomicSwap) {
-        this.chains[chain.chainId].atomicSwap = new web3.eth.Contract(atomicSwapAbi, this.chainsData[chain.chainId].contracts.atomicSwap);
-      }
-      if (this.chainsData[chain.chainId].contracts.atomicSwapERC20) {
-        this.chains[chain.chainId].atomicSwapERC20 = new web3.eth.Contract(atomicSwapERC20Abi, this.chainsData[chain.chainId].contracts.atomicSwapERC20);
-      }
-      if (this.chainsData[chain.chainId].contracts.acuityRPC) {
-        this.chains[chain.chainId].rpc = new web3.eth.Contract(rpcAbi, this.chainsData[chain.chainId].contracts.acuityRPC);
+      else {
+        this.chains[chain.chainId].rpc = this.chains[chain.chainId].ws;
+        this.chains[chain.chainId].rpc.rpc = new this.chains[chain.chainId].ws.web3.eth.Contract(rpcAbi, this.chainsData[chain.chainId].contracts.acuityRPC);
       }
     }
     catch (e) {}

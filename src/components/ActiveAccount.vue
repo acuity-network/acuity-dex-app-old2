@@ -89,12 +89,12 @@ async function load() {
       let foreignAddress = '0x' + Buffer.from(result).toString('hex').slice(24);
       store.acuAccountForeignAccountSet(chainId, store.activeAcu, foreignAddress);
 
-      if ($ethClient.chains[chainId].account) {
-        let mappedAcuAddress = encodeAddress(await $ethClient.chains[chainId].account.methods.getAcuAccount(foreignAddress).call());
-        store.foreignAccountAcuAccountSet(chainId, foreignAddress, mappedAcuAddress);
-      }
+      let mappedAcuAddress = encodeAddress(await $ethClient.chains[chainId].rpc.account.methods.getAcuAccount(foreignAddress).call());
+      store.foreignAccountAcuAccountSet(chainId, foreignAddress, mappedAcuAddress);
     }
-    catch (e) {}
+    catch (e) {
+      console.error(e);
+    }
   }
 };
 
@@ -110,12 +110,10 @@ onMounted(async () => {
   });
 
   for (let chainId of Object.keys(store.ethChains)) {
-    if ($ethClient.chains[chainId].account) {
-      let emitter = $ethClient.chains[chainId].account.events.allEvents()
-    	.on('data', async (log: any) => {
-        load();
-      });
-    }
+    let emitter = $ethClient.chains[chainId].ws.account.events.allEvents()
+  	.on('data', async (log: any) => {
+      load();
+    });
   }
 
   load();

@@ -40,7 +40,7 @@ let decimals = 18;
 
 async function load() {
 
-  let token = new $ethClient.chains[store.metaMaskChainId].web3.eth.Contract(erc20Abi, route.params.address);
+  let token = new $ethClient.chains[store.metaMaskChainId].ws.web3.eth.Contract(erc20Abi, route.params.address);
   let contractAddress = $ethClient.chainsData[store.metaMaskChainId].contracts.atomicSwapERC20;
 
   name.value = store.tokens[store.metaMaskChainId][route.params.address as string].name;
@@ -51,7 +51,7 @@ async function load() {
 }
 
 onMounted(async () => {
-  let token = new $ethClient.chains[store.metaMaskChainId].web3.eth.Contract(erc20Abi, route.params.address);
+  let token = new $ethClient.chains[store.metaMaskChainId].ws.web3.eth.Contract(erc20Abi, route.params.address);
   let emitter = token.events.allEvents()
   .on('data', function(event: any){
     load();

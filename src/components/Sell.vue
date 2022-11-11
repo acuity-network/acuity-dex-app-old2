@@ -246,14 +246,14 @@ async function load() {
       if (polkadotBuyAsset.value == "0") {
         if (store.buyChainId) {
           try {
-            buyBalance.value = $ethClient.formatWei(await $ethClient.chains[store.buyChainId].web3.eth.getBalance(store.metaMaskAccount), buyDecimals.value);
+            buyBalance.value = $ethClient.formatWei(await $ethClient.chains[store.buyChainId].rpc.web3.eth.getBalance(store.metaMaskAccount), buyDecimals.value);
           }
           catch (e) {};
         }
       }
       else {
         try {
-          let token = new $ethClient.chains[metaMaskChainId.value].web3.eth.Contract(erc20Abi, polkadotBuyAsset.value);
+          let token = new $ethClient.chains[metaMaskChainId.value].rpc.web3.eth.Contract(erc20Abi, polkadotBuyAsset.value);
           buyBalance.value = $ethClient.formatWei(await token.methods
             .balanceOf(store.metaMaskAccount)
             .call(), buyDecimals.value);
@@ -266,14 +266,14 @@ async function load() {
       if (metaMaskSellAsset.value == "0") {
         if (metaMaskChainId.value) {
           try {
-            sellBalance.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].web3.eth.getBalance(store.metaMaskAccount), sellDecimals.value);
+            sellBalance.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].rpc.web3.eth.getBalance(store.metaMaskAccount), sellDecimals.value);
           }
           catch (e) {};
         }
       }
       else {
         try {
-          let token = new $ethClient.chains[metaMaskChainId.value].web3.eth.Contract(erc20Abi, metaMaskSellAsset.value);
+          let token = new $ethClient.chains[metaMaskChainId.value].rpc.web3.eth.Contract(erc20Abi, metaMaskSellAsset.value);
           sellBalance.value = $ethClient.formatWei(await token.methods
             .balanceOf(store.metaMaskAccount)
             .call(), sellDecimals.value);
@@ -289,14 +289,14 @@ async function load() {
         if (metaMaskBuyAsset.value == "0") {
           if (store.buyChainId) {
             try {
-              buyBalance.value = $ethClient.formatWei(await $ethClient.chains[store.buyChainId].web3.eth.getBalance(store.metaMaskAccount), buyDecimals.value);
+              buyBalance.value = $ethClient.formatWei(await $ethClient.chains[store.buyChainId].rpc.web3.eth.getBalance(store.metaMaskAccount), buyDecimals.value);
             }
             catch (e) {};
           }
         }
         else {
           try {
-            let token = new $ethClient.chains[store.buyChainId].web3.eth.Contract(erc20Abi, metaMaskBuyAsset.value);
+            let token = new $ethClient.chains[store.buyChainId].rpc.web3.eth.Contract(erc20Abi, metaMaskBuyAsset.value);
             buyBalance.value = $ethClient.formatWei(await token.methods
               .balanceOf(store.metaMaskAccount)
               .call(), buyDecimals.value);
@@ -319,13 +319,13 @@ async function load() {
 
 onMounted(async () => {
   if (metaMaskChainId.value && $ethClient.chains[metaMaskChainId.value]) {
-    emitter = $ethClient.chains[metaMaskChainId.value].atomicSwap.events.allEvents()
+    emitter = $ethClient.chains[metaMaskChainId.value].ws.atomicSwap.events.allEvents()
     .on('data', async (log: any) => {
       load();
     });
   }
   if (metaMaskChainId.value && $ethClient.chains[metaMaskChainId.value]) {
-    emitter = $ethClient.chains[metaMaskChainId.value].atomicSwapERC20.events.allEvents()
+    emitter = $ethClient.chains[metaMaskChainId.value].ws.atomicSwapERC20.events.allEvents()
     .on('data', async (log: any) => {
       load();
     });
@@ -339,14 +339,14 @@ watch(wallet, async (newValue, oldValue) => {
 
 watch(metaMaskChainId, async (newValue, oldValue) => {
   if (newValue && $ethClient.chains[newValue]?.atomicSwap) {
-    emitter = $ethClient.chains[newValue].atomicSwap.events.allEvents()
+    emitter = $ethClient.chains[newValue].ws.atomicSwap.events.allEvents()
   	.on('data', async (log: any) => {
       load();
     });
   }
 
   if (newValue && $ethClient.chains[newValue]?.atomicSwapERC20) {
-    emitter = $ethClient.chains[newValue].atomicSwapERC20.events.allEvents()
+    emitter = $ethClient.chains[newValue].ws.atomicSwapERC20.events.allEvents()
   	.on('data', async (log: any) => {
       load();
     });

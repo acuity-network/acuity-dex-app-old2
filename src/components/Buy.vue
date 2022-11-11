@@ -118,7 +118,7 @@ const sellOrders: Ref<any[]> = ref([]);
 
 async function getAcuAddress(foreignAddress: string): Promise<string> {
   if (!store.sellChainId) return "";
-  return encodeAddress(await $ethClient.chains[store.sellChainId].account.methods.getAcuAccount(foreignAddress).call());
+  return encodeAddress(await $ethClient.chains[store.sellChainId].rpc.account.methods.getAcuAccount(foreignAddress).call());
 }
 
 async function loadName(address: string): Promise<string> {
@@ -184,10 +184,6 @@ async function load() {
 
 /*
   if (!$ethClient.chains[store.sellChainId]) {
-    return;
-  }
-
-  if (!$ethClient.chains[store.sellChainId].atomicSwap) {
     return;
   }
 */
