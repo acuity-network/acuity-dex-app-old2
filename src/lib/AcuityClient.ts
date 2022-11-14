@@ -197,13 +197,13 @@ export default class MixClient {
 			},
     }).then(async api => {
       this.api = api;
-      await this.api.isReady
+      this.api.isReady.then(async () => {
+        const allInjected = await web3Enable('Acuity DEX');
+    	  let accountsAcu = await web3Accounts();
+    		let store = main();
+    		store.accountsAcuSet(accountsAcu);
+      });
     });
-
-    const allInjected = await web3Enable('Acuity DEX');
-	  let accountsAcu = await web3Accounts();
-		let store = main();
-		store.accountsAcuSet(accountsAcu);
 
 		return this;
   }
