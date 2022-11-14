@@ -41,91 +41,94 @@ export default class EthClient {
   db: any;
   provider: any;
 	web3: any;
-  formatWei: any;
-  unformatWei: any;
   account: any;
   atomicSwap: any;
   atomicSwapERC20: any;
 	chains: { [key: number]: any; } = {};
   chainsData: any = import.meta.env.DEV ? ethChainsDataTestnetsJson : ethChainsDataJson;
 
+  formatWei: any = (wei: string, decimals: number = 18) => {
+    let divisor = BigInt(10) ** BigInt(decimals);
+    let integer = (BigInt(wei) / divisor).toLocaleString();
+    let decimal = this.web3.utils.padLeft((BigInt(wei) % divisor).toString(), decimals);
+    let displayDecimals = decimal.length;
+
+    while(displayDecimals != 0 && decimal[displayDecimals - 1] == '0') {
+      displayDecimals--;
+    }
+
+    decimal = decimal.slice(0, displayDecimals);
+    return integer + ((decimal == '') ? '' : ('.' + decimal));
+  };
+
+  unformatWei: any = (formatted: string, decimals: number = 18) => {
+    let result = formatted.replaceAll(',', '').split('.', 2);
+    let integer = result[0];
+    let decimal = result[1];
+    if (!decimal) decimal = '';
+    if (decimal.length > decimals) return BigInt(0);
+
+    try {
+      return BigInt(integer) * (BigInt(10) ** BigInt(decimals)) + BigInt(this.web3.utils.padRight(decimal, decimals));
+    }
+    catch (e) {
+      return BigInt(0);
+    }
+  };
+
+
 	async init(db: any) {
     this.db = db;
-    this.provider = await detectEthereumProvider();
-		store = main();
+    store = main();
 
-    if (this.provider) {
-      this.web3 = new Web3(this.provider);
-  		this.web3.eth.defaultBlock = 'pending';
-  		this.web3.eth.transactionConfirmationBlocks = 1;
-      this.formatWei = (wei: string, decimals: number = 18) => {
-        let divisor = BigInt(10) ** BigInt(decimals);
-        let integer = (BigInt(wei) / divisor).toLocaleString();
-        let decimal = this.web3.utils.padLeft((BigInt(wei) % divisor).toString(), decimals);
-        let displayDecimals = decimal.length;
+    detectEthereumProvider().then(async provider => {
+      this.provider = provider;
 
-        while(displayDecimals != 0 && decimal[displayDecimals - 1] == '0') {
-          displayDecimals--;
+      if (this.provider) {
+        this.web3 = new Web3(this.provider);
+    		this.web3.eth.defaultBlock = 'pending';
+    		this.web3.eth.transactionConfirmationBlocks = 1;
+
+        this.provider
+          .on('chainChanged', (chainIdHex: string) => {
+            let chainId = parseInt(chainIdHex, 16);
+            store.metaMaskChainIdSet(chainId);
+            if (this.chainsData.hasOwnProperty(chainId)) {
+              this.account = new this.web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
+          		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
+              this.atomicSwapERC20 = new this.web3.eth.Contract(atomicSwapERC20Abi, this.chainsData[chainId].contracts.atomicSwapERC20);
+            }
+          })
+          .on('accountsChanged', (accounts: any) => {
+    				store.metaMaskAccountSet(accounts[0].toLowerCase());
+          });
+
+        let chainId = await this.web3.eth.getChainId();
+        store.metaMaskChainIdSet(chainId);
+
+        if (this.chainsData.hasOwnProperty(chainId)) {
+          this.account = new this.web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
+      		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
+          this.atomicSwapERC20 = new this.web3.eth.Contract(atomicSwapERC20Abi, this.chainsData[chainId].contracts.atomicSwapERC20);
         }
 
-        decimal = decimal.slice(0, displayDecimals);
-        return integer + ((decimal == '') ? '' : ('.' + decimal));
-      }
+        let accounts = await this.web3.eth.requestAccounts();
+  			store.metaMaskAccountSet(accounts[0].toLowerCase());
 
-      this.unformatWei = (formatted: string, decimals: number = 18) => {
-        let result = formatted.replaceAll(',', '').split('.', 2);
-        let integer = result[0];
-        let decimal = result[1];
-        if (!decimal) decimal = '';
-        if (decimal.length > decimals) return BigInt(0);
-
-        try {
-          return BigInt(integer) * (BigInt(10) ** BigInt(decimals)) + BigInt(this.web3.utils.padRight(decimal, decimals));
-        }
-        catch (e) {
-          return BigInt(0);
-        }
-      }
-
-      this.provider
-        .on('chainChanged', (chainIdHex: string) => {
-          let chainId = parseInt(chainIdHex, 16);
-          store.metaMaskChainIdSet(chainId);
-          if (this.chainsData.hasOwnProperty(chainId)) {
-            this.account = new this.web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
-        		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
-            this.atomicSwapERC20 = new this.web3.eth.Contract(atomicSwapERC20Abi, this.chainsData[chainId].contracts.atomicSwapERC20);
+  			for await (const [key, json] of this.db.iterator({
+  		    gt: '/chains/',
+          lt: '/chains/z',
+  		  })) {
+          try {
+            let chain = JSON.parse(json);
+            this.loadChain(chain);
           }
-        })
-        .on('accountsChanged', (accounts: any) => {
-  				store.metaMaskAccountSet(accounts[0].toLowerCase());
-        });
-
-      let chainId = await this.web3.eth.getChainId();
-      store.metaMaskChainIdSet(chainId);
-
-      if (this.chainsData.hasOwnProperty(chainId)) {
-        this.account = new this.web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
-    		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
-        this.atomicSwapERC20 = new this.web3.eth.Contract(atomicSwapERC20Abi, this.chainsData[chainId].contracts.atomicSwapERC20);
+          catch (e) {}
+  		  }
+      } else {
+        console.log('Please install MetaMask!');
       }
-
-      let accounts = await this.web3.eth.requestAccounts();
-			store.metaMaskAccountSet(accounts[0].toLowerCase());
-
-			for await (const [key, json] of this.db.iterator({
-		    gt: '/chains/',
-        lt: '/chains/z',
-		  })) {
-        try {
-          let chain = JSON.parse(json);
-          this.loadChain(chain);
-        }
-        catch (e) {}
-		  }
-    } else {
-      console.log('Please install MetaMask!');
-    }
+    });
 
 		return this;
   }
@@ -135,6 +138,7 @@ export default class EthClient {
 
     try {
       chain.label = this.chainsData[chain.chainId].label;
+      console.log("Loading ", chain.label);
       store.ethChainSet(chain);
       if (chain.ws == '') return;
 
