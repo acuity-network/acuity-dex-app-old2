@@ -53,7 +53,7 @@ let $ethClient: any = inject('$ethClient');
 
 const blockNumber = ref(0)
 
-let balanceUnsub;
+let balanceUnsub: any;
 
 onMounted(async () => {
   $acuityClient.api.rpc.chain.subscribeNewHeads((lastHeader: any) => {
@@ -65,6 +65,8 @@ onMounted(async () => {
     store.activeAcuSet(activeAccount);
   }
   catch (e) {}
+
+  $ethClient.loadBalances();
 })
 
 watch(() => store.activeAcu, async (newValue, oldValue) => {
@@ -76,9 +78,11 @@ watch(() => store.activeAcu, async (newValue, oldValue) => {
   }
   catch (e) {}
 
-  balanceUnsub = $acuityClient.api.query.system.account(newValue, ({ data: { free: currentFree }, nonce: currentNonce }) => {
-    store.acuBalanceSet(newValue, $ethClient.formatWei(currentFree));
+  balanceUnsub = $acuityClient.api.query.system.account(newValue, (result: any) => {
+    store.acuBalanceSet(newValue, $ethClient.formatWei(result.data.free));
   });
+
+  $ethClient.loadBalances();
 });
 
 async function onboardMetaMask(event: any) {
@@ -106,6 +110,34 @@ async function onboardMetaMask(event: any) {
       </v-list>
       <v-select v-model="store.activeAcu" :items="store.accountsAcu" label="Acuity account"></v-select>
       <v-text-field v-model="store.acuBalance[store.activeAcu]" label="Balance" suffix="ACU" readonly></v-text-field>
+
+      <v-list density="compact">
+        <v-list-item
+          v-for="chain in store.ethChains"
+          :key="chain.chainId"
+          :title="chain.label"
+        >
+        <template v-if="store.acuAccountForeignAccount[chain.chainId] && store.chainBalance[chain.chainId]">
+          <v-text-field
+            v-model="store.chainBalance[chain.chainId][store.acuAccountForeignAccount[chain.chainId][store.activeAcu]]"
+            :suffix="$ethClient.chainsData[chain.chainId].symbol"
+            readonly
+          ></v-text-field>
+
+          <template v-if="store.tokens[chain.chainId] && store.tokenBalance[chain.chainId]">
+            <template v-for="(token, address) in store.tokens[chain.chainId]">
+              <v-text-field
+                v-if="store.tokenBalance[chain.chainId][address]"
+                v-model="store.tokenBalance[chain.chainId][address][store.acuAccountForeignAccount[chain.chainId][store.activeAcu]]"
+                :suffix="token.symbol"
+                readonly
+              ></v-text-field>
+            </template>
+          </template>
+        </template>
+        </v-list-item>
+      </v-list>
+
       <v-btn block color="rgb(227, 126, 6)" class="my-2" target="_blank" href="https://polkadot.js.org/extension/">polkadot{.js}</v-btn>
       <v-btn block color="rgb(3, 125, 214)" class="my-2" @click="onboardMetaMask">MetaMask</v-btn>
     </v-navigation-drawer>

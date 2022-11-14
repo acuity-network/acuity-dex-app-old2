@@ -16,6 +16,9 @@ const atomicSwapAbi: any = atomicSwapAbiJson;
 import atomicSwapERC20AbiJson from '../lib/contracts/AcuityAtomicSwapERC20.abi.json'
 const atomicSwapERC20Abi: any = atomicSwapERC20AbiJson;
 
+import erc20AbiJson from '../lib/contracts/ERC20.abi.json'
+const erc20Abi: any = erc20AbiJson;
+
 import rpcAbiJson from '../lib/contracts/AcuityRPC.abi.json'
 const rpcAbi: any = rpcAbiJson;
 
@@ -178,6 +181,31 @@ export default class EthClient {
       let info = JSON.parse(json);
 
       store.tokenSet(chain.chainId, address, info);
+    }
+  }
+
+  async loadBalances() {
+    for (let key in store.ethChains) {
+      let chainId: number = parseInt(key);
+      if (store.acuAccountForeignAccount[chainId]) {
+        let chainAccount = store.acuAccountForeignAccount[chainId][store.activeAcu];
+        if (chainAccount) {
+          let balance = this.formatWei(await this.chains[chainId].rpc.web3.eth.getBalance(chainAccount), 18);
+          store.chainBalanceSet(chainId, chainAccount, balance);
+          for (let tokenAddress in store.tokens[chainId]) {
+            try {
+              let token = new this.chains[chainId].rpc.web3.eth.Contract(erc20Abi, tokenAddress);
+              let balance = this.formatWei(await token.methods
+                .balanceOf(chainAccount)
+                .call(), store.tokens[chainId][tokenAddress].decimals);
+              store.tokenBalanceSet(chainId, tokenAddress, chainAccount, balance);
+            }
+            catch (e) {
+              console.log(e);
+            };
+          }
+        }
+      }
     }
   }
 

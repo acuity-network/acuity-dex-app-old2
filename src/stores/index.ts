@@ -10,6 +10,7 @@ export const main = defineStore('main', {
 		activeAcu: "" as string,
     activeAcuName: "" as string,
     acuBalance: {} as any,
+    chainBalance: {} as any,
 		accountsAcu: [] as any[],
     addressesAcu: [] as string[],
     metaMaskChainId: 0 as number,
@@ -28,6 +29,7 @@ export const main = defineStore('main', {
     foreignAccountAcuAccount: {} as any,
     acuAccountForeignAccount: {} as any,
     tokens: {} as any,
+    tokenBalance: {} as any,
   }),
   getters: {
   },
@@ -44,6 +46,12 @@ export const main = defineStore('main', {
     acuBalanceSet(address: string, balance: string) {
 			this.acuBalance[address] = balance;
 		},
+    chainBalanceSet(chainId: number, address: string, balance: string) {
+      if (!this.chainBalance[chainId]) {
+        this.chainBalance[chainId] = {}
+      }
+      this.chainBalance[chainId][address] = balance;
+    },
 		accountsAcuSet(accounts: any[]) {
 			this.accountsAcu = [];
       this.addressesAcu = [];
@@ -79,14 +87,15 @@ export const main = defineStore('main', {
       this.endpoints[endpoint].height = BigInt(height).toLocaleString();
     },
     ethChainSet(chain: any) {
-      if (!(chain.chainId in this.ethChains)) {
+      let chainId: number = parseInt(chain.chainId);
+      if (!(chainId in this.ethChains)) {
         this.chainSelect.push({
-          value: chain.chainId,
+          value: chainId,
           title: chain.label,
         });
       }
-      this.ethChains[chain.chainId] = {
-        chainId: chain.chainId,
+      this.ethChains[chainId] = {
+        chainId: chainId,
         label: chain.label,
         ws: chain.ws,
         rpc: chain.rpc,
@@ -107,11 +116,15 @@ export const main = defineStore('main', {
       this.ethChains[chainId].height = BigInt(height).toLocaleString();
     },
     foreignAccountAcuAccountSet(chainId: number, foreignAccount: string, acuAccount: string) {
-      this.foreignAccountAcuAccount[chainId] = {};
+      if (!this.foreignAccountAcuAccount[chainId]) {
+       this.foreignAccountAcuAccount[chainId] = {};
+      }
       this.foreignAccountAcuAccount[chainId][foreignAccount] = acuAccount;
     },
     acuAccountForeignAccountSet(chainId: number, acuAccount: string, foreignAccount: string) {
-      this.acuAccountForeignAccount[chainId] = {};
+      if (!this.acuAccountForeignAccount[chainId]) {
+        this.acuAccountForeignAccount[chainId] = {};
+      }
       this.acuAccountForeignAccount[chainId][acuAccount] = foreignAccount;
     },
     tokenSet(chainId: number, address: string, info: object) {
@@ -119,6 +132,15 @@ export const main = defineStore('main', {
         this.tokens[chainId] = {};
       }
       this.tokens[chainId][address] = info;
+    },
+    tokenBalanceSet(chainId: number, token: string, address: string, balance: string) {
+      if (!this.tokenBalance[chainId]) {
+        this.tokenBalance[chainId] = {};
+      }
+      if (!this.tokenBalance[chainId][token]) {
+        this.tokenBalance[chainId][token] = {};
+      }
+      this.tokenBalance[chainId][token][address] = balance;
     },
   },
 })

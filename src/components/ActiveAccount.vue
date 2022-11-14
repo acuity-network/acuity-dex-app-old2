@@ -92,9 +92,7 @@ async function load() {
       let mappedAcuAddress = encodeAddress(await $ethClient.chains[chainId].rpc.account.methods.getAcuAccount(foreignAddress).call());
       store.foreignAccountAcuAccountSet(chainId, foreignAddress, mappedAcuAddress);
     }
-    catch (e) {
-      console.error(e);
-    }
+    catch (e) {}
   }
 };
 
@@ -194,12 +192,13 @@ async function setForeignAccount(event: any) {
     setForeignAccountWaiting.value = false;
     setForeignAccountDisabled.value = false;
   }
+  $ethClient.loadBalances();
 }
 
 async function setAcuAccount(event: any) {
   setAcuAccountDisabled.value = true;
   let acuAddressHex = '0x' + Buffer.from(decodeAddress(store.activeAcu)).toString('hex');
-  $ethClient.account.methods
+  await $ethClient.account.methods
     .setAcuAccount(acuAddressHex)
     .send({from: store.metaMaskAccount})
     .on('transactionHash', function(payload: any) {
@@ -213,6 +212,7 @@ async function setAcuAccount(event: any) {
       setAcuAccountWaiting.value = false;
       setAcuAccountDisabled.value = false;
     });
+  $ethClient.loadBalances();
 }
 
 </script>

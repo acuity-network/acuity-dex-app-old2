@@ -18,9 +18,6 @@ let $ethClient: any = inject('$ethClient');
 let route = useRoute();
 let router = useRouter();
 
-import erc20AbiJson from '../lib/contracts/ERC20.abi.json'
-const erc20Abi: any = erc20AbiJson;
-
 const store = main();
 const chains = computed(() => store.ethChains);
 const chainSelect = computed(() => store.chainSelect);
@@ -68,7 +65,6 @@ let metaMaskSellAssetItems: any = computed(() => {
 
   return assets;
 });
-let sellBalance = ref('');
 
 let metaMaskBuyAsset = ref('0');
 let metaMaskBuyAssetItems: any = computed(() => {
@@ -121,8 +117,6 @@ let polkadotBuyAssetItems: any = computed(() => {
 
   return assets;
 });
-
-let buyBalance = ref('');
 
 function getSubstrateAssetId(): string {
   return $ethClient.web3.utils.padRight('0x0001', 64);
@@ -234,77 +228,6 @@ async function load() {
 
   console.log("sellAssetId:", sellAssetIdHex.value);
   console.log("buyAssetId:", buyAssetIdHex.value);
-
-  sellBalance.value = '';
-  buyBalance.value = '';
-
-  switch(wallet.value) {
-    case 'polkadot':
-      let result = await $acuityClient.api.query.system.account(store.activeAcu);
-      sellBalance.value = $ethClient.formatWei(result.data.free, sellDecimals.value);
-
-      if (polkadotBuyAsset.value == "0") {
-        if (store.buyChainId) {
-          try {
-            buyBalance.value = $ethClient.formatWei(await $ethClient.chains[store.buyChainId].rpc.web3.eth.getBalance(store.metaMaskAccount), buyDecimals.value);
-          }
-          catch (e) {};
-        }
-      }
-      else {
-        try {
-          let token = new $ethClient.chains[metaMaskChainId.value].rpc.web3.eth.Contract(erc20Abi, polkadotBuyAsset.value);
-          buyBalance.value = $ethClient.formatWei(await token.methods
-            .balanceOf(store.metaMaskAccount)
-            .call(), buyDecimals.value);
-          }
-          catch (e) {};
-      }
-      break;
-
-    case 'metamask':
-      if (metaMaskSellAsset.value == "0") {
-        if (metaMaskChainId.value) {
-          try {
-            sellBalance.value = $ethClient.formatWei(await $ethClient.chains[metaMaskChainId.value].rpc.web3.eth.getBalance(store.metaMaskAccount), sellDecimals.value);
-          }
-          catch (e) {};
-        }
-      }
-      else {
-        try {
-          let token = new $ethClient.chains[metaMaskChainId.value].rpc.web3.eth.Contract(erc20Abi, metaMaskSellAsset.value);
-          sellBalance.value = $ethClient.formatWei(await token.methods
-            .balanceOf(store.metaMaskAccount)
-            .call(), sellDecimals.value);
-          }
-          catch (e) {};
-      }
-
-      if (store.buyChainId == 0) {
-        let result = await $acuityClient.api.query.system.account(store.activeAcu);
-        buyBalance.value = $ethClient.formatWei(result.data.free, buyDecimals.value);
-      }
-      else {
-        if (metaMaskBuyAsset.value == "0") {
-          if (store.buyChainId) {
-            try {
-              buyBalance.value = $ethClient.formatWei(await $ethClient.chains[store.buyChainId].rpc.web3.eth.getBalance(store.metaMaskAccount), buyDecimals.value);
-            }
-            catch (e) {};
-          }
-        }
-        else {
-          try {
-            let token = new $ethClient.chains[store.buyChainId].rpc.web3.eth.Contract(erc20Abi, metaMaskBuyAsset.value);
-            buyBalance.value = $ethClient.formatWei(await token.methods
-              .balanceOf(store.metaMaskAccount)
-              .call(), buyDecimals.value);
-            }
-            catch (e) {};
-        }
-      }
-  }
 
   if (sellAssetIdHex.value && buyAssetIdHex.value) {
     try {
@@ -424,7 +347,6 @@ async function goto(event: any) {
         <template v-if="wallet == 'metamask'">
           <v-text-field v-model="store.metaMaskChainName" label="Sell chain" readonly hint="Select in MetaMask." persistent-hint></v-text-field>
           <v-select v-model="metaMaskSellAsset" :items="metaMaskSellAssetItems" label="Sell asset"></v-select>
-          <v-text-field v-model="sellBalance" label="Sell balance" :suffix="sellSymbol" readonly></v-text-field>
           <v-select v-model="store.buyChainId" :items="chainSelect" label="Buy chain"></v-select>
           <v-select v-model="metaMaskBuyAsset" :items="metaMaskBuyAssetItems" label="Buy asset"></v-select>
         </template>
@@ -432,12 +354,9 @@ async function goto(event: any) {
         <template v-if="wallet == 'polkadot'">
           <v-select v-model="substrateChain" :items="substrateChains" label="Sell chain"></v-select>
           <v-text-field v-model="polkadotSellAsset" label="Sell asset" readonly></v-text-field>
-          <v-text-field v-model="sellBalance" label="Sell balance" :suffix="sellSymbol" readonly></v-text-field>
           <v-select v-model="store.buyChainId" :items="chainSelect" label="Buy chain"></v-select>
           <v-select v-model="polkadotBuyAsset" :items="polkadotBuyAssetItems" label="Buy asset"></v-select>
         </template>
-
-        <v-text-field v-model="buyBalance" label="Buy balance" :suffix="buySymbol" readonly></v-text-field>
 
         <v-card class="mb-10">
           <v-toolbar color="blue">
