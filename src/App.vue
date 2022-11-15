@@ -156,7 +156,7 @@ async function onboardMetaMask(event: any) {
           </v-col>
         </v-row>
       </v-container>
-      <router-view></router-view>
+      <router-view v-if="store.acuLoaded && store.ethLoaded"></router-view>
     </v-main>
     <v-footer app>
     </v-footer>

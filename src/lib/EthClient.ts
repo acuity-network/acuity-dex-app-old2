@@ -133,6 +133,8 @@ export default class EthClient {
       }
     });
 
+    store.setEthLoaded();
+
 		return this;
   }
 
