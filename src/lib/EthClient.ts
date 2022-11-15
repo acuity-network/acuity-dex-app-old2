@@ -124,16 +124,17 @@ export default class EthClient {
   		  })) {
           try {
             let chain = JSON.parse(json);
-            this.loadChain(chain);
+            await this.loadChain(chain);
           }
           catch (e) {}
   		  }
       } else {
         console.log('Please install MetaMask!');
       }
-    });
 
-    store.setEthLoaded();
+      store.setEthLoaded();
+
+    });
 
 		return this;
   }
