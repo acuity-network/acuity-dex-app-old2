@@ -150,7 +150,7 @@ async function onboardMetaMask(event: any) {
     <v-main>
       <v-container class="pt-0">
         <v-row class="pt-0" >
-          <v-col cols="12" md="10" class="pt-0">
+          <v-col cols="12" lg="10" class="pt-0">
             <v-alert type="info">Acuity DEX is undergoing beta testing. Don't attempt any large trades.<br />
             Join the <a style="color: white;" target="_blank" href="https://t.me/Acuity_Trading">Acuity Trading</a> Telegram group.</v-alert>
           </v-col>

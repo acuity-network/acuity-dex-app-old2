@@ -220,7 +220,7 @@ async function setAcuAccount(event: any) {
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" md="10">
+      <v-col cols="12" lg="10">
         <v-card class="mb-10">
           <v-toolbar color="blue">
             <v-toolbar-title>Public Identity</v-toolbar-title>
@@ -243,7 +243,7 @@ async function setAcuAccount(event: any) {
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" md="10">
+      <v-col cols="12" lg="10">
         <v-table class="mb-10">
           <thead>
             <tr>

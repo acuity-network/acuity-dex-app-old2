@@ -1273,7 +1273,7 @@ async function timeoutSellLock(lock: any) {
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" md="10">
+      <v-col cols="12" lg="10">
         <v-text-field readonly v-model="sellerName" label="Seller" hint="Who is selling." persistent-hint></v-text-field>
         <v-text-field readonly v-model="sellChain" label="Sell chain" persistent-hint></v-text-field>
         <v-text-field readonly v-model="sellAsset" label="Sell asset" hint="Asset being sold." persistent-hint></v-text-field>

@@ -105,7 +105,7 @@ async function addMetaMask(event: any) {
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" md="10">
+      <v-col cols="12" lg="10">
         <v-table class="mb-10">
           <thead>
             <tr>
