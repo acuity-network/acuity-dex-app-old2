@@ -30,10 +30,8 @@ const sellerAccountId = ref("");
 const sellerName = ref("");
 const sellChainId = ref(0);
 const sellToken = ref("");
-const sellBalance = ref("");
 const buyChainId = ref(0);
 const buyToken = ref("");
-const buyBalance = ref("");
 const price = ref("");
 const value = ref("");
 const total = ref("");
@@ -161,71 +159,6 @@ async function load() {
   time.value = Date.now();
 
   let newLocks: any = {};
-
-  sellBalance.value = '';
-  buyBalance.value = '';
-
-  if (sellChainId.value == 0) {
-    let result = await $acuityClient.api.query.system.account(store.activeAcu);
-    sellBalance.value = $ethClient.formatWei(result.data.free, sellDecimals.value);
-  }
-  else {
-    let sellChainIdHex = '0x0002';
-    sellChainIdHex += $ethClient.web3.utils.stripHexPrefix($ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellChainId.value), 12));
-    let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(store.activeAcu, sellChainIdHex)).unwrap();
-    let buyerAddressSellChain = '0x' + Buffer.from(result).toString('hex').slice(24);
-
-    if (sellToken.value == "0x0000000000000000000000000000000000000000") {
-      try {
-        sellBalance.value = $ethClient.formatWei(await $ethClient.chains[sellChainId.value].rpc.web3.eth.getBalance(buyerAddressSellChain), sellDecimals.value);
-      }
-      catch (e) {
-        console.error(e);
-      };
-    }
-    else {
-      try {
-        let token = new $ethClient.chains[sellChainId.value].rpc.web3.eth.Contract(erc20Abi, sellToken.value);
-        sellBalance.value = $ethClient.formatWei(await token.methods
-          .balanceOf(buyerAddressSellChain)
-          .call(), sellDecimals.value);
-        }
-        catch (e) {
-          console.error(e);
-        };
-    }
-  }
-
-  if (buyChainId.value == 0) {
-    let result = await $acuityClient.api.query.system.account(store.activeAcu);
-    buyBalance.value = $ethClient.formatWei(result.data.free, sellDecimals.value);
-  }
-  else {
-    let buyChainIdHex = '0x0002';
-    buyChainIdHex += $ethClient.web3.utils.stripHexPrefix($ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(buyChainId.value), 12));
-    let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(store.activeAcu, buyChainIdHex)).unwrap();
-    let buyerAddressBuyChain = '0x' + Buffer.from(result).toString('hex').slice(24);
-
-    if (buyToken.value == "0x0000000000000000000000000000000000000000") {
-      try {
-        buyBalance.value = $ethClient.formatWei(await $ethClient.chains[buyChainId.value].rpc.web3.eth.getBalance(buyerAddressBuyChain), buyDecimals.value);
-      }
-      catch (e) {
-        console.error(e);
-      };
-    }
-    else {
-      try {
-        let token = new $ethClient.chains[buyChainId.value].rpc.web3.eth.Contract(erc20Abi, buyToken.value);
-        buyBalance.value = $ethClient.formatWei(await token.methods
-          .balanceOf(buyerAddressBuyChain)
-          .call(), buyDecimals.value);
-        }
-        catch (e) {
-          console.error(e);
-        };
-    }
-  }
 
   let buyHeight;
   let sellHeight;
@@ -637,6 +570,7 @@ onMounted(async () => {
   buyChainId.value = $ethClient.web3.utils.hexToNumber('0x' + route.params.buyAssetId.slice(6, 18));
   buyToken.value = '0x' + route.params.buyAssetId.slice(26, 66);
 
+  // Get seller address on sell chain.
   if (sellChainId.value == 0) {
     sellerAddressSellChain.value = sellerAccountId.value;
   }
@@ -647,6 +581,7 @@ onMounted(async () => {
     sellerAddressSellChain.value = '0x' + Buffer.from(result).toString('hex').slice(24);
   }
 
+  // Get seller address on buy chain.
   if (buyChainId.value == 0) {
     sellerAddressBuyChain.value = sellerAccountId.value;
   }
@@ -1277,10 +1212,8 @@ async function timeoutSellLock(lock: any) {
         <v-text-field readonly v-model="sellerName" label="Seller" hint="Who is selling." persistent-hint></v-text-field>
         <v-text-field readonly v-model="sellChain" label="Sell chain" persistent-hint></v-text-field>
         <v-text-field readonly v-model="sellAsset" label="Sell asset" hint="Asset being sold." persistent-hint></v-text-field>
-        <v-text-field readonly v-model="sellBalance" label="Your sell asset balance" hint="Your current balance of the asset being sold." persistent-hint :suffix="sellSymbol"></v-text-field>
         <v-text-field readonly v-model="buyChain" label="Buy chain" persistent-hint></v-text-field>
         <v-text-field readonly v-model="buyAsset" label="Buy asset" hint="Asset to pay with." persistent-hint></v-text-field>
-        <v-text-field readonly v-model="buyBalance" label="Your buy asset balance" hint="Your current balance of the asset you can buy with." persistent-hint :suffix="buySymbol"></v-text-field>
         <v-text-field readonly v-model="price" label="Price" :suffix="buySymbol + ' / ' + sellSymbol" hint="Price asset is being sold for." persistent-hint></v-text-field>
         <v-text-field readonly v-model="value" label="Value" :suffix="sellSymbol" hint="How much is for sale." persistent-hint></v-text-field>
         <v-text-field readonly v-model="total" label="Total" :suffix="buySymbol" hint="Maximum that can be paid." persistent-hint></v-text-field>
