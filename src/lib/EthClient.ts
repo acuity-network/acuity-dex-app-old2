@@ -1,6 +1,7 @@
 import detectEthereumProvider from '@metamask/detect-provider';
 import Web3 from 'web3'
 import { encodeAddress } from '@polkadot/keyring';
+import { Buffer } from "buffer";
 import { main } from '../stores/index'
 let store: any;
 
@@ -42,6 +43,7 @@ function newEndpoint(chainId: number, uri: string) {
 
 export default class EthClient {
   db: any;
+  acuityClient: any;
   provider: any;
 	web3: any;
   account: any;
@@ -79,12 +81,12 @@ export default class EthClient {
     }
   };
 
-
-	async init(db: any) {
+	async init(db: any, acuityClient: any) {
     this.db = db;
+    this.acuityClient = acuityClient;
     store = main();
 
-    detectEthereumProvider().then(async provider => {
+    await detectEthereumProvider().then(async provider => {
       this.provider = provider;
 
       if (this.provider) {
@@ -131,9 +133,6 @@ export default class EthClient {
       } else {
         console.log('Please install MetaMask!');
       }
-
-      store.setEthLoaded();
-
     });
 
 		return this;
@@ -184,6 +183,26 @@ export default class EthClient {
       let info = JSON.parse(json);
 
       store.tokenSet(chain.chainId, address, info);
+    }
+  }
+
+  async loadAccounts() {
+    for (let chainIdKey of Object.keys(store.ethChains)) {
+      let chainId = parseInt(chainIdKey);
+      let chainIdHex = '0x0002';
+      chainIdHex += this.web3.utils.stripHexPrefix(this.web3.utils.padLeft(this.web3.utils.toHex(chainId), 12));
+
+      try {
+        let result = (await this.acuityClient.api.query.orderbook.accountForeignAccount(store.activeAcu, chainIdHex)).unwrap();
+        let foreignAddress = '0x' + Buffer.from(result).toString('hex').slice(24);
+        store.acuAccountForeignAccountSet(chainId, store.activeAcu, foreignAddress);
+
+        let mappedAcuAddress = encodeAddress(await this.chains[chainId].rpc.account.methods.getAcuAccount(foreignAddress).call());
+        store.foreignAccountAcuAccountSet(chainId, foreignAddress, mappedAcuAddress);
+      }
+      catch (e) {
+        console.error(e);
+      }
     }
   }
 

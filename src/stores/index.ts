@@ -7,8 +7,8 @@ const chainsData: any = import.meta.env.DEV ? ethChainsDataTestnetsJson : ethCha
 
 export const main = defineStore('main', {
   state: () => ({
-    acuLoaded: false,
-    ethLoaded: false,
+    loaded: false,
+    acuBlockNumber: "" as string,
 		activeAcu: "" as string,
     activeAcuName: "" as string,
     acuBalance: {} as any,
@@ -36,11 +36,11 @@ export const main = defineStore('main', {
   getters: {
   },
   actions: {
-    setAcuLoaded() {
-      this.acuLoaded = true;
+    setLoaded() {
+      this.loaded = true;
     },
-    setEthLoaded() {
-      this.ethLoaded = true;
+    setAcuBlockNumber(blockNumber: string) {
+      this.acuBlockNumber = blockNumber;
     },
 		activeAcuSet(address: string) {
 			this.activeAcu = address;

@@ -202,7 +202,6 @@ export default class MixClient {
     	  let accountsAcu = await web3Accounts();
     		let store = main();
     		store.accountsAcuSet(accountsAcu);
-        store.setAcuLoaded();
       });
     });
 

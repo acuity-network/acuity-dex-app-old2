@@ -9,6 +9,8 @@ import {
 } from '@polkadot/extension-dapp';
 import MetaMaskOnboarding from '@metamask/onboarding';
 
+import Splash from './components/Splash.vue'
+
 const drawer = ref(false);
 
 import { main } from './stores/index'
@@ -50,40 +52,6 @@ const menu = ref([
 let $db: any = inject('$db');
 let $acuityClient: any = inject('$acuityClient');
 let $ethClient: any = inject('$ethClient');
-
-const blockNumber = ref(0)
-
-let balanceUnsub: any;
-
-onMounted(async () => {
-  $acuityClient.api.rpc.chain.subscribeNewHeads((lastHeader: any) => {
-    blockNumber.value = lastHeader.number.toString();
-  });
-
-  try {
-    let activeAccount = await $db.get('/activeAccount');
-    store.activeAcuSet(activeAccount);
-  }
-  catch (e) {}
-
-  $ethClient.loadBalances();
-})
-
-watch(() => store.activeAcu, async (newValue, oldValue) => {
-  console.log("Switched to account", newValue);
-  $db.put('/activeAccount', newValue);
-
-  try {
-    balanceUnsub()
-  }
-  catch (e) {}
-
-  balanceUnsub = $acuityClient.api.query.system.account(newValue, (result: any) => {
-    store.acuBalanceSet(newValue, $ethClient.formatWei(result.data.free));
-  });
-
-  $ethClient.loadBalances();
-});
 
 async function onboardMetaMask(event: any) {
   const onboarding = new MetaMaskOnboarding();
@@ -145,7 +113,7 @@ async function onboardMetaMask(event: any) {
       <template v-slot:prepend>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       </template>
-      <v-app-bar-title>Acuity DEX {{ blockNumber }}</v-app-bar-title>
+      <v-app-bar-title>Acuity DEX {{ store.acuBlockNumber }}</v-app-bar-title>
     </v-app-bar>
     <v-main>
       <v-container class="pt-0">
@@ -156,7 +124,8 @@ async function onboardMetaMask(event: any) {
           </v-col>
         </v-row>
       </v-container>
-      <router-view v-if="store.acuLoaded && store.ethLoaded"></router-view>
+      <splash></splash>
+      <router-view v-if="store.loaded"></router-view>
     </v-main>
     <v-footer app>
     </v-footer>

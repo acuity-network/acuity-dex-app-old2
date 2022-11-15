@@ -79,21 +79,6 @@ async function load() {
   }
   catch (e) {}
 
-  for (let chainIdKey of Object.keys(store.ethChains)) {
-    let chainId = parseInt(chainIdKey);
-    let chainIdHex = '0x0002';
-    chainIdHex += $ethClient.web3.utils.stripHexPrefix($ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(chainId), 12));
-
-    try {
-      let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(store.activeAcu, chainIdHex)).unwrap();
-      let foreignAddress = '0x' + Buffer.from(result).toString('hex').slice(24);
-      store.acuAccountForeignAccountSet(chainId, store.activeAcu, foreignAddress);
-
-      let mappedAcuAddress = encodeAddress(await $ethClient.chains[chainId].rpc.account.methods.getAcuAccount(foreignAddress).call());
-      store.foreignAccountAcuAccountSet(chainId, foreignAddress, mappedAcuAddress);
-    }
-    catch (e) {}
-  }
 };
 
 onMounted(async () => {
