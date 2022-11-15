@@ -79,6 +79,8 @@ async function load() {
   }
   catch (e) {}
 
+  await $ethClient.loadAccounts();
+  $ethClient.loadBalances();
 };
 
 onMounted(async () => {
@@ -177,7 +179,6 @@ async function setForeignAccount(event: any) {
     setForeignAccountWaiting.value = false;
     setForeignAccountDisabled.value = false;
   }
-  $ethClient.loadBalances();
 }
 
 async function setAcuAccount(event: any) {
@@ -197,6 +198,7 @@ async function setAcuAccount(event: any) {
       setAcuAccountWaiting.value = false;
       setAcuAccountDisabled.value = false;
     });
+    await $ethClient.loadAccounts();
   $ethClient.loadBalances();
 }
 

@@ -200,9 +200,7 @@ export default class EthClient {
         let mappedAcuAddress = encodeAddress(await this.chains[chainId].rpc.account.methods.getAcuAccount(foreignAddress).call());
         store.foreignAccountAcuAccountSet(chainId, foreignAddress, mappedAcuAddress);
       }
-      catch (e) {
-        console.error(e);
-      }
+      catch (e) {}
     }
   }
 
