@@ -12,7 +12,7 @@
     "@mdi/font": "7.0.96",
     "@metamask/detect-provider": "^2.0.0",
     "@metamask/onboarding": "^1.0.1",
-    "@polkadot/api": "^9.8.1",
+    "@polkadot/api": "^9.8.2",
     "@polkadot/extension-dapp": "^0.44.6",
     "@polkadot/keyring": "^10.1.12",
     "@polkadot/util": "^10.1.12",
@@ -22,7 +22,7 @@
     "buffer": "^6.0.3",
     "events": "^3.3.0",
     "level": "^8.0.0",
-    "pinia": "^2.0.23",
+    "pinia": "^2.0.24",
     "roboto-fontface": "^0.10.0",
     "stream-browserify": "^3.0.0",
     "vue": "^3.2.45",
@@ -35,7 +35,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.2.0",
     "typescript": "4.7.4",
-    "vite": "^3.2.3",
+    "vite": "^3.2.4",
     "vite-plugin-vuetify": "1.0.0",
     "vue-tsc": "^0.29.8"
   }
