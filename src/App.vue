@@ -11,9 +11,9 @@ import MetaMaskOnboarding from '@metamask/onboarding';
 
 import Splash from './components/Splash.vue'
 
-const drawer = ref(false);
-
 import { main } from './stores/index'
+
+const drawer = ref(false);
 const store = main();
 
 const menu = ref([

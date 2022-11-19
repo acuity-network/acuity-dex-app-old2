@@ -12,6 +12,9 @@ import {
 import { encodeAddress } from '@polkadot/keyring';
 import { main } from '../stores/index'
 
+import erc20AbiJson from '../lib/contracts/ERC20.abi.json'
+const erc20Abi: any = erc20AbiJson;
+
 let $db: any = inject('$db');
 let $acuityClient: any = inject('$acuityClient');
 let $ethClient: any = inject('$ethClient');
@@ -23,8 +26,6 @@ const chains = computed(() => store.ethChains);
 const chainSelect = computed(() => store.chainSelect);
 const metaMaskChainId = computed(() => store.metaMaskChainId);
 
-import erc20AbiJson from '../lib/contracts/ERC20.abi.json'
-const erc20Abi: any = erc20AbiJson;
 
 
 const name = ref("");

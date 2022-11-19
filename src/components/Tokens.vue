@@ -14,14 +14,15 @@ import Web3 from 'web3'
 
 import { main } from '../stores/index'
 
+import erc20AbiJson from '../lib/contracts/ERC20.abi.json'
+const erc20Abi: any = erc20AbiJson;
+
 let $db: any = inject('$db');
 let $acuityClient: any = inject('$acuityClient');
 let $ethClient: any = inject('$ethClient');
 let route = useRoute();
 let router = useRouter();
 
-import erc20AbiJson from '../lib/contracts/ERC20.abi.json'
-const erc20Abi: any = erc20AbiJson;
 
 const store = main();
 const endpoints = computed(() => store.endpoints);
