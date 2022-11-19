@@ -20,6 +20,8 @@ let router = useRouter();
 
 const store = main();
 
+const noPolkadot = ref(false);
+
 let balanceUnsub: any;
 
 watch(() => store.activeAcu, async (newValue, oldValue) => {
@@ -41,10 +43,15 @@ watch(() => store.activeAcu, async (newValue, oldValue) => {
 
 
 onMounted(async () => {
-  await Promise.all([
+  let results = await Promise.all([
 		$acuityClient.init(),
 		$ethClient.init($db, $acuityClient),
 	]);
+
+  if (results[0] == false) {
+    noPolkadot.value = true;
+    return;
+  }
 
   store.setLoaded();
 
@@ -66,5 +73,6 @@ onMounted(async () => {
 
 <template>
   <v-container>
+    <v-alert v-if="noPolkadot" type="error">Please enable <a style="color: white;" target="_blank" href="https://polkadot.js.org/extension/">Polkadot{.js}</a> browser extension to access Acuity DEX.</v-alert>
   </v-container>
 </template>

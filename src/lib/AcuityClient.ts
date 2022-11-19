@@ -15,7 +15,7 @@ export default class MixClient {
 
     let acuityEndpoint = import.meta.env.DEV ? 'ws://127.0.0.1:9946' : 'wss://freemont.acuity.social';
     let wsProvider = new WsProvider(acuityEndpoint);
-    await ApiPromise.create({
+    this.api = await ApiPromise.create({
       provider: wsProvider,
       types: {
         Balance: 'u128',
@@ -195,16 +195,18 @@ export default class MixClient {
 					},
 				},
 			},
-    }).then(async api => {
-      this.api = api;
-      this.api.isReady.then(async () => {
-        const allInjected = await web3Enable('Acuity DEX');
-    	  let accountsAcu = await web3Accounts();
-    		let store = main();
-    		store.accountsAcuSet(accountsAcu);
-      });
     });
 
-		return this;
+    await this.api.isReady;
+
+    const allInjected = await web3Enable('Acuity DEX');
+    if (allInjected.length == 0) {
+      return false;
+    }
+	  let accountsAcu = await web3Accounts();
+		let store = main();
+		store.accountsAcuSet(accountsAcu);
+
+		return true;
   }
 }
