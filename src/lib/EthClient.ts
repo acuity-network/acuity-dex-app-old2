@@ -6,7 +6,6 @@ import { main } from '../stores/index'
 let store: any;
 
 import ethChainsDataJson from '../lib/eth-chains.json';
-import ethChainsDataTestnetsJson from '../lib/eth-chains-testnets.json';
 
 import accountAbiJson from '../lib/contracts/AcuityAccount.abi.json'
 const accountAbi: any = accountAbiJson;
@@ -50,7 +49,7 @@ export default class EthClient {
   atomicSwap: any;
   atomicSwapERC20: any;
 	chains: { [key: number]: any; } = {};
-  chainsData: any = import.meta.env.DEV ? ethChainsDataTestnetsJson : ethChainsDataJson;
+  chainsData: any = ethChainsDataJson;
 
   formatWei: any = (wei: string, decimals: number = 18) => {
     let divisor = BigInt(10) ** BigInt(decimals);
