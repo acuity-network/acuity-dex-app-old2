@@ -220,6 +220,9 @@ async function setAcuAccount(event: any) {
           </v-card-actions>
           <v-progress-linear :indeterminate="setNameWaiting" color="yellow darken-2"></v-progress-linear>
         </v-card>
+        <v-alert type="info" variant="outlined" icon="mdi-account" class="mb-8">
+          Your name and Telegram ID are stored publicly on the Acuity blockchain so other traders can contact you.
+        </v-alert>
       </v-col>
     </v-row>
     <v-row>
@@ -254,6 +257,9 @@ async function setAcuAccount(event: any) {
           <v-btn class="mb-4" @click="setAcuAccount" :disabled="setAcuAccountDisabled">Set Acuity Account on {{ store.metaMaskChainName }}</v-btn>
           <v-progress-linear class="mb-10" :indeterminate="setAcuAccountWaiting" color="yellow darken-2"></v-progress-linear>
         </div>
+        <v-alert type="info" variant="outlined" icon="mdi-swap-horizontal" class="mb-8">
+          In order to trade, your accounts must have a two-way connection with your Acuity account.
+        </v-alert>
       </v-col>
     </v-row>
   </v-container>
