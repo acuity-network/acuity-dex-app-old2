@@ -57,7 +57,7 @@ onMounted(async () => {
     noEthereum.value = true;
   }
 
-  if (results[0] == false || results[1] == false){
+  if (results[0] == false || results[1] == false) {
     return;
   }
 

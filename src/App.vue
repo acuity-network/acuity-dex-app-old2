@@ -18,16 +18,6 @@ const store = main();
 const menu = ref([
   {
     to: '/',
-    icon: 'mdi-account',
-    text: 'Account',
-  },
-  {
-    to: '/goto',
-    icon: 'mdi-account-arrow-right',
-    text: 'Goto',
-  },
-  {
-    to: '/chains',
     icon: 'mdi-connection',
     text: 'Chains',
   },
@@ -35,6 +25,16 @@ const menu = ref([
     to: '/tokens',
     icon: 'mdi-circle-multiple',
     text: 'Tokens',
+  },
+  {
+    to: '/active-account',
+    icon: 'mdi-account',
+    text: 'Account',
+  },
+  {
+    to: '/goto',
+    icon: 'mdi-account-arrow-right',
+    text: 'Goto',
   },
   {
     to: '/buy',

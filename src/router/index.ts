@@ -12,7 +12,7 @@ import SellOrder from '../components/SellOrder.vue'
 
 const routes = [
   {
-    path: '/',
+    path: '/active-account',
     name: 'active-account',
     component: ActiveAccount,
   },
@@ -27,7 +27,7 @@ const routes = [
     component: Account,
   },
   {
-    path: '/chains',
+    path: '/',
     name: 'chains',
     component: Chains,
   },
