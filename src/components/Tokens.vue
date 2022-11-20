@@ -188,6 +188,10 @@ async function removeToken(address: string) {
           label="Token address"
         ></v-text-field>
         <v-btn @click="addToken">Add token</v-btn>
+        <v-alert type="info" variant="outlined" icon="mdi-circle-multiple" class="mt-8">
+          On each chain you can add the tokens you wish to trade with.<br />
+          Either select a well-known token or manually enter a token address.
+        </v-alert>
       </v-col>
     </v-row>
   </v-container>
