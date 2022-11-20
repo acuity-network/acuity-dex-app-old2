@@ -18,8 +18,6 @@ let route = useRoute();
 let router = useRouter();
 
 const store = main();
-const accountsAcu = computed(() => store.accountsAcu);
-const addressesAcu = computed(() => store.addressesAcu);
 
 const name = ref("");
 const telegram = ref("");

@@ -20,8 +20,6 @@ let route = useRoute();
 let router = useRouter();
 
 const store = main();
-const endpoints = computed(() => store.endpoints);
-const chains = computed(() => store.ethChains);
 
 const eth = ref("");
 
@@ -122,7 +120,7 @@ async function addMetaMask(event: any) {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="chain in chains" :bgcolor="(chain.chainId == store.metaMaskChainId) ? '#2196f3' : ''">
+            <tr v-for="chain in store.ethChains" :bgcolor="(chain.chainId == store.metaMaskChainId) ? '#2196f3' : ''">
               <td>{{ chain.label }}</td>
               <td>{{ chain.ws }}<br />{{ chain.rpc }}</td>
               <td class="text-right">{{ chain.height }}</td>
@@ -157,7 +155,7 @@ async function addMetaMask(event: any) {
             </thead>
             <tbody>
               <tr
-                v-for="(value, endpoint) in endpoints"
+                v-for="(value, endpoint) in store.endpoints"
                 :key="endpoint"
               >
                 <td><v-radio :key="endpoint" :value="endpoint"></v-radio></td>

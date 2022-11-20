@@ -18,8 +18,6 @@ let route = useRoute();
 let router = useRouter();
 
 const store = main();
-const chains = computed(() => store.ethChains);
-const chainSelect = computed(() => store.chainSelect);
 
 let sellAsset = ref('0');
 let sellAssetItems: any = computed(() => {
@@ -256,9 +254,9 @@ async function buy(accountId: string) {
   <v-container>
     <v-row>
       <v-col cols="12" lg="10">
-        <v-select v-model="store.sellChainId" :items="chainSelect" label="Sell chain"></v-select>
+        <v-select v-model="store.sellChainId" :items="store.chainSelect" label="Sell chain"></v-select>
         <v-select v-model="sellAsset" :items="sellAssetItems" label="Sell asset"></v-select>
-        <v-select v-model="store.buyChainId" :items="chainSelect" label="Buy chain"></v-select>
+        <v-select v-model="store.buyChainId" :items="store.chainSelect" label="Buy chain"></v-select>
         <v-select v-model="buyAsset" :items="buyAssetItems" label="Buy asset"></v-select>
 
         <v-table class="mb-10">

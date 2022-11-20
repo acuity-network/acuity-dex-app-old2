@@ -25,8 +25,6 @@ let router = useRouter();
 
 
 const store = main();
-const endpoints = computed(() => store.endpoints);
-const chains = computed(() => store.ethChains);
 
 const tokenAddress = ref("");
 const tokenAddresses: Ref<any[]> = ref([]);

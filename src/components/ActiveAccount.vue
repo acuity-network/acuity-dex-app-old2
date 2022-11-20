@@ -19,13 +19,6 @@ let route = useRoute();
 let router = useRouter();
 
 const store = main();
-const addressesAcu = computed(() => store.addressesAcu);
-const chains = computed(() => store.ethChains);
-const metaMaskChainId = computed(() => store.metaMaskChainId);
-const metaMaskChainName = computed(() => store.metaMaskChainName);
-const metaMaskAccount = computed(() => store.metaMaskAccount);
-const acuAccountForeignAccount = computed(() => store.acuAccountForeignAccount);
-const foreignAccountAcuAccount = computed(() => store.foreignAccountAcuAccount);
 
 const name = ref("");
 const web = ref("");
@@ -246,19 +239,19 @@ async function setAcuAccount(event: any) {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="chain in chains" :bgcolor="(chain.chainId == store.metaMaskChainId) ? '#2196f3' : ''">
+            <tr v-for="chain in store.ethChains" :bgcolor="(chain.chainId == store.metaMaskChainId) ? '#2196f3' : ''">
               <td>{{ chain.label }}</td>
-              <td><span v-if="acuAccountForeignAccount[chain.chainId]">{{ acuAccountForeignAccount[chain.chainId][store.activeAcu] }}</span></td>
-              <td><span v-if="foreignAccountAcuAccount[chain.chainId] && (foreignAccountAcuAccount[chain.chainId][acuAccountForeignAccount[chain.chainId][store.activeAcu]] == store.activeAcu)">yes</span></td>
+              <td><span v-if="store.acuAccountForeignAccount[chain.chainId]">{{ store.acuAccountForeignAccount[chain.chainId][store.activeAcu] }}</span></td>
+              <td><span v-if="store.foreignAccountAcuAccount[chain.chainId] && (store.foreignAccountAcuAccount[chain.chainId][store.acuAccountForeignAccount[chain.chainId][store.activeAcu]] == store.activeAcu)">yes</span></td>
             </tr>
           </tbody>
         </v-table>
 
-        <div v-if="metaMaskChainId && chains[metaMaskChainId]" class="mt-10" >
-          <v-btn class="mb-4" @click="setForeignAccount" :disabled="setForeignAccountDisabled">Set {{ metaMaskChainName }} Account on Acuity</v-btn>
+        <div v-if="store.metaMaskChainId && store.ethChains[store.metaMaskChainId]" class="mt-10" >
+          <v-btn class="mb-4" @click="setForeignAccount" :disabled="setForeignAccountDisabled">Set {{ store.metaMaskChainName }} Account on Acuity</v-btn>
           <v-progress-linear class="mb-10" :indeterminate="setForeignAccountWaiting" color="yellow darken-2"></v-progress-linear>
 
-          <v-btn class="mb-4" @click="setAcuAccount" :disabled="setAcuAccountDisabled">Set Acuity Account on {{ metaMaskChainName }}</v-btn>
+          <v-btn class="mb-4" @click="setAcuAccount" :disabled="setAcuAccountDisabled">Set Acuity Account on {{ store.metaMaskChainName }}</v-btn>
           <v-progress-linear class="mb-10" :indeterminate="setAcuAccountWaiting" color="yellow darken-2"></v-progress-linear>
         </div>
       </v-col>

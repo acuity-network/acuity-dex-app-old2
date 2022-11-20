@@ -19,8 +19,6 @@ let route = useRoute();
 let router = useRouter();
 
 const store = main();
-const chains = computed(() => store.ethChains);
-const chainSelect = computed(() => store.chainSelect);
 const metaMaskChainId = computed(() => store.metaMaskChainId);
 
 const wallets = [
@@ -347,14 +345,14 @@ async function goto(event: any) {
         <template v-if="wallet == 'metamask'">
           <v-text-field v-model="store.metaMaskChainName" label="Sell chain" readonly hint="Select in MetaMask." persistent-hint></v-text-field>
           <v-select v-model="metaMaskSellAsset" :items="metaMaskSellAssetItems" label="Sell asset"></v-select>
-          <v-select v-model="store.buyChainId" :items="chainSelect" label="Buy chain"></v-select>
+          <v-select v-model="store.buyChainId" :items="store.chainSelect" label="Buy chain"></v-select>
           <v-select v-model="metaMaskBuyAsset" :items="metaMaskBuyAssetItems" label="Buy asset"></v-select>
         </template>
 
         <template v-if="wallet == 'polkadot'">
           <v-select v-model="substrateChain" :items="substrateChains" label="Sell chain"></v-select>
           <v-text-field v-model="polkadotSellAsset" label="Sell asset" readonly></v-text-field>
-          <v-select v-model="store.buyChainId" :items="chainSelect" label="Buy chain"></v-select>
+          <v-select v-model="store.buyChainId" :items="store.chainSelect" label="Buy chain"></v-select>
           <v-select v-model="polkadotBuyAsset" :items="polkadotBuyAssetItems" label="Buy asset"></v-select>
         </template>
 
