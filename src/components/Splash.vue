@@ -21,6 +21,7 @@ let router = useRouter();
 const store = main();
 
 const noPolkadot = ref(false);
+const noEthereum = ref(false);
 
 let balanceUnsub: any;
 
@@ -50,6 +51,13 @@ onMounted(async () => {
 
   if (results[0] == false) {
     noPolkadot.value = true;
+  }
+
+  if (results[1] == false) {
+    noEthereum.value = true;
+  }
+
+  if (results[0] == false || results[1] == false){
     return;
   }
 
@@ -73,6 +81,7 @@ onMounted(async () => {
 
 <template>
   <v-container>
-    <v-alert v-if="noPolkadot" type="error">Please enable <a style="color: white;" target="_blank" href="https://polkadot.js.org/extension/">Polkadot{.js}</a> browser extension to access Acuity DEX.</v-alert>
+    <v-alert v-if="noPolkadot" type="error" class="mb-8">Please enable <a style="color: white;" target="_blank" href="https://polkadot.js.org/extension/">Polkadot{.js}</a> browser extension to access Acuity DEX.</v-alert>
+    <v-alert v-if="noEthereum" type="error" class="mb-8">Please enable an Ethereum browser extension such as <a style="color: white;" target="_blank" href="https://metamask.io/download/">MetaMask</a> to access Acuity DEX.</v-alert>
   </v-container>
 </template>

@@ -3,7 +3,6 @@ lockfileVersion: 5.4
 specifiers:
   '@mdi/font': 7.0.96
   '@metamask/detect-provider': ^2.0.0
-  '@metamask/onboarding': ^1.0.1
   '@polkadot/api': ^9.8.2
   '@polkadot/extension-dapp': ^0.44.6
   '@polkadot/keyring': ^10.1.12
@@ -32,7 +31,6 @@ specifiers:
 dependencies:
   '@mdi/font': 7.0.96
   '@metamask/detect-provider': 2.0.0
-  '@metamask/onboarding': 1.0.1
   '@polkadot/api': 9.8.2
   '@polkadot/extension-dapp': 0.44.6_oxlhkb6zkxgwaqqrutgg2noday
   '@polkadot/keyring': 10.1.12_rctvuuxcfab7pevo7bnynlzygy
@@ -321,12 +319,6 @@ packages:
   /@metamask/detect-provider/2.0.0:
     resolution: {integrity: sha512-sFpN+TX13E9fdBDh9lvQeZdJn4qYoRb/6QF2oZZK/Pn559IhCFacPMU1rMuqyXoFQF3JSJfii2l98B87QDPeCQ==}
     engines: {node: '>=14.0.0'}
-    dev: false
-
-  /@metamask/onboarding/1.0.1:
-    resolution: {integrity: sha512-FqHhAsCI+Vacx2qa5mAFcWNSrTcVGMNjzxVgaX8ECSny/BJ9/vgXP9V7WF/8vb9DltPeQkxr+Fnfmm6GHfmdTQ==}
-    dependencies:
-      bowser: 2.11.0
     dev: false
 
   /@noble/hashes/1.1.3:
@@ -1152,10 +1144,6 @@ packages:
       unpipe: 1.0.0
     transitivePeerDependencies:
       - supports-color
-    dev: false
-
-  /bowser/2.11.0:
-    resolution: {integrity: sha512-AlcaJBi/pqqJBIQ8U9Mcpc9i8Aqxn88Skv5d+xBX006BY5u8N3mGLHa5Lgppa7L/HfwgwLgZ6NYs+Ag6uUmJRA==}
     dev: false
 
   /brace-expansion/2.0.1:

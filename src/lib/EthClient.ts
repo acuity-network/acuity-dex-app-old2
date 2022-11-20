@@ -85,56 +85,54 @@ export default class EthClient {
     this.acuityClient = acuityClient;
     store = main();
 
-    await detectEthereumProvider().then(async provider => {
-      this.provider = provider;
+    this.provider = await detectEthereumProvider();
 
-      if (this.provider) {
-        this.web3 = new Web3(this.provider);
-    		this.web3.eth.defaultBlock = 'pending';
-    		this.web3.eth.transactionConfirmationBlocks = 1;
+    if (!this.provider) {
+      return false;
+    }
 
-        this.provider
-          .on('chainChanged', (chainIdHex: string) => {
-            let chainId = parseInt(chainIdHex, 16);
-            store.metaMaskChainIdSet(chainId);
-            if (this.chainsData.hasOwnProperty(chainId)) {
-              this.account = new this.web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
-          		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
-              this.atomicSwapERC20 = new this.web3.eth.Contract(atomicSwapERC20Abi, this.chainsData[chainId].contracts.atomicSwapERC20);
-            }
-          })
-          .on('accountsChanged', (accounts: any) => {
-    				store.metaMaskAccountSet(accounts[0].toLowerCase());
-          });
+    this.web3 = new Web3(this.provider);
+		this.web3.eth.defaultBlock = 'pending';
+		this.web3.eth.transactionConfirmationBlocks = 1;
 
-        let chainId = await this.web3.eth.getChainId();
+    this.provider
+      .on('chainChanged', (chainIdHex: string) => {
+        let chainId = parseInt(chainIdHex, 16);
         store.metaMaskChainIdSet(chainId);
-
         if (this.chainsData.hasOwnProperty(chainId)) {
           this.account = new this.web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
       		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
           this.atomicSwapERC20 = new this.web3.eth.Contract(atomicSwapERC20Abi, this.chainsData[chainId].contracts.atomicSwapERC20);
         }
+      })
+      .on('accountsChanged', (accounts: any) => {
+				store.metaMaskAccountSet(accounts[0].toLowerCase());
+      });
 
-        let accounts = await this.web3.eth.requestAccounts();
-  			store.metaMaskAccountSet(accounts[0].toLowerCase());
+    let chainId = await this.web3.eth.getChainId();
+    store.metaMaskChainIdSet(chainId);
 
-  			for await (const [key, json] of this.db.iterator({
-  		    gt: '/chains/',
-          lt: '/chains/z',
-  		  })) {
-          try {
-            let chain = JSON.parse(json);
-            await this.loadChain(chain);
-          }
-          catch (e) {}
-  		  }
-      } else {
-        console.log('Please install MetaMask!');
+    if (this.chainsData.hasOwnProperty(chainId)) {
+      this.account = new this.web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
+  		this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
+      this.atomicSwapERC20 = new this.web3.eth.Contract(atomicSwapERC20Abi, this.chainsData[chainId].contracts.atomicSwapERC20);
+    }
+
+    let accounts = await this.web3.eth.requestAccounts();
+		store.metaMaskAccountSet(accounts[0].toLowerCase());
+
+		for await (const [key, json] of this.db.iterator({
+	    gt: '/chains/',
+      lt: '/chains/z',
+	  })) {
+      try {
+        let chain = JSON.parse(json);
+        await this.loadChain(chain);
       }
-    });
+      catch (e) {}
+	  }
 
-		return this;
+		return true;
   }
 
   async loadChain(chain: any) {

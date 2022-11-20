@@ -7,7 +7,6 @@ import {
   web3ListRpcProviders,
   web3UseRpcProvider
 } from '@polkadot/extension-dapp';
-import MetaMaskOnboarding from '@metamask/onboarding';
 
 import Splash from './components/Splash.vue'
 
@@ -52,11 +51,6 @@ const menu = ref([
 let $db: any = inject('$db');
 let $acuityClient: any = inject('$acuityClient');
 let $ethClient: any = inject('$ethClient');
-
-async function onboardMetaMask(event: any) {
-  const onboarding = new MetaMaskOnboarding();
-  onboarding.startOnboarding();
-}
 
 </script>
 
@@ -107,7 +101,7 @@ async function onboardMetaMask(event: any) {
       </v-list>
 
       <v-btn block color="rgb(227, 126, 6)" class="my-2" target="_blank" href="https://polkadot.js.org/extension/">polkadot{.js}</v-btn>
-      <v-btn block color="rgb(3, 125, 214)" class="my-2" @click="onboardMetaMask">MetaMask</v-btn>
+      <v-btn block color="rgb(3, 125, 214)" class="my-2" target="_blank" href="https://metamask.io/download/">MetaMask</v-btn>
     </v-navigation-drawer>
     <v-app-bar app>
       <template v-slot:prepend>

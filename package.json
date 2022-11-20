@@ -11,7 +11,6 @@
   "dependencies": {
     "@mdi/font": "7.0.96",
     "@metamask/detect-provider": "^2.0.0",
-    "@metamask/onboarding": "^1.0.1",
     "@polkadot/api": "^9.8.2",
     "@polkadot/extension-dapp": "^0.44.6",
     "@polkadot/keyring": "^10.1.12",
