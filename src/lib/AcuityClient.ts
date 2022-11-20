@@ -1,5 +1,5 @@
 import {
-  web3Accounts,
+  web3AccountsSubscribe,
   web3Enable,
   web3FromAddress,
   web3ListRpcProviders,
@@ -8,10 +8,12 @@ import {
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { main } from '../stores/index'
 
-export default class MixClient {
-	api: any
+export default class AcuityClient {
+	api: any;
+  store: any;
 
 	async init() {
+    this.store = main();
 
     let acuityEndpoint = import.meta.env.DEV ? 'ws://127.0.0.1:9946' : 'wss://freemont.acuity.social';
     let wsProvider = new WsProvider(acuityEndpoint);
@@ -203,9 +205,10 @@ export default class MixClient {
     if (allInjected.length == 0) {
       return false;
     }
-	  let accountsAcu = await web3Accounts();
-		let store = main();
-		store.accountsAcuSet(accountsAcu);
+
+    let unsubscribe = await web3AccountsSubscribe(( accounts ) => {
+      this.store.accountsAcuSet(accounts);
+    });
 
 		return true;
   }
