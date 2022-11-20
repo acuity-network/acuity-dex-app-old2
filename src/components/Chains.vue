@@ -171,7 +171,12 @@ async function addMetaMask(event: any) {
           <v-btn @click="addChain" :disabled="uri == ''">Add to app</v-btn>
           <v-btn @click="addMetaMask" :disabled="!uri.startsWith('https://')">Add to MetaMask</v-btn>
         </div>
-        <p>Select a wss:// URI for the app and a https:// one for MetaMask.</p>
+        <v-alert type="info" variant="outlined" class="mt-8">
+          Add the Ethereum chains you wish to trade on.<br />
+          This app requires a <b>wss://</b> URI for each chain.<br />
+          Some <b>wss://</b> URIs are insufficient and a <b>https://</b> URI is also required.<br />
+          MetaMask requires a <b>https://</b> URI.
+        </v-alert>
       </v-col>
     </v-row>
   </v-container>

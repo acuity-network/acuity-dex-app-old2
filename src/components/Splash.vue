@@ -81,8 +81,8 @@ onMounted(async () => {
 
 <template>
   <v-container>
-    <v-alert v-if="noPolkadot" type="error" class="mb-8">Please enable <a style="color: white;" target="_blank" href="https://polkadot.js.org/extension/">Polkadot{.js}</a> browser extension to access Acuity DEX.</v-alert>
-    <v-alert v-if="noEthereum" type="error" class="mb-8">Please enable an Ethereum browser extension such as <a style="color: white;" target="_blank" href="https://metamask.io/download/">MetaMask</a> to access Acuity DEX.</v-alert>
-    <v-alert v-if="store.loaded && store.accountsAcu.length == 0" type="error" class="mb-8">Please create an Acuity account in the Polkadot{.js} browser extension.</v-alert>
+    <v-alert v-if="noPolkadot" type="error" variant="outlined" class="mb-8">Please enable <a target="_blank" href="https://polkadot.js.org/extension/">Polkadot{.js}</a> browser extension to access Acuity DEX.</v-alert>
+    <v-alert v-if="noEthereum" type="error" variant="outlined" class="mb-8">Please enable an Ethereum browser extension such as <a target="_blank" href="https://metamask.io/download/">MetaMask</a> to access Acuity DEX.</v-alert>
+    <v-alert v-if="store.loaded && store.accountsAcu.length == 0" type="error" variant="outlined" class="mb-8">Please create an Acuity account in the Polkadot{.js} browser extension.</v-alert>
   </v-container>
 </template>
