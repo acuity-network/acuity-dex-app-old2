@@ -99,9 +99,6 @@ let $ethClient: any = inject('$ethClient');
         </template>
         </v-list-item>
       </v-list>
-
-      <v-btn block color="rgb(227, 126, 6)" class="my-2" target="_blank" href="https://polkadot.js.org/extension/">polkadot{.js}</v-btn>
-      <v-btn block color="rgb(3, 125, 214)" class="my-2" target="_blank" href="https://metamask.io/download/">MetaMask</v-btn>
     </v-navigation-drawer>
     <v-app-bar app>
       <template v-slot:prepend>
