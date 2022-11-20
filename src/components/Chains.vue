@@ -33,7 +33,7 @@ const uri = ref("");
 
 onMounted(async () => {
   for (let chainId in $ethClient.chainsData) {
-    if ($ethClient.chainsData[parseInt(chainId)].hasOwnProperty('disabled')) {
+    if ($ethClient.chainsData[parseInt(chainId)]['disabled']) {
       continue;
     }
     ethChains.value.push({
