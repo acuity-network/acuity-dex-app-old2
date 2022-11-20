@@ -113,7 +113,7 @@ let $ethClient: any = inject('$ethClient');
       <v-container class="pt-0 pb-0">
         <v-row class="pt-0">
           <v-col cols="12" lg="10" class="pt-0">
-            <v-alert type="warning" variant="outlined">Acuity DEX is undergoing beta testing. Don't attempt any large trades.<br />
+            <v-alert type="warning" variant="outlined" icon="mdi-test-tube">Acuity DEX is undergoing beta testing. Don't attempt any large trades.<br />
             Join the <a target="_blank" href="https://t.me/Acuity_Trading">Acuity Trading</a> Telegram group.</v-alert>
           </v-col>
         </v-row>
