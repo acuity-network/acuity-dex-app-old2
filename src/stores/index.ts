@@ -26,6 +26,7 @@ export const main = defineStore('main', {
         title: "Acuity",
       }
     ] as any[],
+    ethChainSelect: [] as any[],
     foreignAccountAcuAccount: {} as any,
     acuAccountForeignAccount: {} as any,
     tokens: {} as any,
@@ -99,6 +100,10 @@ export const main = defineStore('main', {
           value: chainId,
           title: chain.label,
         });
+        this.ethChainSelect.push({
+          value: chainId,
+          title: chain.label,
+        });
       }
       this.ethChains[chainId] = {
         chainId: chainId,
@@ -114,6 +119,13 @@ export const main = defineStore('main', {
       for (let i in this.chainSelect) {
         if (this.chainSelect[i].value == chainId) {
           delete this.chainSelect[i];
+          break;
+        }
+      }
+
+      for (let i in this.ethChainSelect) {
+        if (this.ethChainSelect[i].value == chainId) {
+          delete this.ethChainSelect[i];
           break;
         }
       }

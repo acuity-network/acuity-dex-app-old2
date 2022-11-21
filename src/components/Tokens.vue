@@ -26,16 +26,21 @@ let router = useRouter();
 
 const store = main();
 
+const chainId = ref("");
 const tokenAddress = ref("");
 const tokenAddresses: Ref<any[]> = ref([]);
 
 let tokens: any[] = reactive([]);
 
 async function load() {
-  for (let address in $ethClient.chainsData[store.metaMaskChainId].tokens) {
+  if (!chainId.value) {
+    return;
+  }
+  tokenAddresses.value = [];
+  for (let address in $ethClient.chainsData[chainId.value].tokens) {
     tokenAddresses.value.push({
       value: address,
-      title: $ethClient.chainsData[store.metaMaskChainId].tokens[address],
+      title: $ethClient.chainsData[chainId.value].tokens[address],
     });
   }
 
@@ -43,8 +48,8 @@ async function load() {
   let tokenList = [];
 
   for await (const [key, json] of $db.iterator({
-    gt: '/tokens/' + store.metaMaskChainId + '/',
-    lt: '/tokens/' + store.metaMaskChainId + '/z',
+    gt: '/tokens/' + chainId.value + '/',
+    lt: '/tokens/' + chainId.value + '/z',
   })) {
     let address = key.split('/')[3];
     let info = JSON.parse(json);
@@ -59,18 +64,18 @@ async function load() {
     });
     tokenList.push(address);
   }
-
-  if ($ethClient.chains[store.metaMaskChainId].rpc) {
+/*
+  if ($ethClient.chains[chainId.value].rpc) {
     let balances: [] = await
-    $ethClient.chains[store.metaMaskChainId].rpc.rpc.methods.getAccountTokenBalances(store.metaMaskAccount, tokenList).call();
+    $ethClient.chains[chainId.value].rpc.rpc.methods.getAccountTokenBalances(store.metaMaskAccount, tokenList).call();
 
     for (let i in balances) {
       tokens[i].balance = $ethClient.formatWei(balances[i], tokens[i].decimals);
     }
 
-    let contract = $ethClient.chainsData[store.metaMaskChainId].contracts.atomicSwapERC20;
+    let contract = $ethClient.chainsData[chainId.value].contracts.atomicSwapERC20;
     let allowances: [] = await
-    $ethClient.chains[store.metaMaskChainId].rpc.rpc.methods.getAccountTokenAllowances(store.metaMaskAccount, contract, tokenList).call();
+    $ethClient.chains[chainId.value].rpc.rpc.methods.getAccountTokenAllowances(store.metaMaskAccount, contract, tokenList).call();
 
     for (let i in allowances) {
       if (BigInt(allowances[i]) / (BigInt(10) ** BigInt(tokens[i].decimals)) > BigInt(2) ** BigInt(57)) {
@@ -80,14 +85,15 @@ async function load() {
         tokens[i].allowance = $ethClient.formatWei(allowances[i], tokens[i].decimals);
       }
     }
-  }
+  }*/
 }
 
 onMounted(async () => {
   load();
 })
 
-watch(() => store.metaMaskChainId, async (newValue, oldValue) => {
+watch(() => chainId.value, async (newValue, oldValue) => {
+  tokenAddress.value = '';
   load();
 });
 
@@ -96,7 +102,7 @@ watch(() => store.metaMaskAccount, async (newValue, oldValue) => {
 });
 
 async function addToken(event: any) {
-  let token = new $ethClient.chains[store.metaMaskChainId].rpc.web3.eth.Contract(erc20Abi, tokenAddress.value);
+  let token = new $ethClient.chains[chainId.value].rpc.web3.eth.Contract(erc20Abi, tokenAddress.value);
 
   let result = await Promise.all([
     token.methods.name().call(),
@@ -110,7 +116,7 @@ async function addToken(event: any) {
     decimals: result[2],
   }
 
-  await $db.put('/tokens/' + store.metaMaskChainId + '/' + tokenAddress.value, JSON.stringify(info));
+  await $db.put('/tokens/' + chainId.value + '/' + tokenAddress.value, JSON.stringify(info));
   load();
 }
 
@@ -124,7 +130,7 @@ async function goto(address: string) {
 }
 
 async function removeToken(address: string) {
-  await $db.del('/tokens/' + store.metaMaskChainId + '/' + address);
+  await $db.del('/tokens/' + chainId.value + '/' + address);
   load();
 }
 
@@ -134,7 +140,7 @@ async function removeToken(address: string) {
   <v-container>
     <v-row>
       <v-col cols="12" lg="10">
-        <v-text-field class="mb-10" v-model="store.metaMaskChainName" label="Chain" readonly hint="Select in MetaMask." persistent-hint></v-text-field>
+        <v-select v-model="chainId" :items="store.ethChainSelect" label="Chain"></v-select>
         <v-table class="mb-10">
           <thead>
             <tr>
@@ -147,12 +153,6 @@ async function removeToken(address: string) {
               <th class="text-right">
                 Decimals
               </th>
-              <th class="text-right">
-                Balance
-              </th>
-              <th class="text-right">
-                Allowance
-              </th>
               <th></th>
             </tr>
           </thead>
@@ -161,13 +161,8 @@ async function removeToken(address: string) {
               <td>{{ token.symbol }}</td>
               <td>{{ token.name }}</td>
               <td class="text-right">{{ token.decimals }}</td>
-              <td class="text-right">{{ token.balance }}</td>
-              <td class="text-right">{{ token.allowance }}</td>
               <td>
                 <div class="d-flex" style="gap: 1rem">
-                  <v-btn icon density="comfortable" @click="goto(token.address)">
-                    <v-icon size="small">mdi-handshake</v-icon>
-                  </v-btn>
                   <v-btn icon density="comfortable" @click="removeToken(token.address)">
                     <v-icon size="small">mdi-delete</v-icon>
                   </v-btn>
