@@ -1,58 +1,40 @@
 <script setup lang="ts">
 import { ref, inject, onMounted, computed, watch} from 'vue'
 import type { Ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import {
-  web3Accounts,
-  web3Enable,
-  web3FromAddress,
-  web3ListRpcProviders,
-  web3UseRpcProvider
-} from '@polkadot/extension-dapp';
-import { encodeAddress } from '@polkadot/keyring';
+import { useRouter } from 'vue-router'
+import { web3FromAddress } from '@polkadot/extension-dapp';
 import { main } from '../stores/index'
 
-let $db: any = inject('$db');
 let $acuityClient: any = inject('$acuityClient');
 let $ethClient: any = inject('$ethClient');
-let route = useRoute();
 let router = useRouter();
 
 const store = main();
-const metaMaskChainId = computed(() => store.metaMaskChainId);
 
-const wallets = [
-  {
-    title: 'MetaMask Browser Extension',
-    value: 'metamask',
-  },
-  {
-    title: 'Polkadot Browser Extension',
-    value: 'polkadot',
-  },
-];
+let sellChainId: Ref<number | null> = ref(null);
+let sellAsset: Ref<string | null> = ref(null);
+let buyChainId: Ref<number | null> = ref(null);
+let buyAsset: Ref<string | null> = ref(null);
 
-const wallet = ref('metamask');
+let sellAssetItems: any = computed(() => {
+  if (sellChainId.value == null) return [];
+  if (sellChainId.value == 0) {
+    return [
+      {
+        title: "Acuity (ACU)",
+        value: "",
+      }
+    ];
+  }
 
-const substrateChains = [
-  {
-    title: 'Acuity',
-    value: 'acuity',
-  },
-];
-
-const substrateChain = ref('acuity');
-
-let metaMaskSellAsset = ref('0');
-let metaMaskSellAssetItems: any = computed(() => {
   let assets = [];
 
   assets.push({
-    title: $ethClient.chainsData[metaMaskChainId.value]?.label + " (" + $ethClient.chainsData[metaMaskChainId.value]?.symbol + ")",
-    value: "0",
+    title: $ethClient.chainsData[sellChainId.value]?.label + " (" + $ethClient.chainsData[sellChainId.value]?.symbol + ")",
+    value: "",
   });
 
-  let tokens = store.tokens[metaMaskChainId.value];
+  let tokens = store.tokens[sellChainId.value];
 
   for (let address in tokens) {
     assets.push({
@@ -64,49 +46,27 @@ let metaMaskSellAssetItems: any = computed(() => {
   return assets;
 });
 
-let metaMaskBuyAsset = ref('0');
-let metaMaskBuyAssetItems: any = computed(() => {
-  let assets = [];
-
-  if (store.buyChainId == 0) {
-    assets.push({
-      title: "Acuity (ACU)",
-      value: "0",
-    })
-  }
-  else {
-    assets.push({
-      title: $ethClient.chainsData[store.buyChainId]?.label + " (" + $ethClient.chainsData[store.buyChainId]?.symbol + ")",
-      value: "0",
-    });
-
-    let tokens = store.tokens[store.buyChainId];
-
-    for (let address in tokens) {
-      assets.push({
-        title: tokens[address].name + " (" + tokens[address].symbol + ")",
-        value: address,
-      });
-    }
+let buyAssetItems: any = computed(() => {
+  if (buyChainId.value == null) return [];
+  if (buyChainId.value == 0) {
+    return [
+      {
+        title: "Acuity (ACU)",
+        value: "",
+      }
+    ];
   }
 
-  return assets;
-});
-
-let polkadotSellAsset: any = ref("ACU");
-let polkadotBuyAsset = ref('0');
-let polkadotBuyAssetItems: any = computed(() => {
   let assets = [];
 
   assets.push({
-    title: $ethClient.chainsData[store.buyChainId]?.label + " (" + $ethClient.chainsData[store.buyChainId]?.symbol + ")",
-    value: "0",
+    title: $ethClient.chainsData[buyChainId.value]?.label + " (" + $ethClient.chainsData[buyChainId.value]?.symbol + ")",
+    value: "",
   });
 
-  let tokens = store.tokens[store.buyChainId];
+  let tokens = store.tokens[buyChainId.value];
 
   for (let address in tokens) {
-
     assets.push({
       title: tokens[address].name + " (" + tokens[address].symbol + ")",
       value: address,
@@ -142,158 +102,118 @@ function getEthereumAssetId(chainId: number, tokenAddress: string | null): strin
 }
 
 let sellAssetIdHex: any = computed(() => {
-  switch (wallet.value) {
-    case 'polkadot':
-      return getSubstrateAssetId();
-    case 'metamask':
-      return getEthereumAssetId(metaMaskChainId.value, (metaMaskSellAsset.value == "0") ? null : metaMaskSellAsset.value);
+  if (sellChainId.value == null || sellAsset.value == null) {
+    return null;
   }
+  if (sellChainId.value == 0) {
+    return getSubstrateAssetId();
+  }
+  return getEthereumAssetId(sellChainId.value, (sellAsset.value == "") ? null : sellAsset.value);
 });
 
 let buyAssetIdHex: any = computed(() => {
-  switch (wallet.value) {
-    case 'polkadot':
-      return getEthereumAssetId(store.buyChainId, (polkadotBuyAsset.value == "0") ? null : polkadotBuyAsset.value);
-    case 'metamask':
-      if (store.buyChainId == 0) {
-        return getSubstrateAssetId();
-      }
-      else {
-        return getEthereumAssetId(store.buyChainId, (metaMaskBuyAsset.value == "0") ? null : metaMaskBuyAsset.value);
-      }
+  if (buyChainId.value == null || buyAsset.value == null) {
+    return null;
+  }
+  if (buyChainId.value == 0) {
+    return getSubstrateAssetId();
+  }
+  else {
+    return getEthereumAssetId(buyChainId.value, (buyAsset.value == "") ? null : buyAsset.value);
   }
 });
 
 const sellSymbol = computed(() => {
-  switch(wallet.value) {
-    case 'polkadot':
-      return "ACU";
-    case 'metamask':
-      return (metaMaskSellAsset.value == "0") ? $ethClient.chainsData[metaMaskChainId.value]?.symbol : store.tokens[metaMaskChainId.value][metaMaskSellAsset.value].symbol;
+  if (sellChainId.value == null || sellAsset.value == null) {
+    return '';
   }
+  if (sellChainId.value == 0) {
+    return 'ACU';
+  }
+  return (sellAsset.value == "") ? $ethClient.chainsData[sellChainId.value]?.symbol : store.tokens[sellChainId.value][sellAsset.value].symbol;
 });
 
 const buySymbol = computed(() => {
-  switch(wallet.value) {
-    case 'polkadot':
-      return (polkadotBuyAsset.value == "0") ? $ethClient.chainsData[store.buyChainId]?.symbol : store.tokens[store.buyChainId][polkadotBuyAsset.value].symbol;
-    case 'metamask':
-      if (store.buyChainId == 0) {
-        return "ACU";
-      }
-      return (metaMaskBuyAsset.value == "0") ? $ethClient.chainsData[store.buyChainId]?.symbol : store.tokens[store.buyChainId][metaMaskBuyAsset.value].symbol;
+  if (buyChainId.value == null || buyAsset.value == null) {
+    return '';
   }
+  if (buyChainId.value == 0) {
+    return "ACU";
+  }
+  return (buyAsset.value == "") ? $ethClient.chainsData[buyChainId.value]?.symbol : store.tokens[buyChainId.value][buyAsset.value].symbol;
 });
 
 const sellDecimals = computed(() => {
-  switch(wallet.value) {
-    case 'polkadot':
-      return 18;
-    case 'metamask':
-      return (metaMaskSellAsset.value == "0") ? 18 : store.tokens[metaMaskChainId.value][metaMaskSellAsset.value].decimals;
+  if (sellChainId.value == null || sellAsset.value == null) {
+    return null;
   }
+  if (sellChainId.value == 0) {
+    return 18;
+  }
+  return (sellAsset.value == "") ? 18 : store.tokens[sellChainId.value][sellAsset.value].decimals;
 });
 
 const buyDecimals = computed(() => {
-  switch(wallet.value) {
-    case 'polkadot':
-      return (polkadotBuyAsset.value == "0") ? 18 : store.tokens[store.buyChainId][polkadotBuyAsset.value].decimals;
-    case 'metamask':
-      if (store.buyChainId == 0) {
-        return 18;
-      }
-      return (metaMaskBuyAsset.value == "0") ? 18 : store.tokens[store.buyChainId][metaMaskBuyAsset.value].decimals;
+  if (buyChainId.value == null || buyAsset.value == null) {
+    return null;
   }
+  if (buyChainId.value == 0) {
+    return 18;
+  }
+  return (buyAsset.value == "") ? 18 : store.tokens[buyChainId.value][buyAsset.value].decimals;
 });
 
-const setDisabled = ref(false);
+const disabled = ref(false);
 const setWaiting = ref(false);
 
 const sellValue = ref("");
 const sellPrice = ref("");
 const sellTotal = computed(() => {
+  if (sellValue.value == '' || sellPrice.value == '') {
+    return ""
+  }
 
-  let sellValueWei = BigInt($ethClient.unformatWei((sellValue.value != '') ? sellValue.value : '0', sellDecimals.value));
-  let sellPriceWei = BigInt($ethClient.unformatWei((sellPrice.value != '') ? sellPrice.value : '0', buyDecimals.value));
+  let sellValueWei = BigInt($ethClient.unformatWei(sellValue.value, sellDecimals.value));
+  let sellPriceWei = BigInt($ethClient.unformatWei(sellPrice.value, buyDecimals.value));
   let buyValueWei = (sellValueWei * sellPriceWei) / (BigInt(10) ** BigInt(sellDecimals.value));
 
   return $ethClient.formatWei(buyValueWei.toString(), buyDecimals.value);
 });
 
-let emitter;
-
 async function load() {
+  if (sellChainId.value == null || sellAsset.value == null ||
+    buyChainId.value == null || buyAsset.value == null) {
+    return
+  }
 
   console.log("sellAssetId:", sellAssetIdHex.value);
   console.log("buyAssetId:", buyAssetIdHex.value);
 
-  if (sellAssetIdHex.value && buyAssetIdHex.value) {
-    try {
-      let result = (await $acuityClient.api.query.orderbook.accountPairOrder(store.activeAcu, sellAssetIdHex.value, buyAssetIdHex.value)).unwrap();
+  try {
+    let result = (await $acuityClient.api.query.orderbook.accountPairOrder(store.activeAcu, sellAssetIdHex.value, buyAssetIdHex.value)).unwrap();
 
-      sellPrice.value = $ethClient.formatWei(result.price, buyDecimals.value);
-      sellValue.value = $ethClient.formatWei(result.value, sellDecimals.value);
-    }
-    catch (e) {};
+    sellPrice.value = $ethClient.formatWei(result.price, buyDecimals.value);
+    sellValue.value = $ethClient.formatWei(result.value, sellDecimals.value);
   }
+  catch (e) {};
 }
 
-onMounted(async () => {
-  if (metaMaskChainId.value && $ethClient.chains[metaMaskChainId.value]) {
-    emitter = $ethClient.chains[metaMaskChainId.value].ws.atomicSwap.events.allEvents()
-    .on('data', async (log: any) => {
-      load();
-    });
-  }
-  if (metaMaskChainId.value && $ethClient.chains[metaMaskChainId.value]) {
-    emitter = $ethClient.chains[metaMaskChainId.value].ws.atomicSwapERC20.events.allEvents()
-    .on('data', async (log: any) => {
-      load();
-    });
-  }
-  load();
-})
-
-watch(wallet, async (newValue, oldValue) => {
+watch(sellChainId, async (newValue, oldValue) => {
+  sellAsset.value = "";
   load();
 });
 
-watch(metaMaskChainId, async (newValue, oldValue) => {
-  if (newValue && $ethClient.chains[newValue]?.atomicSwap) {
-    emitter = $ethClient.chains[newValue].ws.atomicSwap.events.allEvents()
-  	.on('data', async (log: any) => {
-      load();
-    });
-  }
-
-  if (newValue && $ethClient.chains[newValue]?.atomicSwapERC20) {
-    emitter = $ethClient.chains[newValue].ws.atomicSwapERC20.events.allEvents()
-  	.on('data', async (log: any) => {
-      load();
-    });
-  }
-
+watch(buyChainId, async (newValue, oldValue) => {
+  buyAsset.value = "";
   load();
 });
 
-watch(metaMaskSellAsset, async (newValue, oldValue) => {
-  load();
-});
-
-watch(() => store.buyChainId, async (newValue, oldValue) => {
-  load();
-});
-
-watch(metaMaskBuyAsset, async (newValue, oldValue) => {
-  load();
-});
-
-watch(polkadotBuyAsset, async (newValue, oldValue) => {
+watch([sellAsset, buyAsset], async (newValue, oldValue) => {
   load();
 });
 
 async function set(event: any) {
-  setDisabled.value = true;
+  disabled.value = true;
   const injector = await web3FromAddress(store.activeAcu);
   let price = $ethClient.unformatWei(sellPrice.value, buyDecimals.value);
   let value = $ethClient.unformatWei(sellValue.value, sellDecimals.value);
@@ -309,13 +229,38 @@ async function set(event: any) {
           unsub();
           load();
           setWaiting.value = false;
-          setDisabled.value = false;
+          disabled.value = false;
         }
       });
   }
   catch (e) {
     setWaiting.value = false;
-    setDisabled.value = false;
+    disabled.value = false;
+  }
+}
+
+async function unset(event: any) {
+  disabled.value = true;
+  const injector = await web3FromAddress(store.activeAcu);
+
+  try {
+    const unsub = await $acuityClient.api.tx.orderbook
+      .removeOrder(sellAssetIdHex.value, buyAssetIdHex.value)
+      .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
+        if (!result.status.isInBlock) {
+          setWaiting.value = true;
+        }
+        else {
+          unsub();
+          load();
+          setWaiting.value = false;
+          disabled.value = false;
+        }
+      });
+  }
+  catch (e) {
+    setWaiting.value = false;
+    disabled.value = false;
   }
 }
 
@@ -340,23 +285,12 @@ async function goto(event: any) {
   <v-container>
     <v-row>
       <v-col cols="12" lg="10">
-        <v-select v-model="wallet" :items="wallets" label="Sell wallet"></v-select>
+        <v-select v-model="sellChainId" :items="store.chainSelect" label="Sell chain"></v-select>
+        <v-select v-model="sellAsset" :items="sellAssetItems" label="Sell asset"></v-select>
+        <v-select v-model="buyChainId" :items="store.chainSelect" label="Buy chain"></v-select>
+        <v-select v-model="buyAsset" :items="buyAssetItems" label="Buy asset"></v-select>
 
-        <template v-if="wallet == 'metamask'">
-          <v-text-field v-model="store.metaMaskChainName" label="Sell chain" readonly hint="Select in MetaMask." persistent-hint></v-text-field>
-          <v-select v-model="metaMaskSellAsset" :items="metaMaskSellAssetItems" label="Sell asset"></v-select>
-          <v-select v-model="store.buyChainId" :items="store.chainSelect" label="Buy chain"></v-select>
-          <v-select v-model="metaMaskBuyAsset" :items="metaMaskBuyAssetItems" label="Buy asset"></v-select>
-        </template>
-
-        <template v-if="wallet == 'polkadot'">
-          <v-select v-model="substrateChain" :items="substrateChains" label="Sell chain"></v-select>
-          <v-text-field v-model="polkadotSellAsset" label="Sell asset" readonly></v-text-field>
-          <v-select v-model="store.buyChainId" :items="store.chainSelect" label="Buy chain"></v-select>
-          <v-select v-model="polkadotBuyAsset" :items="polkadotBuyAssetItems" label="Buy asset"></v-select>
-        </template>
-
-        <v-card class="mb-10">
+        <v-card class="mb-10" :disabled="sellAssetIdHex == null || buyAssetIdHex == null || disabled">
           <v-toolbar color="blue">
             <v-toolbar-title>Sell order</v-toolbar-title>
           </v-toolbar>
@@ -366,21 +300,25 @@ async function goto(event: any) {
                 <v-text-field v-model="sellPrice" label="Price" :suffix="buySymbol + ' / ' + sellSymbol"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="4">
-                <v-text-field v-model="sellValue" label="Value" :suffix="sellSymbol"></v-text-field>
+                <v-text-field v-model="sellValue" label="Sell quantity" :suffix="sellSymbol"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="4">
-                <v-text-field v-model="sellTotal" readonly label="Total" :suffix="buySymbol"></v-text-field>
+                <v-text-field v-model="sellTotal" readonly label="Buy quantity" :suffix="buySymbol"></v-text-field>
               </v-col>
             </v-row>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="success" @click="set" :disabled="setDisabled">Set</v-btn>
+            <v-btn color="success" @click="set">Set</v-btn>
+            <!--<v-btn color="success" @click="unset">Unset</v-btn>-->
             <v-btn color="success" @click="reset">Reset</v-btn>
             <v-btn color="success" @click="goto">Goto</v-btn>
           </v-card-actions>
           <v-progress-linear :indeterminate="setWaiting" color="yellow darken-2"></v-progress-linear>
         </v-card>
+        <v-alert type="info" variant="outlined" icon="mdi-cart-arrow-up" class="mt-8">
+          Select an asset pair and publish your price and quantity for sale.
+        </v-alert>
       </v-col>
     </v-row>
   </v-container>
