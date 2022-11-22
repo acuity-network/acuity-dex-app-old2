@@ -235,13 +235,21 @@ onMounted(async () => {
 })
 
 watch(sellChainId, async (newValue, oldValue) => {
-  sellAsset.value = "";
-  load();
+  if (sellAsset.value != "") {
+    sellAsset.value = "";
+  }
+  else {
+    load();
+  }
 });
 
 watch(buyChainId, async (newValue, oldValue) => {
-  buyAsset.value = "";
-  load();
+  if (buyAsset.value != "") {
+    buyAsset.value = "";
+  }
+  else {
+    load();
+  }
 });
 
 watch([sellAsset, buyAsset], async (newValue, oldValue) => {
