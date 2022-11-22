@@ -197,58 +197,61 @@ async function load() {
     let blockNumbers = await $acuityClient.api.rpc.atomicSwap.getIndexBlocks(route.params.accountId);
 
     for (let blockNumber of blockNumbers) {
-      const blockHash = await $acuityClient.api.rpc.chain.getBlockHash(blockNumber);
-      const apiAt = await $acuityClient.api.at(blockHash);
-      const events = await apiAt.query.system.events();
+      try {
+        const blockHash = await $acuityClient.api.rpc.chain.getBlockHash(blockNumber);
+        const apiAt = await $acuityClient.api.at(blockHash);
+        const events = await apiAt.query.system.events();
 
-      for (let event of events) {
-        if (event.event.section == 'atomicSwap' && event.event.method == 'LockBuy') {
-          if ($ethClient.web3.utils.bytesToHex(event.event.data[6]) != (route.params.sellAssetId as string).toLowerCase()) {   // correct sell assetId
-            continue;
+        for (let event of events) {
+          if (event.event.section == 'atomicSwap' && event.event.method == 'LockBuy') {
+            if ($ethClient.web3.utils.bytesToHex(event.event.data[6]) != (route.params.sellAssetId as string).toLowerCase()) {   // correct sell assetId
+              continue;
+            }
+            let lockId = $ethClient.web3.utils.bytesToHex(event.event.data[5]);
+
+            if (lockId in newLocks) continue;
+
+            let sellChainIdHex = '0x0002';
+            sellChainIdHex += $ethClient.web3.utils.stripHexPrefix($ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellChainId.value), 12));
+            let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(encodeAddress(event.event.data[0]), sellChainIdHex)).unwrap();
+            let sellAddress = '0x' + Buffer.from(result).toString('hex').slice(24);
+
+            // Calculate how much value the sell lock should have.
+            let buyLockValueWei = BigInt(event.event.data[4]);
+            let buyLockPriceWei = BigInt(event.event.data[7]);
+            let sellLockValueWei = (buyLockValueWei * (BigInt(10) ** BigInt(sellDecimals.value))) / buyLockPriceWei;
+
+            newLocks[lockId] = {
+              lockId: lockId,
+              secret: "",
+              hashedSecret: $ethClient.web3.utils.bytesToHex(event.event.data[2]),
+              buyerAddressBuyChain: encodeAddress(event.event.data[0]),
+              buyerAddressSellChain: sellAddress,
+              buyerName: await loadName(encodeAddress(event.event.data[0])),
+              buyLockValue: $ethClient.formatWei(event.event.data[4], buyDecimals.value),
+              buyLockPrice: $ethClient.formatWei(event.event.data[7], buyDecimals.value),
+              buyLockState: "Locked",
+              buyLockTimeoutRaw: parseInt(event.event.data[3]),
+              buyLockTimeoutMS: parseInt(event.event.data[3]),
+              buyLockTimeout: new Date(parseInt(event.event.data[3])).toLocaleString(),
+              sellLockValueWei: sellLockValueWei.toString(),
+              sellLockValue: $ethClient.formatWei(sellLockValueWei.toString(), sellDecimals.value),
+              sellLockState: "Not locked",
+              createSellLockDisabled: false,
+              createSellLockWaiting: false,
+              unlockSellLockDisabled: false,
+              unlockSellLockWaiting: false,
+              timeoutSellLockDisabled: false,
+              timeoutSellLockWaiting: false,
+              unlockBuyLockDisabled: false,
+              unlockBuyLockWaiting: false,
+              timeoutBuyLockDisabled: false,
+              timeoutBuyLockWaiting: false,
+            };
           }
-          let lockId = $ethClient.web3.utils.bytesToHex(event.event.data[5]);
-
-          if (lockId in newLocks) continue;
-
-          let sellChainIdHex = '0x0002';
-          sellChainIdHex += $ethClient.web3.utils.stripHexPrefix($ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(sellChainId.value), 12));
-          let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(encodeAddress(event.event.data[0]), sellChainIdHex)).unwrap();
-          let sellAddress = '0x' + Buffer.from(result).toString('hex').slice(24);
-
-          // Calculate how much value the sell lock should have.
-          let buyLockValueWei = BigInt(event.event.data[4]);
-          let buyLockPriceWei = BigInt(event.event.data[7]);
-          let sellLockValueWei = (buyLockValueWei * (BigInt(10) ** BigInt(sellDecimals.value))) / buyLockPriceWei;
-
-          newLocks[lockId] = {
-            lockId: lockId,
-            secret: "",
-            hashedSecret: $ethClient.web3.utils.bytesToHex(event.event.data[2]),
-            buyerAddressBuyChain: encodeAddress(event.event.data[0]),
-            buyerAddressSellChain: sellAddress,
-            buyerName: await loadName(encodeAddress(event.event.data[0])),
-            buyLockValue: $ethClient.formatWei(event.event.data[4], buyDecimals.value),
-            buyLockPrice: $ethClient.formatWei(event.event.data[7], buyDecimals.value),
-            buyLockState: "Locked",
-            buyLockTimeoutRaw: parseInt(event.event.data[3]),
-            buyLockTimeoutMS: parseInt(event.event.data[3]),
-            buyLockTimeout: new Date(parseInt(event.event.data[3])).toLocaleString(),
-            sellLockValueWei: sellLockValueWei.toString(),
-            sellLockValue: $ethClient.formatWei(sellLockValueWei.toString(), sellDecimals.value),
-            sellLockState: "Not locked",
-            createSellLockDisabled: false,
-            createSellLockWaiting: false,
-            unlockSellLockDisabled: false,
-            unlockSellLockWaiting: false,
-            timeoutSellLockDisabled: false,
-            timeoutSellLockWaiting: false,
-            unlockBuyLockDisabled: false,
-            unlockBuyLockWaiting: false,
-            timeoutBuyLockDisabled: false,
-            timeoutBuyLockWaiting: false,
-          };
         }
       }
+      catch (e) {}
     }
   }
   else {
@@ -340,48 +343,51 @@ async function load() {
     let blockNumbers = await $acuityClient.api.rpc.atomicSwap.getIndexBlocks(sellerAddressSellChain.value);
 
     for (let blockNumber of blockNumbers) {
-      const blockHash = await $acuityClient.api.rpc.chain.getBlockHash(blockNumber);
-      const apiAt = await $acuityClient.api.at(blockHash);
-      const events = await apiAt.query.system.events();
+      try {
+        const blockHash = await $acuityClient.api.rpc.chain.getBlockHash(blockNumber);
+        const apiAt = await $acuityClient.api.at(blockHash);
+        const events = await apiAt.query.system.events();
 
-      for (let event of events) {
-        if (event.event.section == 'atomicSwap' && event.event.method == 'LockSell') {
-          if (event.event.data[6] != (route.params.buyAssetId as string).toLowerCase()) {   // correct sell assetId
-            continue;
-          }
+        for (let event of events) {
+          if (event.event.section == 'atomicSwap' && event.event.method == 'LockSell') {
+            if (event.event.data[6] != (route.params.buyAssetId as string).toLowerCase()) {   // correct sell assetId
+              continue;
+            }
 
-          let buyLockId = $ethClient.web3.utils.bytesToHex(event.event.data[7]);
+            let buyLockId = $ethClient.web3.utils.bytesToHex(event.event.data[7]);
 
-          if (newLocks[buyLockId]) {
-            newLocks[buyLockId].sellLockId = $ethClient.web3.utils.bytesToHex(event.event.data[5]);
-            newLocks[buyLockId].sellLockState = "Locked";
-            newLocks[buyLockId].sellLockTimeoutRaw = parseInt(event.event.data[3]);
-            newLocks[buyLockId].sellLockTimeoutMS = parseInt(event.event.data[3]);
-            newLocks[buyLockId].sellLockTimeout = new Date(parseInt(event.event.data[3])).toLocaleString();
-          }
-        }
-
-        if (event.event.section == 'atomicSwap' && event.event.method == 'Unlock') {
-          let sellLockId = $ethClient.web3.utils.bytesToHex(event.event.data[2]);
-
-          for (let lockId in newLocks) {
-            if (newLocks[lockId].sellLockId == sellLockId) {
-              newLocks[lockId].secret = $ethClient.web3.utils.bytesToHex(event.event.data[3]);
-              newLocks[lockId].sellLockState = "Unlocked";
+            if (newLocks[buyLockId]) {
+              newLocks[buyLockId].sellLockId = $ethClient.web3.utils.bytesToHex(event.event.data[5]);
+              newLocks[buyLockId].sellLockState = "Locked";
+              newLocks[buyLockId].sellLockTimeoutRaw = parseInt(event.event.data[3]);
+              newLocks[buyLockId].sellLockTimeoutMS = parseInt(event.event.data[3]);
+              newLocks[buyLockId].sellLockTimeout = new Date(parseInt(event.event.data[3])).toLocaleString();
             }
           }
-        }
 
-        if (event.event.section == 'atomicSwap' && event.event.method == 'Retrieve') {
-          let sellLockId = $ethClient.web3.utils.bytesToHex(event.event.data[2]);
+          if (event.event.section == 'atomicSwap' && event.event.method == 'Unlock') {
+            let sellLockId = $ethClient.web3.utils.bytesToHex(event.event.data[2]);
 
-          for (let lockId in newLocks) {
-            if (newLocks[lockId].sellLockId == sellLockId) {
-              newLocks[lockId].sellLockState = "Timed out";
+            for (let lockId in newLocks) {
+              if (newLocks[lockId].sellLockId == sellLockId) {
+                newLocks[lockId].secret = $ethClient.web3.utils.bytesToHex(event.event.data[3]);
+                newLocks[lockId].sellLockState = "Unlocked";
+              }
+            }
+          }
+
+          if (event.event.section == 'atomicSwap' && event.event.method == 'Retrieve') {
+            let sellLockId = $ethClient.web3.utils.bytesToHex(event.event.data[2]);
+
+            for (let lockId in newLocks) {
+              if (newLocks[lockId].sellLockId == sellLockId) {
+                newLocks[lockId].sellLockState = "Timed out";
+              }
             }
           }
         }
       }
+      catch (e) {}
     }
   }
   else {
@@ -489,27 +495,30 @@ async function load() {
     let blockNumbers = await $acuityClient.api.rpc.atomicSwap.getIndexBlocks(sellerAddressBuyChain.value);
 
     for (let blockNumber of blockNumbers) {
-      const blockHash = await $acuityClient.api.rpc.chain.getBlockHash(blockNumber);
-      const apiAt = await $acuityClient.api.at(blockHash);
-      const events = await apiAt.query.system.events();
+      try {
+        const blockHash = await $acuityClient.api.rpc.chain.getBlockHash(blockNumber);
+        const apiAt = await $acuityClient.api.at(blockHash);
+        const events = await apiAt.query.system.events();
 
-      for (let event of events) {
-        if (event.event.section == 'atomicSwap' && event.event.method == 'Unlock') {
-          let lockId = $ethClient.web3.utils.bytesToHex(event.event.data[2]);
+        for (let event of events) {
+          if (event.event.section == 'atomicSwap' && event.event.method == 'Unlock') {
+            let lockId = $ethClient.web3.utils.bytesToHex(event.event.data[2]);
 
-          if (newLocks[lockId]) {
-            newLocks[lockId].buyLockState = "Unlocked";
+            if (newLocks[lockId]) {
+              newLocks[lockId].buyLockState = "Unlocked";
+            }
           }
-        }
 
-        if (event.event.section == 'atomicSwap' && event.event.method == 'Retrieve') {
-          let lockId = $ethClient.web3.utils.bytesToHex(event.event.data[2]);
+          if (event.event.section == 'atomicSwap' && event.event.method == 'Retrieve') {
+            let lockId = $ethClient.web3.utils.bytesToHex(event.event.data[2]);
 
-          if (newLocks[lockId]) {
-            newLocks[lockId].buyLockState = "Timed out";
+            if (newLocks[lockId]) {
+              newLocks[lockId].buyLockState = "Timed out";
+            }
           }
         }
       }
+      catch (e) {}
     }
   }
   else {
