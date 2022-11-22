@@ -19,117 +19,72 @@ let router = useRouter();
 
 const store = main();
 
-let sellAsset = ref('0');
-let sellAssetItems: any = computed(() => {
-  let assets = [];
-
-  if (store.sellChainId == 0) {
-    assets.push({
-      title: "Acuity (ACU)",
-      value: "0",
-    })
-  }
-  else {
-    assets.push({
-      title: $ethClient.chainsData[store.sellChainId]?.label + " (" + $ethClient.chainsData[store.sellChainId]?.symbol + ")",
-      value: "0",
-    });
-
-    let tokens = store.tokens[store.sellChainId];
-
-    for (let address in tokens) {
-      assets.push({
-        title: tokens[address].name + " (" + tokens[address].symbol + ")",
-        value: address,
-      });
-    }
-  }
-
-  return assets;
-});
-
-let buyAsset = ref('0');
-let buyAssetItems: any = computed(() => {
-  let assets = [];
-
-  if (store.buyChainId == 0) {
-    assets.push({
-      title: "Acuity (ACU)",
-      value: "0",
-    })
-  }
-  else {
-    assets.push({
-      title: $ethClient.chainsData[store.buyChainId]?.label + " (" + $ethClient.chainsData[store.buyChainId]?.symbol + ")",
-      value: "0",
-    });
-
-    let tokens = store.tokens[store.buyChainId];
-
-    for (let address in tokens) {
-      assets.push({
-        title: tokens[address].name + " (" + tokens[address].symbol + ")",
-        value: address,
-      });
-    }
-  }
-
-  return assets;
-});
-
-const sellSymbol = computed(() => {
-
-  if (store.sellChainId == 0) {
-    return 'ACU';
-  }
-
-  return (sellAsset.value == "0") ? $ethClient.chainsData[store.sellChainId]?.symbol : store.tokens[store.sellChainId][sellAsset.value].symbol;
-
-});
-
-const buySymbol = computed(() => {
-  if (store.buyChainId == 0) {
-    return 'ACU';
-  }
-
-  return (buyAsset.value == "0") ? $ethClient.chainsData[store.buyChainId]?.symbol : store.tokens[store.buyChainId][buyAsset.value].symbol;
-});
-
-const sellDecimals = computed(() => {
-  if (store.sellChainId == 0) {
-    return 18;
-  }
-
-  return (sellAsset.value == "0") ? 18 : store.tokens[store.sellChainId][sellAsset.value].decimals;
-});
-
-const buyDecimals = computed(() => {
-  if (store.buyChainId == 0) {
-    return 18;
-  }
-
-  return (buyAsset.value == "0") ? 18 : store.tokens[store.buyChainId][buyAsset.value].decimals;
-});
+let sellChainId: Ref<number | null> = ref(null);
+let sellAsset: Ref<string | null> = ref(null);
+let buyChainId: Ref<number | null> = ref(null);
+let buyAsset: Ref<string | null> = ref(null);
 
 const sellOrders: Ref<any[]> = ref([]);
 
-
-async function getAcuAddress(foreignAddress: string): Promise<string> {
-  if (!store.sellChainId) return "";
-  return encodeAddress(await $ethClient.chains[store.sellChainId].rpc.account.methods.getAcuAccount(foreignAddress).call());
-}
-
-async function loadName(address: string): Promise<string> {
-  try {
-    let result = await $acuityClient.api.query.identity.identityOf(address);
-    let json = result.unwrap().info.display.toString();
-    let display = JSON.parse(json);
-    return $ethClient.web3.utils.hexToAscii(display.raw);
+let sellAssetItems: any = computed(() => {
+  if (sellChainId.value == null) return [];
+  if (sellChainId.value == 0) {
+    return [
+      {
+        title: "Acuity (ACU)",
+        value: "",
+      }
+    ];
   }
-  catch (e) {
-    return 'unknown';
+
+  let assets = [];
+
+  assets.push({
+    title: $ethClient.chainsData[sellChainId.value]?.label + " (" + $ethClient.chainsData[sellChainId.value]?.symbol + ")",
+    value: "",
+  });
+
+  let tokens = store.tokens[sellChainId.value];
+
+  for (let address in tokens) {
+    assets.push({
+      title: tokens[address].name + " (" + tokens[address].symbol + ")",
+      value: address,
+    });
   }
-}
+
+  return assets;
+});
+
+let buyAssetItems: any = computed(() => {
+  if (buyChainId.value == null) return [];
+  if (buyChainId.value == 0) {
+    return [
+      {
+        title: "Acuity (ACU)",
+        value: "",
+      }
+    ];
+  }
+
+  let assets = [];
+
+  assets.push({
+    title: $ethClient.chainsData[buyChainId.value]?.label + " (" + $ethClient.chainsData[buyChainId.value]?.symbol + ")",
+    value: "",
+  });
+
+  let tokens = store.tokens[buyChainId.value];
+
+  for (let address in tokens) {
+    assets.push({
+      title: tokens[address].name + " (" + tokens[address].symbol + ")",
+      value: address,
+    });
+  }
+
+  return assets;
+});
 
 function getSubstrateAssetId(): string {
   return $ethClient.web3.utils.padRight('0x0001', 64);
@@ -157,34 +112,93 @@ function getEthereumAssetId(chainId: number, tokenAddress: string | null): strin
 }
 
 let sellAssetIdHex: any = computed(() => {
-  if (store.sellChainId == 0) {
+  if (sellChainId.value == null || sellAsset.value == null) {
+    return null;
+  }
+  if (sellChainId.value == 0) {
     return getSubstrateAssetId();
   }
-  else {
-    return getEthereumAssetId(store.sellChainId, (sellAsset.value == "0") ? null : sellAsset.value);
-  }
+  return getEthereumAssetId(sellChainId.value, (sellAsset.value == "") ? null : sellAsset.value);
 });
 
 let buyAssetIdHex: any = computed(() => {
-  if (store.buyChainId == 0) {
+  if (buyChainId.value == null || buyAsset.value == null) {
+    return null;
+  }
+  if (buyChainId.value == 0) {
     return getSubstrateAssetId();
   }
   else {
-    return getEthereumAssetId(store.buyChainId, (buyAsset.value == "0") ? null : buyAsset.value);
+    return getEthereumAssetId(buyChainId.value, (buyAsset.value == "") ? null : buyAsset.value);
   }
 });
 
+const sellSymbol = computed(() => {
+  if (sellChainId.value == null || sellAsset.value == null) {
+    return '';
+  }
+  if (sellChainId.value == 0) {
+    return 'ACU';
+  }
+  return (sellAsset.value == "") ? $ethClient.chainsData[sellChainId.value]?.symbol : store.tokens[sellChainId.value][sellAsset.value].symbol;
+});
+
+const buySymbol = computed(() => {
+  if (buyChainId.value == null || buyAsset.value == null) {
+    return '';
+  }
+  if (buyChainId.value == 0) {
+    return "ACU";
+  }
+  return (buyAsset.value == "") ? $ethClient.chainsData[buyChainId.value]?.symbol : store.tokens[buyChainId.value][buyAsset.value].symbol;
+});
+
+const sellDecimals = computed(() => {
+  if (sellChainId.value == null || sellAsset.value == null) {
+    return null;
+  }
+  if (sellChainId.value == 0) {
+    return 18;
+  }
+  return (sellAsset.value == "") ? 18 : store.tokens[sellChainId.value][sellAsset.value].decimals;
+});
+
+const buyDecimals = computed(() => {
+  if (buyChainId.value == null || buyAsset.value == null) {
+    return null;
+  }
+  if (buyChainId.value == 0) {
+    return 18;
+  }
+  return (buyAsset.value == "") ? 18 : store.tokens[buyChainId.value][buyAsset.value].decimals;
+});
+
+async function getAcuAddress(foreignAddress: string): Promise<string> {
+  if (!sellChainId) return "";
+  return encodeAddress(await $ethClient.chains[sellChainId].rpc.account.methods.getAcuAccount(foreignAddress).call());
+}
+
+async function loadName(address: string): Promise<string> {
+  try {
+    let result = await $acuityClient.api.query.identity.identityOf(address);
+    let json = result.unwrap().info.display.toString();
+    let display = JSON.parse(json);
+    return $ethClient.web3.utils.hexToAscii(display.raw);
+  }
+  catch (e) {
+    return 'unknown';
+  }
+}
+
 async function load() {
-
-  if (store.sellChainId === null || store.buyChainId === null) {
-    return;
+  if (sellChainId.value == null || sellAsset.value == null ||
+    buyChainId.value == null || buyAsset.value == null) {
+    return
   }
 
-/*
-  if (!$ethClient.chains[store.sellChainId]) {
-    return;
-  }
-*/
+  console.log("sellAssetId:", sellAssetIdHex.value);
+  console.log("buyAssetId:", buyAssetIdHex.value);
+
   sellOrders.value = [];
 
   let orders = await $acuityClient.api.rpc.orderbook.getPairSellersOrders(sellAssetIdHex.value, buyAssetIdHex.value, 0, 100);
@@ -220,19 +234,17 @@ onMounted(async () => {
   load();
 })
 
-watch(() => store.sellChainId, async (newValue, oldValue) => {
+watch(sellChainId, async (newValue, oldValue) => {
+  sellAsset.value = "";
   load();
 });
 
-watch(() => store.buyChainId, async (newValue, oldValue) => {
+watch(buyChainId, async (newValue, oldValue) => {
+  buyAsset.value = "";
   load();
 });
 
-watch(sellAsset, async (newValue, oldValue) => {
-  load();
-});
-
-watch(buyAsset, async (newValue, oldValue) => {
+watch([sellAsset, buyAsset], async (newValue, oldValue) => {
   load();
 });
 
@@ -254,9 +266,9 @@ async function buy(accountId: string) {
   <v-container>
     <v-row>
       <v-col cols="12" lg="10">
-        <v-select v-model="store.sellChainId" :items="store.chainSelect" label="Sell chain"></v-select>
+        <v-select v-model="sellChainId" :items="store.chainSelect" label="Sell chain"></v-select>
         <v-select v-model="sellAsset" :items="sellAssetItems" label="Sell asset"></v-select>
-        <v-select v-model="store.buyChainId" :items="store.chainSelect" label="Buy chain"></v-select>
+        <v-select v-model="buyChainId" :items="store.chainSelect" label="Buy chain"></v-select>
         <v-select v-model="buyAsset" :items="buyAssetItems" label="Buy asset"></v-select>
 
         <v-table class="mb-10">
@@ -292,6 +304,9 @@ async function buy(accountId: string) {
             </tr>
           </tbody>
         </v-table>
+        <v-alert type="info" variant="outlined" icon="mdi-cart-arrow-down" class="mt-8">
+          Find a sell order you want to buy from.
+        </v-alert>
       </v-col>
     </v-row>
   </v-container>
