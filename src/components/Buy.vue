@@ -278,10 +278,10 @@ async function buy(accountId: string) {
                 Seller
               </th>
               <th class="text-right">
-                Price ({{ buySymbol }} / {{ sellSymbol }})
+                Value ({{ sellSymbol }})
               </th>
               <th class="text-right">
-                Value ({{ sellSymbol }})
+                Price ({{ buySymbol }} / {{ sellSymbol }})
               </th>
               <th class="text-right">
                 Total ({{ buySymbol }})
@@ -293,8 +293,8 @@ async function buy(accountId: string) {
           <tbody>
             <tr v-for="sellOrder in sellOrders">
               <td><router-link :to="'/account/' + sellOrder.account">{{ sellOrder.accountName }}</router-link></td>
-              <td class="text-right">{{ sellOrder.price }}</td>
               <td class="text-right">{{ sellOrder.value }}</td>
+              <td class="text-right">{{ sellOrder.price }}</td>
               <td class="text-right">{{ sellOrder.total }}</td>
               <td>
                 <v-btn icon density="comfortable" @click="buy(sellOrder.account)">
