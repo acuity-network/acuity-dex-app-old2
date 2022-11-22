@@ -167,8 +167,6 @@ function getTokenLockId(returnValues: any) {
 }
 
 async function load() {
-  time.value = Date.now();
-
   let newLocks: any = {};
 
   let buyHeight;
@@ -583,6 +581,12 @@ let buyEmitterERC20;
 let sellEmitterERC20;
 
 onMounted(async () => {
+  // Update time once per second.
+  setInterval(() => {
+    time.value = Date.now();
+  }, 1000);
+  time.value = Date.now();
+
   sellerAccountId.value = route.params.accountId as string;
   sellerName.value = await loadName(sellerAccountId.value);
   sellerTelegram.value = await loadTelegram(sellerAccountId.value);
