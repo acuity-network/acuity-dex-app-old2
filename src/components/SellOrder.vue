@@ -1233,11 +1233,11 @@ async function timeoutSellLock(lock: any) {
               <th class="text-left">
                 Buyer
               </th>
-              <th class="text-left">
-                Buy Lock ({{ buySymbol }})
+              <th class="text-right">
+                Buy Lock<br />({{ buySymbol }})
               </th>
-              <th class="text-left">
-                Price ({{ buySymbol + ' / ' + sellSymbol }})
+              <th class="text-right">
+                Price<br />({{ buySymbol + ' / ' + sellSymbol }})
               </th>
               <th class="text-left">
                 State
@@ -1247,8 +1247,8 @@ async function timeoutSellLock(lock: any) {
               </th>
               <th class="text-left"></th>
               <th style="background-color: rgba(18, 18, 18);"></th>
-              <th class="text-left">
-                Sell Lock ({{ sellSymbol }})
+              <th class="text-right">
+                Sell Lock<br />({{ sellSymbol }})
               </th>
               <th class="text-left">
                 State
@@ -1262,8 +1262,8 @@ async function timeoutSellLock(lock: any) {
           <tbody>
             <tr v-for="(lock, lockId) in locks" :key="lockId">
               <td>{{ lock.buyerName }}</td>
-              <td>{{ lock.buyLockValue }}</td>
-              <td>{{ lock.buyLockPrice }}</td>
+              <td class="text-right">{{ lock.buyLockValue }}</td>
+              <td class="text-right">{{ lock.buyLockPrice }}</td>
               <td>{{ lock.buyLockState }}</td>
               <td>{{ lock.buyLockTimeout }}</td>
               <td>
@@ -1277,7 +1277,7 @@ async function timeoutSellLock(lock: any) {
                 </v-btn>
               </td>
               <td style="background-color: rgb(18, 18, 18);"></td>
-              <td>{{ lock.sellLockValue }}</td>
+              <td class="text-right">{{ lock.sellLockValue }}</td>
               <td>{{ lock.sellLockState }}</td>
               <td>{{ lock.sellLockTimeout }}</td>
               <td>
