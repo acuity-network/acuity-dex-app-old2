@@ -212,6 +212,10 @@ watch([sellAsset, buyAsset], async (newValue, oldValue) => {
   load();
 });
 
+watch(() => store.activeAcu, async (newValue, oldValue) => {
+  load();
+});
+
 async function set(event: any) {
   disabled.value = true;
   const injector = await web3FromAddress(store.activeAcu);
