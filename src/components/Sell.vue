@@ -311,8 +311,8 @@ async function goto(event: any) {
             <v-spacer></v-spacer>
             <v-btn color="success" @click="set">Set</v-btn>
             <!--<v-btn color="success" @click="unset">Unset</v-btn>-->
-            <v-btn color="success" @click="reset">Reset</v-btn>
-            <v-btn color="success" @click="goto">Goto</v-btn>
+            <v-btn color="error" @click="reset">Reset</v-btn>
+            <v-btn color="info" @click="goto">Goto</v-btn>
           </v-card-actions>
           <v-progress-linear :indeterminate="setWaiting" color="yellow darken-2"></v-progress-linear>
         </v-card>

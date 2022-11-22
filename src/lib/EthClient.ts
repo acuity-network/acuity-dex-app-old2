@@ -282,4 +282,16 @@ export default class EthClient {
     })
     .catch((error: any) => {});
   }
+
+  async switchEthereumChain(chainId: number) {
+    const params = {
+      chainId: this.web3.utils.numberToHex(chainId),
+    };
+
+    this.provider.request({
+      method: "wallet_switchEthereumChain",
+      params: [params],
+    })
+    .catch((error: any) => {});
+  }
 }

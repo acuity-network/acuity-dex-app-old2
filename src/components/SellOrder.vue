@@ -658,6 +658,10 @@ watch(() => store.metaMaskAccount, async (newValue, oldValue) => {
 });
 */
 
+async function switchChain(event: any) {
+  $ethClient.switchEthereumChain(buyChainId.value);
+}
+
 /**
  * Called by buyer.
  */
@@ -1195,6 +1199,7 @@ async function timeoutSellLock(lock: any) {
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
+            <v-btn color="info" @click="switchChain" :disabled="buyChainId == store.metaMaskChainId">Switch chain</v-btn>
             <v-btn color="success" @click="createBuyLock" :disabled="buyChainId != 0 && buyChainId != store.metaMaskChainId">Create buy lock</v-btn>
           </v-card-actions>
           <v-progress-linear :indeterminate="buyWaiting" color="yellow darken-2"></v-progress-linear>
