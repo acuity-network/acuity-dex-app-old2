@@ -2522,23 +2522,29 @@
 		]
 	},
 	"11155111": {
-		"disabled": true,
+		"disabled": false,
 		"testnet": true,
 		"label": "Sepolia",
 		"symbol": "SEP",
 		"tokens": {},
 		"contracts": {
-			"account": "",
-			"atomicSwap": "",
-			"atomicSwapERC20": "",
-			"acuityRPC": ""
+			"account": "0xA1E721BBAc783D2C8De29d189a7658efEe76a78C",
+			"atomicSwap": "0x7d96b4c8c8D02f383bCD3609dC0cEE9b58C8BA2D",
+			"atomicSwapERC20": "0x62B88b705EEEBE0692fE573EecC55669481125eD",
+			"acuityRPC": "0x55e780058b973d5014D22A819B17BA93564783CE"
 		},
 		"rpcs": [
-			"https://rpc.sepolia.org"
+			"https://rpc.sepolia.dev/",
+			"https://rpc.sepolia.online/",
+			"https://rpc.sepolia.org",
+			"https://rpc2.sepolia.org",
+			"https://rpc-sepolia.rockx.com/",
+			"wss://sepolia.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+			"https://sepolia.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
 		],
 		"explorers": [
-			"https://sepolia.otterscan.io/",
-			"https://sepolia.etherscan.io/"
+			"https://sepolia.etherscan.io/",
+			"https://sepolia.otterscan.io/"
 		]
 	},
 	"1313161554": {
