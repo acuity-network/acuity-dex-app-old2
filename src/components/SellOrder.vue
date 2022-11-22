@@ -29,6 +29,7 @@ const locks: any = reactive({});
 
 const sellerAccountId = ref("");
 const sellerName = ref("");
+const sellerTelegram = ref("");
 const sellChainId = ref(0);
 const sellToken = ref("");
 const buyChainId = ref(0);
@@ -137,6 +138,15 @@ async function loadName(address: string): Promise<string> {
   catch (e) {
     return 'unknown';
   }
+}
+
+async function loadTelegram(address: string): Promise<string> {
+  try {
+    let result = await $acuityClient.api.query.identity.identityOf(address);
+    let info = result.unwrap().info;
+    return $ethClient.web3.utils.hexToAscii(JSON.parse(info.additional.toString())[0][1].raw);
+  }
+  catch (e) {}
 }
 
 function getLockId(returnValues: any) {
@@ -566,6 +576,7 @@ let sellEmitterERC20;
 onMounted(async () => {
   sellerAccountId.value = route.params.accountId as string;
   sellerName.value = await loadName(sellerAccountId.value);
+  sellerTelegram.value = await loadTelegram(sellerAccountId.value);
   sellChainId.value = $ethClient.web3.utils.hexToNumber('0x' + route.params.sellAssetId.slice(6, 18));
   sellToken.value = '0x' + route.params.sellAssetId.slice(26, 66);
   buyChainId.value = $ethClient.web3.utils.hexToNumber('0x' + route.params.buyAssetId.slice(6, 18));
@@ -1210,18 +1221,64 @@ async function timeoutSellLock(lock: any) {
     </v-row>
     <v-row>
       <v-col cols="12" lg="10">
-        <v-text-field readonly v-model="sellerName" label="Seller" hint="Who is selling." persistent-hint></v-text-field>
-        <v-text-field readonly v-model="sellChain" label="Sell chain" persistent-hint></v-text-field>
-        <v-text-field readonly v-model="sellAsset" label="Sell asset" hint="Asset being sold." persistent-hint></v-text-field>
-        <v-text-field readonly v-model="buyChain" label="Buy chain" persistent-hint></v-text-field>
-        <v-text-field readonly v-model="buyAsset" label="Buy asset" hint="Asset to pay with." persistent-hint></v-text-field>
-        <v-text-field readonly v-model="price" label="Price" :suffix="buySymbol + ' / ' + sellSymbol" hint="Price asset is being sold for." persistent-hint></v-text-field>
-        <v-text-field readonly v-model="value" label="Value" :suffix="sellSymbol" hint="How much is for sale." persistent-hint></v-text-field>
-        <v-text-field readonly v-model="total" label="Total" :suffix="buySymbol" hint="Maximum that can be paid." persistent-hint></v-text-field>
-        <v-text-field v-model="buyValue" label="Buy value" :suffix="sellSymbol" hint="How much you want to buy." persistent-hint></v-text-field>
-        <v-text-field readonly v-model="buyCost" label="Cost" :suffix="buySymbol" hint="Cost to buy." persistent-hint></v-text-field>
-        <v-btn @click="createBuyLock" class="mt-4 mb-4"  :disabled="buyDisabled || (buyChainId != 0 && buyChainId != store.metaMaskChainId)">Buy</v-btn>
-        <v-progress-linear class="mb-10" :indeterminate="buyWaiting" color="yellow darken-2"></v-progress-linear>
+        <v-row>
+          <v-col cols="12" sm="6" md="6">
+            <v-text-field readonly v-model="sellerName" label="Seller" hint="Who is selling." persistent-hint></v-text-field>
+          </v-col>
+          <v-col cols="12" sm="6" md="6">
+            <v-text-field readonly v-model="sellerTelegram" label="Seller's Telegram" persistent-hint></v-text-field>
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="12" sm="6" md="6">
+            <v-text-field readonly v-model="sellChain" label="Sell chain" persistent-hint></v-text-field>
+            <v-text-field readonly v-model="sellAsset" label="Sell asset" hint="Asset being sold." persistent-hint></v-text-field>
+          </v-col>
+          <v-col cols="12" sm="6" md="6">
+            <v-text-field readonly v-model="buyChain" label="Buy chain" persistent-hint></v-text-field>
+            <v-text-field readonly v-model="buyAsset" label="Buy asset" hint="Asset to pay with." persistent-hint></v-text-field>
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="12" sm="6" md="4">
+            <v-text-field readonly v-model="price" label="Price" :suffix="buySymbol + ' / ' + sellSymbol" hint="Price asset is being sold for." persistent-hint></v-text-field>
+          </v-col>
+          <v-col cols="12" sm="6" md="4">
+            <v-text-field readonly v-model="value" label="Sell quantity" :suffix="sellSymbol" hint="How much is for sale." persistent-hint></v-text-field>
+          </v-col>
+          <v-col cols="12" sm="6" md="4">
+            <v-text-field readonly v-model="total" label="Buy quantity" :suffix="buySymbol" hint="Maximum that can be paid." persistent-hint></v-text-field>
+          </v-col>
+        </v-row>
+
+        <v-card class="mb-10 mt-8" :disabled="buyDisabled">
+          <v-toolbar color="blue">
+            <v-toolbar-title>Buy</v-toolbar-title>
+          </v-toolbar>
+          <v-card-text>
+            <v-row>
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field v-model="buyValue" label="Buy value" :suffix="sellSymbol" hint="How much you want to buy." persistent-hint></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field readonly v-model="buyCost" label="Cost" :suffix="buySymbol" hint="Cost to buy." persistent-hint></v-text-field>
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="success" @click="createBuyLock" :disabled="buyChainId != 0 && buyChainId != store.metaMaskChainId">Create buy lock</v-btn>
+          </v-card-actions>
+          <v-progress-linear :indeterminate="buyWaiting" color="yellow darken-2"></v-progress-linear>
+        </v-card>
+        <v-alert type="info" variant="outlined" icon="mdi-atom-variant" class="mt-8">
+          1) Contact the seller on Telegram to confirm the trade.<br />
+          2) Create a buy lock.<br />
+          3) Once the seller has created the sell lock, unlock it to receive your funds.<br />
+          4) If the seller doesn't create the sell lock, wait for the timeout.
+        </v-alert>
       </v-col>
     </v-row>
   </v-container>
