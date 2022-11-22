@@ -297,10 +297,10 @@ async function goto(event: any) {
           <v-card-text>
             <v-row>
               <v-col cols="12" sm="6" md="4">
-                <v-text-field v-model="sellPrice" label="Price" :suffix="buySymbol + ' / ' + sellSymbol"></v-text-field>
+                <v-text-field v-model="sellValue" label="Sell quantity" :suffix="sellSymbol"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="4">
-                <v-text-field v-model="sellValue" label="Sell quantity" :suffix="sellSymbol"></v-text-field>
+                <v-text-field v-model="sellPrice" label="Price" :suffix="buySymbol + ' / ' + sellSymbol"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="4">
                 <v-text-field v-model="sellTotal" readonly label="Buy quantity" :suffix="buySymbol"></v-text-field>

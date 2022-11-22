@@ -1169,10 +1169,10 @@ async function timeoutSellLock(lock: any) {
 
         <v-row>
           <v-col cols="12" sm="6" md="4">
-            <v-text-field readonly v-model="price" label="Price" :suffix="buySymbol + ' / ' + sellSymbol" hint="Price asset is being sold for." persistent-hint></v-text-field>
+            <v-text-field readonly v-model="value" label="Sell quantity" :suffix="sellSymbol" hint="How much is for sale." persistent-hint></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="4">
-            <v-text-field readonly v-model="value" label="Sell quantity" :suffix="sellSymbol" hint="How much is for sale." persistent-hint></v-text-field>
+            <v-text-field readonly v-model="price" label="Price" :suffix="buySymbol + ' / ' + sellSymbol" hint="Price asset is being sold for." persistent-hint></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="4">
             <v-text-field readonly v-model="total" label="Buy quantity" :suffix="buySymbol" hint="Maximum that can be paid." persistent-hint></v-text-field>
