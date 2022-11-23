@@ -2313,7 +2313,7 @@
 		]
 	},
 	"43113": {
-		"disabled": true,
+		"disabled": false,
 		"testnet": true,
 		"label": "Avalanche Fuji Testnet",
 		"symbol": "AVAX",
