@@ -288,10 +288,16 @@ export default class EthClient {
       chainId: this.web3.utils.numberToHex(chainId),
     };
 
-    this.provider.request({
+    await this.provider.request({
       method: "wallet_switchEthereumChain",
       params: [params],
     })
-    .catch((error: any) => {});
+
+    // Update the contracts because it is too slow to wait for it to happen automatically.
+    if (this.chainsData.hasOwnProperty(chainId)) {
+      this.account = new this.web3.eth.Contract(accountAbi, this.chainsData[chainId].contracts.account);
+      this.atomicSwap = new this.web3.eth.Contract(atomicSwapAbi, this.chainsData[chainId].contracts.atomicSwap);
+      this.atomicSwapERC20 = new this.web3.eth.Contract(atomicSwapERC20Abi, this.chainsData[chainId].contracts.atomicSwapERC20);
+    }
   }
 }

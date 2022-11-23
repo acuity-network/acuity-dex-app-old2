@@ -665,16 +665,6 @@ onMounted(async () => {
   load();
 });
 
-/*
-watch(() => store.metaMaskAccount, async (newValue, oldValue) => {
-  load();
-});
-*/
-
-async function switchChain(event: any) {
-  $ethClient.switchEthereumChain(buyChainId.value);
-}
-
 /**
  * Called by buyer.
  */
@@ -719,6 +709,17 @@ async function createBuyLock(event: any) {
     }
 
     return;
+  }
+
+  // Ensure MetaMask is on the correct chain.
+  if (store.metaMaskChainId != buyChainId.value) {
+    try {
+      await $ethClient.switchEthereumChain(buyChainId.value);
+    }
+    catch (e) {
+      buyDisabled.value = false;
+      return;
+    }
   }
 
   let timeout = (timeoutRaw / BigInt(1000)).toString();
@@ -803,6 +804,17 @@ async function createSellLock(lock: any) {
     return;
   }
 
+  // Ensure MetaMask is on the correct chain.
+  if (store.metaMaskChainId != sellChainId.value) {
+    try {
+      await $ethClient.switchEthereumChain(sellChainId.value);
+    }
+    catch (e) {
+      locks[lock.lockId].createSellLockDisabled = false;
+      return;
+    }
+  }
+
   let timeout = (timeoutRaw / BigInt(1000)).toString();
   let type = $ethClient.web3.utils.hexToNumber('0x' + route.params.sellAssetId.slice(18, 22));
 
@@ -883,6 +895,17 @@ async function unlockSellLock(lock: any) {
     return;
   }
 
+  // Ensure MetaMask is on the correct chain.
+  if (store.metaMaskChainId != sellChainId.value) {
+    try {
+      await $ethClient.switchEthereumChain(sellChainId.value);
+    }
+    catch (e) {
+      locks[lock.lockId].unlockSellLockDisabled = false;
+      return;
+    }
+  }
+
   let type = $ethClient.web3.utils.hexToNumber('0x' + route.params.sellAssetId.slice(18, 22));
 
   if (type == 0) {
@@ -959,6 +982,17 @@ async function unlockBuyLock(lock: any) {
     }
 
     return;
+  }
+
+  // Ensure MetaMask is on the correct chain.
+  if (store.metaMaskChainId != buyChainId.value) {
+    try {
+      await $ethClient.switchEthereumChain(buyChainId.value);
+    }
+    catch (e) {
+      locks[lock.lockId].unlockBuyLockDisabled = false;
+      return;
+    }
   }
 
   let type = $ethClient.web3.utils.hexToNumber('0x' + route.params.buyAssetId.slice(18, 22));
@@ -1039,6 +1073,17 @@ async function timeoutBuyLock(lock: any) {
     return;
   }
 
+  // Ensure MetaMask is on the correct chain.
+  if (store.metaMaskChainId != buyChainId.value) {
+    try {
+      await $ethClient.switchEthereumChain(buyChainId.value);
+    }
+    catch (e) {
+      locks[lock.lockId].timeoutBuyLockDisabled = false;
+      return;
+    }
+  }
+
   let type = $ethClient.web3.utils.hexToNumber('0x' + route.params.buyAssetId.slice(18, 22));
 
   if (type == 0) {
@@ -1115,6 +1160,17 @@ async function timeoutSellLock(lock: any) {
     }
 
     return;
+  }
+
+  // Ensure MetaMask is on the correct chain.
+  if (store.metaMaskChainId != sellChainId.value) {
+    try {
+      await $ethClient.switchEthereumChain(sellChainId.value);
+    }
+    catch (e) {
+      locks[lock.lockId].timeoutSellLockDisabled = false;
+      return;
+    }
   }
 
   let type = $ethClient.web3.utils.hexToNumber('0x' + route.params.buyAssetId.slice(18, 22));
@@ -1281,11 +1337,11 @@ async function timeoutSellLock(lock: any) {
               <td>{{ lock.buyLockState }}</td>
               <td>{{ lock.buyLockTimeout }}</td>
               <td>
-                <v-btn v-if="lock.buyLockState == 'Locked' && lock.sellLockState == 'Unlocked' && (buyChainId == 0 || (store.metaMaskChainId == buyChainId && store.metaMaskAccount == sellerAddressBuyChain))" size="small" @click="unlockBuyLock(lock)" :disabled="lock.unlockBuyLockDisabled">
+                <v-btn v-if="lock.buyLockState == 'Locked' && lock.sellLockState == 'Unlocked' && (buyChainId == 0 || store.metaMaskAccount == sellerAddressBuyChain)" size="small" @click="unlockBuyLock(lock)" :disabled="lock.unlockBuyLockDisabled">
                   <v-icon v-if="!lock.unlockBuyLockWaiting">mdi-lock-open-variant</v-icon>
                   <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                 </v-btn>
-                <v-btn v-if="lock.buyLockState == 'Locked' && lock.buyLockTimeoutMS < time && (buyChainId == 0 || (store.metaMaskChainId == buyChainId && store.metaMaskAccount == lock.buyerAddressBuyChain))" size="small" @click="timeoutBuyLock(lock)" :disabled="lock.timeoutBuyLockDisabled">
+                <v-btn v-if="lock.buyLockState == 'Locked' && lock.buyLockTimeoutMS < time && (buyChainId == 0 || store.metaMaskAccount == lock.buyerAddressBuyChain)" size="small" @click="timeoutBuyLock(lock)" :disabled="lock.timeoutBuyLockDisabled">
                   <v-icon v-if="!lock.timeoutBuyLockWaiting">mdi-timer-lock-open-outline</v-icon>
                   <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                 </v-btn>
@@ -1295,15 +1351,15 @@ async function timeoutSellLock(lock: any) {
               <td>{{ lock.sellLockState }}</td>
               <td>{{ lock.sellLockTimeout }}</td>
               <td>
-                <v-btn v-if="lock.sellLockState == 'Not locked' && (sellChainId == 0 || (store.metaMaskChainId == sellChainId && store.metaMaskAccount == sellerAddressSellChain))" size="small" @click="createSellLock(lock)" :disabled="lock.createSellLockDisabled">
+                <v-btn v-if="lock.sellLockState == 'Not locked' && (sellChainId == 0 || store.metaMaskAccount == sellerAddressSellChain)" size="small" @click="createSellLock(lock)" :disabled="lock.createSellLockDisabled">
                   <v-icon v-if="!lock.createSellLockWaiting">mdi-lock</v-icon>
                   <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                 </v-btn>
-                <v-btn v-if="lock.sellLockState == 'Locked' && (sellChainId == 0 || (store.metaMaskChainId == sellChainId && store.metaMaskAccount == lock.buyerAddressSellChain))" size="small" @click="unlockSellLock(lock)" :disabled="lock.unlockSellLockDisabled">
+                <v-btn v-if="lock.sellLockState == 'Locked' && (sellChainId == 0 || store.metaMaskAccount == lock.buyerAddressSellChain)" size="small" @click="unlockSellLock(lock)" :disabled="lock.unlockSellLockDisabled">
                   <v-icon v-if="!lock.unlockSellLockWaiting">mdi-lock-open-variant</v-icon>
                   <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                 </v-btn>
-                <v-btn v-if="lock.sellLockState == 'Locked' && lock.sellLockTimeoutMS < time && store.metaMaskChainId == sellChainId && store.metaMaskAccount == sellerAddressSellChain" size="small" @click="timeoutSellLock(lock)" :disabled="lock.timeoutSellLockDisabled">
+                <v-btn v-if="lock.sellLockState == 'Locked' && lock.sellLockTimeoutMS < time && (buyChainId == 0 || store.metaMaskAccount == sellerAddressSellChain)" size="small" @click="timeoutSellLock(lock)" :disabled="lock.timeoutSellLockDisabled">
                   <v-icon v-if="!lock.timeoutSellLockWaiting">mdi-timer-lock-open-outline</v-icon>
                   <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                 </v-btn>
