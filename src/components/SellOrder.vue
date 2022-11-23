@@ -159,7 +159,9 @@ async function loadTelegram(address: string): Promise<string> {
     let info = result.unwrap().info;
     return $ethClient.web3.utils.hexToAscii(JSON.parse(info.additional.toString())[0][1].raw);
   }
-  catch (e) {}
+  catch (e) {
+    return 'unknown';
+  }
 }
 
 function getLockId(returnValues: any) {
@@ -771,7 +773,7 @@ async function createBuyLock(event: any) {
       allowanceWaitingBuy.value = false;
       dialogAllowanceBuy.value = true;
 
-      await new Promise((resolve) => {
+      await new Promise<void>((resolve) => {
         const unwatch = watch(dialogAllowanceBuy, (newVal) => {
           if (newVal == false) {
             unwatch();
@@ -921,7 +923,7 @@ async function createSellLock(lock: any) {
         allowanceWaitingSell.value = false;
         dialogAllowanceSell.value = true;
 
-        await new Promise((resolve) => {
+        await new Promise<void>((resolve) => {
           const unwatch = watch(dialogAllowanceSell, (newVal) => {
             if (newVal == false) {
               unwatch();

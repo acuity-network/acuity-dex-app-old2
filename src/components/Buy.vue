@@ -173,11 +173,6 @@ const buyDecimals = computed(() => {
   return (buyAsset.value == "") ? 18 : store.tokens[buyChainId.value][buyAsset.value].decimals;
 });
 
-async function getAcuAddress(foreignAddress: string): Promise<string> {
-  if (!sellChainId) return "";
-  return encodeAddress(await $ethClient.chains[sellChainId].rpc.account.methods.getAcuAccount(foreignAddress).call());
-}
-
 async function loadName(address: string): Promise<string> {
   try {
     let result = await $acuityClient.api.query.identity.identityOf(address);
