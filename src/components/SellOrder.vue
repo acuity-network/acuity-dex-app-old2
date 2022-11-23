@@ -56,6 +56,12 @@ const buyCost = computed(() => {
 let sellerAddressBuyChain = ref("");
 let sellerAddressSellChain = ref("");
 
+let dialogAllowanceBuy = ref(false);
+let allowanceDisabledBuy = ref(false);
+let allowanceCurrentBuy = ref("");
+let allowanceNewBuy = ref("");
+let allowanceWaitingBuy = ref(false);
+
 const sellSymbol = computed(() => {
   if (sellChainId.value == 0) {
     return 'ACU';
@@ -744,11 +750,39 @@ async function createBuyLock(event: any) {
       });
   }
   else {
-    let token = '0x' + route.params.buyAssetId.slice(26, 66);
-    console.log({token, recipient, hashedSecret, timeout, value, sellAssetId, sellPrice});
+    let tokenAddress = '0x' + route.params.buyAssetId.slice(26, 66);
 
+    // Ensure token allowance is big enough.
+    let token = new $ethClient.chains[buyChainId.value].rpc.web3.eth.Contract(erc20Abi, tokenAddress);
+    let contractAddress = $ethClient.chainsData[buyChainId.value].contracts.atomicSwapERC20;
+    let allowance = await token.methods.allowance(store.metaMaskAccount, contractAddress).call();
+
+    if (value > allowance) {
+      allowanceDisabledBuy.value = false;
+      allowanceCurrentBuy.value = $ethClient.formatWei(allowance, buyDecimals.value),
+      allowanceNewBuy.value = buyCost.value;
+      allowanceWaitingBuy.value = false;
+      dialogAllowanceBuy.value = true;
+
+      await new Promise((resolve) => {
+        const unwatch = watch(dialogAllowanceBuy, (newVal) => {
+          if (newVal == false) {
+            unwatch();
+            resolve();
+          }
+        });
+      });
+
+      allowance = await token.methods.allowance(store.metaMaskAccount, contractAddress).call();
+      if (value > allowance) {
+        buyDisabled.value = false;
+        return;
+      }
+    }
+
+    console.log({tokenAddress, recipient, hashedSecret, timeout, value, sellAssetId, sellPrice});
     $ethClient.atomicSwapERC20.methods
-      .lockBuy(token, recipient, hashedSecret, timeout, value, sellAssetId, sellPrice)
+      .lockBuy(tokenAddress, recipient, hashedSecret, timeout, value, sellAssetId, sellPrice)
       .send({from: store.metaMaskAccount})
       .on('transactionHash', function(payload: any) {
         buyWaiting.value = true;
@@ -762,6 +796,32 @@ async function createBuyLock(event: any) {
         buyDisabled.value = false;
       });
   }
+}
+
+async function approveAllowanceBuy(event: any) {
+  allowanceDisabledBuy.value = true;
+  let tokenAddress = '0x' + route.params.buyAssetId.slice(26, 66);
+  let token = new $ethClient.web3.eth.Contract(erc20Abi, tokenAddress);
+  let contractAddress = $ethClient.chainsData[buyChainId.value].contracts.atomicSwapERC20;
+  let allowance = $ethClient.unformatWei(allowanceNewBuy.value, buyDecimals.value).toString();
+
+  console.log({tokenAddress, contractAddress, allowance});
+  token.methods
+    .approve(contractAddress, allowance)
+    .send({from: store.metaMaskAccount})
+    .on('transactionHash', function(payload: any) {
+      allowanceWaitingBuy.value = true;
+    })
+    .on('receipt', function(receipt: any) {
+      allowanceWaitingBuy.value = false;
+      allowanceDisabledBuy.value = false;
+      load();
+    })
+    .on('error', function(error: any) {
+      console.error(error);
+      allowanceWaitingBuy.value = false;
+      allowanceDisabledBuy.value = false;
+    });
 }
 
 /**
@@ -1370,4 +1430,23 @@ async function timeoutSellLock(lock: any) {
       </v-col>
     </v-row>
   </v-container>
+  <v-dialog v-model="dialogAllowanceBuy" width="50%" persistent>
+    <v-card :disabled="allowanceDisabledBuy">
+      <v-toolbar color="blue">
+        <v-toolbar-title>Approve Buy Allowance</v-toolbar-title>
+      </v-toolbar>
+      <v-card-text>
+        <v-text-field readonly v-model="buyCost" label="Lock value" :suffix="buySymbol"></v-text-field>
+        <v-text-field readonly v-model="allowanceCurrentBuy" label="Current allowance" :suffix="buySymbol"></v-text-field>
+        <v-text-field v-model="allowanceNewBuy" label="New allowance" :suffix="buySymbol"></v-text-field>
+<!--        <v-checkbox v-model="unlimited" label="Unlimited"></v-checkbox>-->
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="success" @click="approveAllowanceBuy">Approve</v-btn>
+        <v-btn color="error" @click="dialogAllowanceBuy = false">Cancel</v-btn>
+      </v-card-actions>
+      <v-progress-linear :indeterminate="allowanceWaitingBuy" color="yellow darken-2"></v-progress-linear>
+    </v-card>
+  </v-dialog>
 </template>
