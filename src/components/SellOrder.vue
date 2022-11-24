@@ -1355,10 +1355,12 @@ async function timeoutSellLock(lock: any) {
       <v-col cols="12" lg="10">
         <v-row>
           <v-col cols="12" sm="6" md="6">
-            <v-text-field readonly v-model="sellerName" label="Seller" hint="Who is selling." persistent-hint></v-text-field>
+            <div class="text-h6">Seller</div>
+              <router-link :to="{ name: 'account', params: { id: route.params.accountId } }">{{ sellerName }}</router-link>
           </v-col>
           <v-col cols="12" sm="6" md="6">
-            <v-text-field readonly v-model="sellerTelegram" label="Seller's Telegram" persistent-hint></v-text-field>
+            <div class="text-h6">Telegram</div>
+            <p><a target="_blank" :href="'https://t.me/' + sellerTelegram " >{{ sellerTelegram }}</a></p>
           </v-col>
         </v-row>
 
