@@ -628,8 +628,13 @@ onMounted(async () => {
   else {
     let chainIdHex = '0x0002';
     chainIdHex += $ethClient.web3.utils.stripHexPrefix($ethClient.web3.utils.padLeft($ethClient.web3.utils.toHex(buyChainId.value), 12));
-    let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(sellerAccountId.value, chainIdHex)).unwrap();
-    sellerAddressBuyChain.value = '0x' + Buffer.from(result).toString('hex').slice(24);
+    try {
+      let result = (await $acuityClient.api.query.orderbook.accountForeignAccount(sellerAccountId.value, chainIdHex)).unwrap();
+      sellerAddressBuyChain.value = '0x' + Buffer.from(result).toString('hex').slice(24);
+    }
+    catch (e) {
+      sellerAddressBuyChain.value = '';
+    }
   }
 
   let result = (await $acuityClient.api.query.orderbook.accountPairOrder(route.params.accountId, route.params.sellAssetId, route.params.buyAssetId)).unwrap();
@@ -1380,46 +1385,53 @@ async function timeoutSellLock(lock: any) {
           </v-col>
         </v-row>
 
-        <template v-if="store.activeAcu == sellerAccountId">
-          <v-alert type="info" variant="outlined" icon="mdi-atom-variant" class="mt-8 mb-8">
-            <ol>
-              <li>1) When a buyer creates a buy lock it will appear below.</li>
-              <li>2) Click on the lock icon to create a sell lock.</li>
-              <li>3) Wait for the buyer to unlock the sell lock.</li>
-              <li>4) Unlock the buy lock.</li>
-              <li>5) If the seller doesn't unlock the sell lock, wait for the timeout.</li>
-            </ol>
+        <template v-if="sellerAddressBuyChain == ''">
+          <v-alert type="error" variant="outlined" class="mt-8 mb-8">
+            Seller has not published their buy chain address.
           </v-alert>
         </template>
         <template v-else>
-          <v-alert type="info" variant="outlined" icon="mdi-atom-variant" class="mt-8 mb-8">
-            <ol>
-              <li>1) Contact the seller to confirm the trade.</li>
-              <li>2) Create a buy lock.</li>
-              <li>3) Once the seller has created the sell lock, unlock it to receive your funds.</li>
-              <li>4) If the seller doesn't create the sell lock, wait for the timeout.</li>
-            </ol>
-          </v-alert>
-          <v-card class="mb-10 mt-8" :disabled="buyDisabled">
-            <v-toolbar color="blue">
-              <v-toolbar-title>Buy</v-toolbar-title>
-            </v-toolbar>
-            <v-card-text>
-              <v-row>
-                <v-col cols="12" sm="6" md="6">
-                  <v-text-field v-model="buyValue" label="Buy value" :suffix="sellSymbol" hint="How much you want to buy." persistent-hint></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="6">
-                  <v-text-field readonly v-model="buyCost" label="Cost" :suffix="buySymbol" hint="Cost to buy." persistent-hint></v-text-field>
-                </v-col>
-              </v-row>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="success" @click="createBuyLock">Create buy lock</v-btn>
-            </v-card-actions>
-            <v-progress-linear :indeterminate="buyWaiting" color="yellow darken-2"></v-progress-linear>
-          </v-card>
+          <template v-if="store.activeAcu == sellerAccountId">
+            <v-alert type="info" variant="outlined" icon="mdi-atom-variant" class="mt-8 mb-8">
+              <ol>
+                <li>1) When a buyer creates a buy lock it will appear below.</li>
+                <li>2) Click on the lock icon to create a sell lock.</li>
+                <li>3) Wait for the buyer to unlock the sell lock.</li>
+                <li>4) Unlock the buy lock.</li>
+                <li>5) If the seller doesn't unlock the sell lock, wait for the timeout.</li>
+              </ol>
+            </v-alert>
+          </template>
+          <template v-else>
+            <v-alert type="info" variant="outlined" icon="mdi-atom-variant" class="mt-8 mb-8">
+              <ol>
+                <li>1) Contact the seller to confirm the trade.</li>
+                <li>2) Create a buy lock.</li>
+                <li>3) Once the seller has created the sell lock, unlock it to receive your funds.</li>
+                <li>4) If the seller doesn't create the sell lock, wait for the timeout.</li>
+              </ol>
+            </v-alert>
+            <v-card class="mb-10 mt-8" :disabled="buyDisabled">
+              <v-toolbar color="blue">
+                <v-toolbar-title>Buy</v-toolbar-title>
+              </v-toolbar>
+              <v-card-text>
+                <v-row>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-text-field v-model="buyValue" label="Buy value" :suffix="sellSymbol" hint="How much you want to buy." persistent-hint></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-text-field readonly v-model="buyCost" label="Cost" :suffix="buySymbol" hint="Cost to buy." persistent-hint></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="success" @click="createBuyLock">Create buy lock</v-btn>
+              </v-card-actions>
+              <v-progress-linear :indeterminate="buyWaiting" color="yellow darken-2"></v-progress-linear>
+            </v-card>
+          </template>
         </template>
       </v-col>
     </v-row>
