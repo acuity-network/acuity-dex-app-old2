@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, inject, onMounted, computed, watch} from 'vue'
+import type { Ref } from 'vue'
 import { Buffer } from "buffer";
 import { useRouter, useRoute } from 'vue-router'
 import {
@@ -1092,7 +1093,7 @@ async function unlockBuyLock(lock: any) {
 
   if (buyChainId.value == 0) {
     console.log({sender, secret, timeout});
-    const injector = await web3FromAddress(sellerAddressBuyChain.value);
+    const injector = await web3FromAddress(sellerAddressBuyChain.value as string);
     try {
       const unsub = await $acuityClient.api.tx.atomicSwap
         .unlock(sender, secret, timeout)
