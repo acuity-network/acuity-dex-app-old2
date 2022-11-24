@@ -53,7 +53,7 @@ const buyCost = computed(() => {
   return $ethClient.formatWei(buyCostWei.toString(), buyDecimals.value);
 });
 
-let sellerAddressBuyChain = ref("");
+let sellerAddressBuyChain: Ref<undefined | null | string> = ref(undefined);
 let sellerAddressSellChain = ref("");
 
 let dialogAllowanceBuy = ref(false);
@@ -633,7 +633,7 @@ onMounted(async () => {
       sellerAddressBuyChain.value = '0x' + Buffer.from(result).toString('hex').slice(24);
     }
     catch (e) {
-      sellerAddressBuyChain.value = '';
+      sellerAddressBuyChain.value = null;
     }
   }
 
@@ -1385,128 +1385,126 @@ async function timeoutSellLock(lock: any) {
           </v-col>
         </v-row>
 
-        <template v-if="sellerAddressBuyChain == ''">
-          <v-alert type="error" variant="outlined" class="mt-8 mb-8">
-            Seller has not published their buy chain address.
-          </v-alert>
-        </template>
-        <template v-else>
-          <template v-if="store.activeAcu == sellerAccountId">
-            <v-alert type="info" variant="outlined" icon="mdi-atom-variant" class="mt-8 mb-8">
-              <ol>
-                <li>1) When a buyer creates a buy lock it will appear below.</li>
-                <li>2) Click on the lock icon to create a sell lock.</li>
-                <li>3) Wait for the buyer to unlock the sell lock.</li>
-                <li>4) Unlock the buy lock.</li>
-                <li>5) If the seller doesn't unlock the sell lock, wait for the timeout.</li>
-              </ol>
+        <template v-if="sellerAddressBuyChain !== undefined">
+          <template v-if="sellerAddressBuyChain === null">
+            <v-alert type="error" variant="outlined" class="mt-8 mb-8">
+              Seller has not published their buy chain address.
             </v-alert>
           </template>
           <template v-else>
-            <v-alert type="info" variant="outlined" icon="mdi-atom-variant" class="mt-8 mb-8">
-              <ol>
-                <li>1) Contact the seller to confirm the trade.</li>
-                <li>2) Create a buy lock.</li>
-                <li>3) Once the seller has created the sell lock, unlock it to receive your funds.</li>
-                <li>4) If the seller doesn't create the sell lock, wait for the timeout.</li>
-              </ol>
-            </v-alert>
-            <v-card class="mb-10 mt-8" :disabled="buyDisabled">
-              <v-toolbar color="blue">
-                <v-toolbar-title>Buy</v-toolbar-title>
-              </v-toolbar>
-              <v-card-text>
-                <v-row>
-                  <v-col cols="12" sm="6" md="6">
-                    <v-text-field v-model="buyValue" label="Buy value" :suffix="sellSymbol" hint="How much you want to buy." persistent-hint></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="6">
-                    <v-text-field readonly v-model="buyCost" label="Cost" :suffix="buySymbol" hint="Cost to buy." persistent-hint></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="success" @click="createBuyLock">Create buy lock</v-btn>
-              </v-card-actions>
-              <v-progress-linear :indeterminate="buyWaiting" color="yellow darken-2"></v-progress-linear>
-            </v-card>
+            <template v-if="store.activeAcu == sellerAccountId">
+              <v-alert type="info" variant="outlined" icon="mdi-atom-variant" class="mt-8 mb-8">
+                <ol>
+                  <li>1) When a buyer creates a buy lock it will appear below.</li>
+                  <li>2) Click on the lock icon to create a sell lock.</li>
+                  <li>3) Wait for the buyer to unlock the sell lock.</li>
+                  <li>4) Unlock the buy lock.</li>
+                  <li>5) If the seller doesn't unlock the sell lock, wait for the timeout.</li>
+                </ol>
+              </v-alert>
+            </template>
+            <template v-else>
+              <v-alert type="info" variant="outlined" icon="mdi-atom-variant" class="mt-8 mb-8">
+                <ol>
+                  <li>1) Contact the seller to confirm the trade.</li>
+                  <li>2) Create a buy lock.</li>
+                  <li>3) Once the seller has created the sell lock, unlock it to receive your funds.</li>
+                  <li>4) If the seller doesn't create the sell lock, wait for the timeout.</li>
+                </ol>
+              </v-alert>
+              <v-card class="mb-10 mt-8" :disabled="buyDisabled">
+                <v-toolbar color="blue">
+                  <v-toolbar-title>Buy</v-toolbar-title>
+                </v-toolbar>
+                <v-card-text>
+                  <v-row>
+                    <v-col cols="12" sm="6" md="6">
+                      <v-text-field v-model="buyValue" label="Buy value" :suffix="sellSymbol" hint="How much you want to buy." persistent-hint></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="6">
+                      <v-text-field readonly v-model="buyCost" label="Cost" :suffix="buySymbol" hint="Cost to buy." persistent-hint></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="success" @click="createBuyLock">Create buy lock</v-btn>
+                </v-card-actions>
+                <v-progress-linear :indeterminate="buyWaiting" color="yellow darken-2"></v-progress-linear>
+              </v-card>
+            </template>
+            <v-table class="mb-10">
+              <thead>
+                <tr>
+                  <th class="text-left">
+                    Buyer
+                  </th>
+                  <th class="text-right">
+                    Buy Lock<br />({{ buySymbol }})
+                  </th>
+                  <th class="text-right">
+                    Price<br />({{ buySymbol + ' / ' + sellSymbol }})
+                  </th>
+                  <th class="text-left">
+                    State
+                  </th>
+                  <th class="text-left">
+                    Timeout
+                  </th>
+                  <th class="text-left"></th>
+                  <th style="background-color: rgba(18, 18, 18);"></th>
+                  <th class="text-right">
+                    Sell Lock<br />({{ sellSymbol }})
+                  </th>
+                  <th class="text-left">
+                    State
+                  </th>
+                  <th class="text-left">
+                    Timeout
+                  </th>
+                  <th class="text-left"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(lock, lockId) in locks" :key="lockId">
+                  <td>{{ lock.buyerName }}</td>
+                  <td class="text-right">{{ lock.buyLockValue }}</td>
+                  <td class="text-right">{{ lock.buyLockPrice }}</td>
+                  <td>{{ lock.buyLockState }}</td>
+                  <td>{{ lock.buyLockTimeout }}</td>
+                  <td>
+                    <v-btn v-if="lock.buyLockState == 'Locked' && lock.sellLockState == 'Unlocked' && (buyChainId == 0 || store.metaMaskAccount == sellerAddressBuyChain)" size="small" @click="unlockBuyLock(lock)" :disabled="lock.unlockBuyLockDisabled">
+                      <v-icon v-if="!lock.unlockBuyLockWaiting">mdi-lock-open-variant</v-icon>
+                      <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
+                    </v-btn>
+                    <v-btn v-if="lock.buyLockState == 'Locked' && lock.buyLockTimeoutMS < time && (buyChainId == 0 || store.metaMaskAccount == lock.buyerAddressBuyChain)" size="small" @click="timeoutBuyLock(lock)" :disabled="lock.timeoutBuyLockDisabled">
+                      <v-icon v-if="!lock.timeoutBuyLockWaiting">mdi-timer-lock-open-outline</v-icon>
+                      <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
+                    </v-btn>
+                  </td>
+                  <td style="background-color: rgb(18, 18, 18);"></td>
+                  <td class="text-right">{{ lock.sellLockValue }}</td>
+                  <td>{{ lock.sellLockState }}</td>
+                  <td>{{ lock.sellLockTimeout }}</td>
+                  <td>
+                    <v-btn v-if="lock.sellLockState == 'Not locked' && (sellChainId == 0 || store.metaMaskAccount == sellerAddressSellChain)" size="small" @click="createSellLock(lock)" :disabled="lock.createSellLockDisabled">
+                      <v-icon v-if="!lock.createSellLockWaiting">mdi-lock</v-icon>
+                      <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
+                    </v-btn>
+                    <v-btn v-if="lock.sellLockState == 'Locked' && (sellChainId == 0 || store.metaMaskAccount == lock.buyerAddressSellChain)" size="small" @click="unlockSellLock(lock)" :disabled="lock.unlockSellLockDisabled">
+                      <v-icon v-if="!lock.unlockSellLockWaiting">mdi-lock-open-variant</v-icon>
+                      <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
+                    </v-btn>
+                    <v-btn v-if="lock.sellLockState == 'Locked' && lock.sellLockTimeoutMS < time && (buyChainId == 0 || store.metaMaskAccount == sellerAddressSellChain)" size="small" @click="timeoutSellLock(lock)" :disabled="lock.timeoutSellLockDisabled">
+                      <v-icon v-if="!lock.timeoutSellLockWaiting">mdi-timer-lock-open-outline</v-icon>
+                      <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
+                    </v-btn>
+                  </td>
+                </tr>
+              </tbody>
+            </v-table>
           </template>
         </template>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="12" md="12">
-        <v-table class="mb-10">
-          <thead>
-            <tr>
-              <th class="text-left">
-                Buyer
-              </th>
-              <th class="text-right">
-                Buy Lock<br />({{ buySymbol }})
-              </th>
-              <th class="text-right">
-                Price<br />({{ buySymbol + ' / ' + sellSymbol }})
-              </th>
-              <th class="text-left">
-                State
-              </th>
-              <th class="text-left">
-                Timeout
-              </th>
-              <th class="text-left"></th>
-              <th style="background-color: rgba(18, 18, 18);"></th>
-              <th class="text-right">
-                Sell Lock<br />({{ sellSymbol }})
-              </th>
-              <th class="text-left">
-                State
-              </th>
-              <th class="text-left">
-                Timeout
-              </th>
-              <th class="text-left"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(lock, lockId) in locks" :key="lockId">
-              <td>{{ lock.buyerName }}</td>
-              <td class="text-right">{{ lock.buyLockValue }}</td>
-              <td class="text-right">{{ lock.buyLockPrice }}</td>
-              <td>{{ lock.buyLockState }}</td>
-              <td>{{ lock.buyLockTimeout }}</td>
-              <td>
-                <v-btn v-if="lock.buyLockState == 'Locked' && lock.sellLockState == 'Unlocked' && (buyChainId == 0 || store.metaMaskAccount == sellerAddressBuyChain)" size="small" @click="unlockBuyLock(lock)" :disabled="lock.unlockBuyLockDisabled">
-                  <v-icon v-if="!lock.unlockBuyLockWaiting">mdi-lock-open-variant</v-icon>
-                  <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
-                </v-btn>
-                <v-btn v-if="lock.buyLockState == 'Locked' && lock.buyLockTimeoutMS < time && (buyChainId == 0 || store.metaMaskAccount == lock.buyerAddressBuyChain)" size="small" @click="timeoutBuyLock(lock)" :disabled="lock.timeoutBuyLockDisabled">
-                  <v-icon v-if="!lock.timeoutBuyLockWaiting">mdi-timer-lock-open-outline</v-icon>
-                  <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
-                </v-btn>
-              </td>
-              <td style="background-color: rgb(18, 18, 18);"></td>
-              <td class="text-right">{{ lock.sellLockValue }}</td>
-              <td>{{ lock.sellLockState }}</td>
-              <td>{{ lock.sellLockTimeout }}</td>
-              <td>
-                <v-btn v-if="lock.sellLockState == 'Not locked' && (sellChainId == 0 || store.metaMaskAccount == sellerAddressSellChain)" size="small" @click="createSellLock(lock)" :disabled="lock.createSellLockDisabled">
-                  <v-icon v-if="!lock.createSellLockWaiting">mdi-lock</v-icon>
-                  <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
-                </v-btn>
-                <v-btn v-if="lock.sellLockState == 'Locked' && (sellChainId == 0 || store.metaMaskAccount == lock.buyerAddressSellChain)" size="small" @click="unlockSellLock(lock)" :disabled="lock.unlockSellLockDisabled">
-                  <v-icon v-if="!lock.unlockSellLockWaiting">mdi-lock-open-variant</v-icon>
-                  <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
-                </v-btn>
-                <v-btn v-if="lock.sellLockState == 'Locked' && lock.sellLockTimeoutMS < time && (buyChainId == 0 || store.metaMaskAccount == sellerAddressSellChain)" size="small" @click="timeoutSellLock(lock)" :disabled="lock.timeoutSellLockDisabled">
-                  <v-icon v-if="!lock.timeoutSellLockWaiting">mdi-timer-lock-open-outline</v-icon>
-                  <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
-                </v-btn>
-              </td>
-            </tr>
-          </tbody>
-        </v-table>
       </v-col>
     </v-row>
   </v-container>
