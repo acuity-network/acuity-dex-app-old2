@@ -120,6 +120,20 @@ let $ethClient: any = inject('$ethClient');
     </v-main>
     <v-footer app>
     </v-footer>
+    <v-dialog v-model="store.error" width="50%">
+      <v-card>
+        <v-toolbar color="error">
+          <v-toolbar-title>Error</v-toolbar-title>
+        </v-toolbar>
+        <v-card-text>
+          {{ store.errorMessage }}
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="success" @click="store.errorUnset()">Okay</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 

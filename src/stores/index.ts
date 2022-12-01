@@ -31,6 +31,8 @@ export const main = defineStore('main', {
     acuAccountForeignAccount: {} as any,
     tokens: {} as any,
     tokenBalance: {} as any,
+    error: false,
+    errorMessage: "",
   }),
   getters: {
   },
@@ -159,6 +161,13 @@ export const main = defineStore('main', {
         this.tokenBalance[chainId][token] = {};
       }
       this.tokenBalance[chainId][token][address] = balance;
+    },
+    errorSet(message: string) {
+      this.errorMessage = message;
+      this.error = true;
+    },
+    errorUnset() {
+      this.error = false;
     },
   },
 })

@@ -225,15 +225,34 @@ async function set(event: any) {
   try {
     const unsub = await $acuityClient.api.tx.orderbook
       .setOrder(sellAssetIdHex.value, buyAssetIdHex.value, price, value)
-      .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
-        if (!result.status.isInBlock) {
+      .signAndSend(store.activeAcu, { signer: injector.signer }, ({ status, events }: any) => {
+        if (!status.isInBlock) {
           setWaiting.value = true;
         }
         else {
           unsub();
-          load();
+          events
+            // find/filter for failed events
+            .filter(({ event }: any) =>
+              $acuityClient.api.events.system.ExtrinsicFailed.is(event)
+            )
+            // we know that data for system.ExtrinsicFailed is
+            // (DispatchError, DispatchInfo)
+            .forEach(({ event: { data: [error, info] } }: any) => {
+              if (error.isModule) {
+                // for module errors, we have the section indexed, lookup
+                const decoded = $acuityClient.api.registry.findMetaError(error.asModule);
+                const { docs, method, section } = decoded;
+
+                store.errorSet(`${section}.${method}: ${docs.join(' ')}`);
+              } else {
+                // Other, CannotLookup, BadOrigin, no extra info
+                store.errorSet(error.toString());
+              }
+            });
           setWaiting.value = false;
           disabled.value = false;
+          load();
         }
       });
   }
@@ -250,15 +269,34 @@ async function unset(event: any) {
   try {
     const unsub = await $acuityClient.api.tx.orderbook
       .removeOrder(sellAssetIdHex.value, buyAssetIdHex.value)
-      .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
-        if (!result.status.isInBlock) {
+      .signAndSend(store.activeAcu, { signer: injector.signer }, ({ status, events }: any) => {
+        if (!status.isInBlock) {
           setWaiting.value = true;
         }
         else {
           unsub();
-          load();
+          events
+            // find/filter for failed events
+            .filter(({ event }: any) =>
+              $acuityClient.api.events.system.ExtrinsicFailed.is(event)
+            )
+            // we know that data for system.ExtrinsicFailed is
+            // (DispatchError, DispatchInfo)
+            .forEach(({ event: { data: [error, info] } }: any) => {
+              if (error.isModule) {
+                // for module errors, we have the section indexed, lookup
+                const decoded = $acuityClient.api.registry.findMetaError(error.asModule);
+                const { docs, method, section } = decoded;
+
+                store.errorSet(`${section}.${method}: ${docs.join(' ')}`);
+              } else {
+                // Other, CannotLookup, BadOrigin, no extra info
+                store.errorSet(error.toString());
+              }
+            });
           setWaiting.value = false;
           disabled.value = false;
+          load();
         }
       });
   }

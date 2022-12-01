@@ -129,20 +129,38 @@ async function setIdentity(event: any) {
   try {
     const unsub = await $acuityClient.api.tx.identity
       .setIdentity(identity)
-      .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
-        if (!result.status.isInBlock) {
+      .signAndSend(store.activeAcu, { signer: injector.signer }, ({ status, events }: any) => {
+        if (!status.isInBlock) {
           setNameWaiting.value = true;
         }
         else {
           unsub();
-          load();
+          events
+            // find/filter for failed events
+            .filter(({ event }: any) =>
+              $acuityClient.api.events.system.ExtrinsicFailed.is(event)
+            )
+            // we know that data for system.ExtrinsicFailed is
+            // (DispatchError, DispatchInfo)
+            .forEach(({ event: { data: [error, info] } }: any) => {
+              if (error.isModule) {
+                // for module errors, we have the section indexed, lookup
+                const decoded = $acuityClient.api.registry.findMetaError(error.asModule);
+                const { docs, method, section } = decoded;
+
+                store.errorSet(`${section}.${method}: ${docs.join(' ')}`);
+              } else {
+                // Other, CannotLookup, BadOrigin, no extra info
+                store.errorSet(error.toString());
+              }
+            });
           setNameWaiting.value = false;
           setNameDisabled.value = false;
+          load();
         }
       });
   }
   catch (e) {
-    console.error(e);
     setNameWaiting.value = false;
     setNameDisabled.value = false;
   }
@@ -157,14 +175,34 @@ async function setForeignAccount(event: any) {
   try {
     const unsub = await $acuityClient.api.tx.orderbook
       .setForeignAccount(chainId, foreignAccount)
-      .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
-        if (!result.status.isInBlock) {
+      .signAndSend(store.activeAcu, { signer: injector.signer }, ({ status, events }: any) => {
+        if (!status.isInBlock) {
           setForeignAccountWaiting.value = true;
         }
         else {
           unsub();
+          events
+            // find/filter for failed events
+            .filter(({ event }: any) =>
+              $acuityClient.api.events.system.ExtrinsicFailed.is(event)
+            )
+            // we know that data for system.ExtrinsicFailed is
+            // (DispatchError, DispatchInfo)
+            .forEach(({ event: { data: [error, info] } }: any) => {
+              if (error.isModule) {
+                // for module errors, we have the section indexed, lookup
+                const decoded = $acuityClient.api.registry.findMetaError(error.asModule);
+                const { docs, method, section } = decoded;
+
+                store.errorSet(`${section}.${method}: ${docs.join(' ')}`);
+              } else {
+                // Other, CannotLookup, BadOrigin, no extra info
+                store.errorSet(error.toString());
+              }
+            });
           setForeignAccountWaiting.value = false;
           setForeignAccountDisabled.value = false;
+          load();
         }
       });
   }

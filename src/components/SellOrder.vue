@@ -711,16 +711,34 @@ async function createBuyLock(event: any) {
     try {
       const unsub = await $acuityClient.api.tx.atomicSwap
         .lockBuy(recipient, hashedSecret, timeout, value, sellAssetId, sellPrice)
-        .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
-          console.log(result);
-          if (!result.status.isInBlock) {
+        .signAndSend(store.activeAcu, { signer: injector.signer }, ({ status, events }: any) => {
+          if (!status.isInBlock) {
             buyWaiting.value = true;
           }
           else {
             unsub();
-            load();
+            events
+              // find/filter for failed events
+              .filter(({ event }: any) =>
+                $acuityClient.api.events.system.ExtrinsicFailed.is(event)
+              )
+              // we know that data for system.ExtrinsicFailed is
+              // (DispatchError, DispatchInfo)
+              .forEach(({ event: { data: [error, info] } }: any) => {
+                if (error.isModule) {
+                  // for module errors, we have the section indexed, lookup
+                  const decoded = $acuityClient.api.registry.findMetaError(error.asModule);
+                  const { docs, method, section } = decoded;
+
+                  store.errorSet(`${section}.${method}: ${docs.join(' ')}`);
+                } else {
+                  // Other, CannotLookup, BadOrigin, no extra info
+                  store.errorSet(error.toString());
+                }
+              });
             buyWaiting.value = false;
             buyDisabled.value = false;
+            load();
           }
         });
     }
@@ -861,16 +879,34 @@ async function createSellLock(lock: any) {
     try {
       const unsub = await $acuityClient.api.tx.atomicSwap
         .lockSell(recipient, hashedSecret, timeout, value, buyAssetId, buyLockId)
-        .signAndSend(sellerAddressSellChain.value, { signer: injector.signer }, (result: any) => {
-          console.log(result);
-          if (!result.status.isInBlock) {
+        .signAndSend(sellerAddressSellChain.value, { signer: injector.signer }, ({ status, events }: any) => {
+          if (!status.isInBlock) {
             locks[lock.lockId].createSellLockWaiting = true;
           }
           else {
             unsub();
-            load();
+            events
+              // find/filter for failed events
+              .filter(({ event }: any) =>
+                $acuityClient.api.events.system.ExtrinsicFailed.is(event)
+              )
+              // we know that data for system.ExtrinsicFailed is
+              // (DispatchError, DispatchInfo)
+              .forEach(({ event: { data: [error, info] } }: any) => {
+                if (error.isModule) {
+                  // for module errors, we have the section indexed, lookup
+                  const decoded = $acuityClient.api.registry.findMetaError(error.asModule);
+                  const { docs, method, section } = decoded;
+
+                  store.errorSet(`${section}.${method}: ${docs.join(' ')}`);
+                } else {
+                  // Other, CannotLookup, BadOrigin, no extra info
+                  store.errorSet(error.toString());
+                }
+              });
             locks[lock.lockId].createSellLockWaiting = false;
             locks[lock.lockId].createSellLockDisabled = false;
+            load();
           }
         });
     }
@@ -1007,23 +1043,40 @@ async function unlockSellLock(lock: any) {
     try {
       const unsub = await $acuityClient.api.tx.atomicSwap
         .unlock(sender, secret, timeout)
-        .signAndSend(lock.buyerAddressSellChain, { signer: injector.signer }, (result: any) => {
-          console.log(result);
-          if (!result.status.isInBlock) {
+        .signAndSend(lock.buyerAddressSellChain, { signer: injector.signer }, ({ status, events }: any) => {
+          if (!status.isInBlock) {
             locks[lock.lockId].unlockSellLockWaiting = true;
           }
           else {
             unsub();
-            load();
+            events
+              // find/filter for failed events
+              .filter(({ event }: any) =>
+                $acuityClient.api.events.system.ExtrinsicFailed.is(event)
+              )
+              // we know that data for system.ExtrinsicFailed is
+              // (DispatchError, DispatchInfo)
+              .forEach(({ event: { data: [error, info] } }: any) => {
+                if (error.isModule) {
+                  // for module errors, we have the section indexed, lookup
+                  const decoded = $acuityClient.api.registry.findMetaError(error.asModule);
+                  const { docs, method, section } = decoded;
+
+                  store.errorSet(`${section}.${method}: ${docs.join(' ')}`);
+                } else {
+                  // Other, CannotLookup, BadOrigin, no extra info
+                  store.errorSet(error.toString());
+                }
+              });
             locks[lock.lockId].unlockSellLockWaiting = false;
             locks[lock.lockId].unlockSellLockDisabled = false;
+            load();
           }
         });
     }
     catch (e) {
       locks[lock.lockId].unlockSellLockWaiting = false;
       locks[lock.lockId].unlockSellLockDisabled = false;
-      console.log(e);
     }
 
     return;
@@ -1097,16 +1150,34 @@ async function unlockBuyLock(lock: any) {
     try {
       const unsub = await $acuityClient.api.tx.atomicSwap
         .unlock(sender, secret, timeout)
-        .signAndSend(sellerAddressBuyChain.value, { signer: injector.signer }, (result: any) => {
-          console.log(result);
-          if (!result.status.isInBlock) {
+        .signAndSend(sellerAddressBuyChain.value, { signer: injector.signer }, ({ status, events }: any) => {
+          if (!status.isInBlock) {
             locks[lock.lockId].unlockBuyLockWaiting = true;
           }
           else {
             unsub();
-            load();
+            events
+              // find/filter for failed events
+              .filter(({ event }: any) =>
+                $acuityClient.api.events.system.ExtrinsicFailed.is(event)
+              )
+              // we know that data for system.ExtrinsicFailed is
+              // (DispatchError, DispatchInfo)
+              .forEach(({ event: { data: [error, info] } }: any) => {
+                if (error.isModule) {
+                  // for module errors, we have the section indexed, lookup
+                  const decoded = $acuityClient.api.registry.findMetaError(error.asModule);
+                  const { docs, method, section } = decoded;
+
+                  store.errorSet(`${section}.${method}: ${docs.join(' ')}`);
+                } else {
+                  // Other, CannotLookup, BadOrigin, no extra info
+                  store.errorSet(error.toString());
+                }
+              });
             locks[lock.lockId].unlockBuyLockWaiting = false;
             locks[lock.lockId].unlockBuyLockDisabled = false;
+            load();
           }
         });
     }
@@ -1186,16 +1257,34 @@ async function timeoutBuyLock(lock: any) {
     try {
       const unsub = await $acuityClient.api.tx.atomicSwap
         .retrieve(recipient, hashedSecret, timeout)
-        .signAndSend(lock.buyerAddressBuyChain, { signer: injector.signer }, (result: any) => {
-          console.log(result);
-          if (!result.status.isInBlock) {
+        .signAndSend(lock.buyerAddressBuyChain, { signer: injector.signer }, ({ status, events }: any) => {
+          if (!status.isInBlock) {
             locks[lock.lockId].timeoutBuyLockWaiting = false;
           }
           else {
             unsub();
-            load();
+            events
+              // find/filter for failed events
+              .filter(({ event }: any) =>
+                $acuityClient.api.events.system.ExtrinsicFailed.is(event)
+              )
+              // we know that data for system.ExtrinsicFailed is
+              // (DispatchError, DispatchInfo)
+              .forEach(({ event: { data: [error, info] } }: any) => {
+                if (error.isModule) {
+                  // for module errors, we have the section indexed, lookup
+                  const decoded = $acuityClient.api.registry.findMetaError(error.asModule);
+                  const { docs, method, section } = decoded;
+
+                  store.errorSet(`${section}.${method}: ${docs.join(' ')}`);
+                } else {
+                  // Other, CannotLookup, BadOrigin, no extra info
+                  store.errorSet(error.toString());
+                }
+              });
             locks[lock.lockId].timeoutBuyLockWaiting = false;
             locks[lock.lockId].timeoutBuyLockDisabled = false;
+            load();
           }
         });
     }
@@ -1275,16 +1364,34 @@ async function timeoutSellLock(lock: any) {
     try {
       const unsub = await $acuityClient.api.tx.atomicSwap
         .retrieve(recipient, hashedSecret, timeout)
-        .signAndSend(sellerAddressSellChain.value, { signer: injector.signer }, (result: any) => {
-          console.log(result);
-          if (!result.status.isInBlock) {
+        .signAndSend(sellerAddressSellChain.value, { signer: injector.signer }, ({ status, events }: any) => {
+          if (!status.isInBlock) {
             locks[lock.lockId].timeoutSellLockWaiting = false;
           }
           else {
             unsub();
-            load();
+            events
+              // find/filter for failed events
+              .filter(({ event }: any) =>
+                $acuityClient.api.events.system.ExtrinsicFailed.is(event)
+              )
+              // we know that data for system.ExtrinsicFailed is
+              // (DispatchError, DispatchInfo)
+              .forEach(({ event: { data: [error, info] } }: any) => {
+                if (error.isModule) {
+                  // for module errors, we have the section indexed, lookup
+                  const decoded = $acuityClient.api.registry.findMetaError(error.asModule);
+                  const { docs, method, section } = decoded;
+
+                  store.errorSet(`${section}.${method}: ${docs.join(' ')}`);
+                } else {
+                  // Other, CannotLookup, BadOrigin, no extra info
+                  store.errorSet(error.toString());
+                }
+              });
             locks[lock.lockId].timeoutSellLockWaiting = false;
             locks[lock.lockId].timeoutSellLockDisabled = false;
+            load();
           }
         });
     }

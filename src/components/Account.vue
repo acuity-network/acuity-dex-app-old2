@@ -34,12 +34,31 @@ async function trust(event: any) {
   try {
     const unsub = await $acuityClient.api.tx.trustedAccounts
       .trustAccount(route.params.id)
-      .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
-        if (!result.status.isInBlock) {
+      .signAndSend(store.activeAcu, { signer: injector.signer }, ({ status, events }: any) => {
+        if (!status.isInBlock) {
           waiting.value = true;
         }
         else {
           unsub();
+          events
+            // find/filter for failed events
+            .filter(({ event }: any) =>
+              $acuityClient.api.events.system.ExtrinsicFailed.is(event)
+            )
+            // we know that data for system.ExtrinsicFailed is
+            // (DispatchError, DispatchInfo)
+            .forEach(({ event: { data: [error, info] } }: any) => {
+              if (error.isModule) {
+                // for module errors, we have the section indexed, lookup
+                const decoded = $acuityClient.api.registry.findMetaError(error.asModule);
+                const { docs, method, section } = decoded;
+
+                store.errorSet(`${section}.${method}: ${docs.join(' ')}`);
+              } else {
+                // Other, CannotLookup, BadOrigin, no extra info
+                store.errorSet(error.toString());
+              }
+            });
           waiting.value = false;
           disabled.value = false;
         }
@@ -57,12 +76,31 @@ async function untrust(event: any) {
   try {
     const unsub = await $acuityClient.api.tx.trustedAccounts
       .untrustAccount(route.params.id)
-      .signAndSend(store.activeAcu, { signer: injector.signer }, (result: any) => {
-        if (!result.status.isInBlock) {
+      .signAndSend(store.activeAcu, { signer: injector.signer }, ({ status, events }: any) => {
+        if (!status.isInBlock) {
           waiting.value = true;
         }
         else {
           unsub();
+          events
+            // find/filter for failed events
+            .filter(({ event }: any) =>
+              $acuityClient.api.events.system.ExtrinsicFailed.is(event)
+            )
+            // we know that data for system.ExtrinsicFailed is
+            // (DispatchError, DispatchInfo)
+            .forEach(({ event: { data: [error, info] } }: any) => {
+              if (error.isModule) {
+                // for module errors, we have the section indexed, lookup
+                const decoded = $acuityClient.api.registry.findMetaError(error.asModule);
+                const { docs, method, section } = decoded;
+
+                store.errorSet(`${section}.${method}: ${docs.join(' ')}`);
+              } else {
+                // Other, CannotLookup, BadOrigin, no extra info
+                store.errorSet(error.toString());
+              }
+            });
           waiting.value = false;
           disabled.value = false;
         }
