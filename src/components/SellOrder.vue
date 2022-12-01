@@ -778,6 +778,7 @@ async function createBuyLock(event: any) {
         buyDisabled.value = false;
       })
       .on('error', function(error: any) {
+        store.errorSet(error.message);
         buyWaiting.value = false;
         buyDisabled.value = false;
       });
@@ -825,6 +826,7 @@ async function createBuyLock(event: any) {
         buyDisabled.value = false;
       })
       .on('error', function(error: any) {
+        store.errorSet(error.message);
         buyWaiting.value = false;
         buyDisabled.value = false;
       });
@@ -852,7 +854,7 @@ async function approveAllowanceBuy(event: any) {
       load();
     })
     .on('error', function(error: any) {
-      console.error(error);
+      store.errorSet(error.message);
       allowanceWaitingBuy.value = false;
       allowanceDisabledBuy.value = false;
       dialogAllowanceBuy.value = false;
@@ -945,6 +947,7 @@ async function createSellLock(lock: any) {
         locks[lock.lockId].createSellLockDisabled = false;
       })
       .on('error', function(error: any) {
+        store.errorSet(error.message);
         locks[lock.lockId].createSellLockWaiting = false;
         locks[lock.lockId].createSellLockDisabled = false;
       });
@@ -993,6 +996,7 @@ async function createSellLock(lock: any) {
           locks[lock.lockId].createSellLockDisabled = false;
         })
         .on('error', function(error: any) {
+          store.errorSet(error.message);
           locks[lock.lockId].createSellLockWaiting = false;
           locks[lock.lockId].createSellLockDisabled = false;
         });
@@ -1020,7 +1024,7 @@ async function approveAllowanceSell(event: any) {
       load();
     })
     .on('error', function(error: any) {
-      console.error(error);
+      store.errorSet(error.message);
       allowanceWaitingSell.value = false;
       allowanceDisabledSell.value = false;
       dialogAllowanceSell.value = false;
@@ -1109,6 +1113,7 @@ async function unlockSellLock(lock: any) {
         locks[lock.lockId].unlockSellLockDisabled = false;
       })
       .on('error', function(error: any) {
+        store.errorSet(error.message);
         locks[lock.lockId].unlockSellLockWaiting = false;
         locks[lock.lockId].unlockSellLockDisabled = false;
       });
@@ -1128,6 +1133,7 @@ async function unlockSellLock(lock: any) {
         locks[lock.lockId].unlockSellLockDisabled = false;
       })
       .on('error', function(error: any) {
+        store.errorSet(error.message);
         locks[lock.lockId].unlockSellLockWaiting = false;
         locks[lock.lockId].unlockSellLockDisabled = false;
       });
@@ -1216,6 +1222,7 @@ async function unlockBuyLock(lock: any) {
         locks[lock.lockId].unlockBuyLockDisabled = false;
       })
       .on('error', function(error: any) {
+        store.errorSet(error.message);
         locks[lock.lockId].unlockBuyLockWaiting = false;
         locks[lock.lockId].unlockBuyLockDisabled = false;
       });
@@ -1235,6 +1242,7 @@ async function unlockBuyLock(lock: any) {
         locks[lock.lockId].unlockBuyLockDisabled = false;
       })
       .on('error', function(error: any) {
+        store.errorSet(error.message);
         locks[lock.lockId].unlockBuyLockWaiting = false;
         locks[lock.lockId].unlockBuyLockDisabled = false;
       });
@@ -1323,6 +1331,7 @@ async function timeoutBuyLock(lock: any) {
         locks[lock.lockId].timeoutBuyLockDisabled = false;
       })
       .on('error', function(error: any) {
+        store.errorSet(error.message);
         locks[lock.lockId].timeoutBuyLockWaiting = false;
         locks[lock.lockId].timeoutBuyLockDisabled = false;
       });
@@ -1342,6 +1351,7 @@ async function timeoutBuyLock(lock: any) {
         locks[lock.lockId].timeoutBuyLockDisabled = false;
       })
       .on('error', function(error: any) {
+        store.errorSet(error.message);
         locks[lock.lockId].timeoutBuyLockWaiting = false;
         locks[lock.lockId].timeoutBuyLockDisabled = false;
       });
@@ -1430,6 +1440,7 @@ async function timeoutSellLock(lock: any) {
         locks[lock.lockId].timeoutSellLockDisabled = false;
       })
       .on('error', function(error: any) {
+        store.errorSet(error.message);
         locks[lock.lockId].timeoutSellLockWaiting = false;
         locks[lock.lockId].timeoutSellLockDisabled = false;
       });
@@ -1449,6 +1460,7 @@ async function timeoutSellLock(lock: any) {
         locks[lock.lockId].timeoutSellLockDisabled = false;
       })
       .on('error', function(error: any) {
+        store.errorSet(error.message);
         locks[lock.lockId].timeoutSellLockWaiting = false;
         locks[lock.lockId].timeoutSellLockDisabled = false;
       });

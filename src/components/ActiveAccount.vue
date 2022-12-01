@@ -226,6 +226,7 @@ async function setAcuAccount(event: any) {
       setAcuAccountDisabled.value = false;
     })
     .on('error', function(error: any) {
+      store.errorSet(error.message);
       setAcuAccountWaiting.value = false;
       setAcuAccountDisabled.value = false;
     });
