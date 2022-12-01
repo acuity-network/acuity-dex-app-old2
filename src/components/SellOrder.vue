@@ -1267,7 +1267,7 @@ async function timeoutBuyLock(lock: any) {
         .retrieve(recipient, hashedSecret, timeout)
         .signAndSend(lock.buyerAddressBuyChain, { signer: injector.signer }, ({ status, events }: any) => {
           if (!status.isInBlock) {
-            locks[lock.lockId].timeoutBuyLockWaiting = false;
+            locks[lock.lockId].timeoutBuyLockWaiting = true;
           }
           else {
             unsub();
@@ -1376,7 +1376,7 @@ async function timeoutSellLock(lock: any) {
         .retrieve(recipient, hashedSecret, timeout)
         .signAndSend(sellerAddressSellChain.value, { signer: injector.signer }, ({ status, events }: any) => {
           if (!status.isInBlock) {
-            locks[lock.lockId].timeoutSellLockWaiting = false;
+            locks[lock.lockId].timeoutSellLockWaiting = true;
           }
           else {
             unsub();
@@ -1595,7 +1595,7 @@ async function timeoutSellLock(lock: any) {
                   <td>{{ lock.buyLockState }}</td>
                   <td>{{ lock.buyLockTimeout }}</td>
                   <td>
-                    <v-btn v-if="lock.buyLockState == 'Locked' && lock.sellLockState == 'Unlocked' && (buyChainId == 0 || store.metaMaskAccount == sellerAddressBuyChain)" size="small" @click="unlockBuyLock(lock)" :disabled="lock.unlockBuyLockDisabled">
+                    <v-btn v-if="lock.buyLockState == 'Locked' && lock.sellLockState == 'Unlocked' && lock.buyLockTimeoutMS >= time && (buyChainId == 0 || store.metaMaskAccount == sellerAddressBuyChain)" size="small" @click="unlockBuyLock(lock)" :disabled="lock.unlockBuyLockDisabled">
                       <v-icon v-if="!lock.unlockBuyLockWaiting">mdi-lock-open-variant</v-icon>
                       <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                     </v-btn>
@@ -1613,7 +1613,7 @@ async function timeoutSellLock(lock: any) {
                       <v-icon v-if="!lock.createSellLockWaiting">mdi-lock</v-icon>
                       <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                     </v-btn>
-                    <v-btn v-if="lock.sellLockState == 'Locked' && (sellChainId == 0 || store.metaMaskAccount == lock.buyerAddressSellChain)" size="small" @click="unlockSellLock(lock)" :disabled="lock.unlockSellLockDisabled">
+                    <v-btn v-if="lock.sellLockState == 'Locked' && lock.sellLockTimeoutMS >= time && (sellChainId == 0 || store.metaMaskAccount == lock.buyerAddressSellChain)" size="small" @click="unlockSellLock(lock)" :disabled="lock.unlockSellLockDisabled">
                       <v-icon v-if="!lock.unlockSellLockWaiting">mdi-lock-open-variant</v-icon>
                       <v-progress-circular v-else indeterminate color="yellow darken-2" size="20"></v-progress-circular>
                     </v-btn>
