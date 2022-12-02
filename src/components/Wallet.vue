@@ -17,6 +17,7 @@ const sendDisabled = ref(false);
 const sendWaiting = ref(false);
 const sendAmount = ref("");
 const sendDestination = ref("");
+const dialogConfirmSend = ref(false);
 
 async function load() {
   let options: QRCode.QRCodeToDataURLOptions = {
@@ -33,6 +34,14 @@ onMounted(async () => {
 
 watch(() => store.activeAcu, async (newValue, oldValue) => {
   load();
+});
+
+const sendAmountWei = computed(() => {
+  return $ethClient.unformatWei(sendAmount.value);
+});
+
+const sendAmountFormatted = computed(() => {
+  return $ethClient.formatWei(sendAmountWei.value);
 });
 
 async function send(event: any) {
@@ -66,12 +75,14 @@ async function send(event: any) {
                 store.errorSet(error.toString());
               }
             });
+          dialogConfirmSend.value = false;
           sendWaiting.value = false;
           sendDisabled.value = false;
         }
       });
   }
   catch (e) {
+    dialogConfirmSend.value = false;
     sendWaiting.value = false;
     sendDisabled.value = false;
   }
@@ -87,32 +98,45 @@ async function send(event: any) {
           <v-col cols="12" sm="8" md="8">
             <v-text-field v-model="store.activeAcu" label="Address" readonly></v-text-field>
             <v-text-field v-model="store.acuBalance[store.activeAcu]" label="Balance" suffix="ACU" readonly></v-text-field>
+            <v-card class="mb-10">
+              <v-toolbar color="blue">
+                <v-toolbar-title>Send ACU</v-toolbar-title>
+              </v-toolbar>
+              <v-card-text>
+                <v-text-field v-model="sendDestination" label="To" hint="Address you want to send it to."></v-text-field>
+                <v-text-field v-model="sendAmount" label="Amount" suffix="ACU" hint="How much you want to send."></v-text-field>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="success" @click="dialogConfirmSend = true">Send</v-btn>
+              </v-card-actions>
+            </v-card>
           </v-col>
           <v-col cols="12" sm="4" md="4">
-              <img class="qr is-pulled-right" :src="qrCode" />
+            <img class="qr" :src="qrCode" />
           </v-col>
         </v-row>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col cols="12" lg="10">
-        <v-card class="mb-10" :disabled="sendDisabled">
-          <v-toolbar color="blue">
-            <v-toolbar-title>Send ACU</v-toolbar-title>
-          </v-toolbar>
-          <v-card-text>
-            <v-text-field v-model="sendAmount" label="Amount" suffix="ACU" hint="How much you want to send."></v-text-field>
-            <v-text-field v-model="sendDestination" label="Destination" hint="Address you want to send it to."></v-text-field>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="success" @click="send">Send</v-btn>
-          </v-card-actions>
-          <v-progress-linear :indeterminate="sendWaiting" color="yellow darken-2"></v-progress-linear>
-        </v-card>
-      </v-col>
-    </v-row>
   </v-container>
+  <v-dialog v-model="dialogConfirmSend" width="60%" persistent>
+    <v-card>
+      <v-toolbar color="blue">
+        <v-toolbar-title>Confirm Balance Transfer</v-toolbar-title>
+      </v-toolbar>
+      <v-card-text>
+        <v-text-field v-model="store.activeAcu" label="From" readonly></v-text-field>
+        <v-text-field v-model="sendDestination" label="To" readonly></v-text-field>
+        <v-text-field v-model="sendAmountFormatted" label="Amount" suffix="ACU" readonly></v-text-field>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn :disabled="sendDisabled" color="success" @click="send">Okay</v-btn>
+        <v-btn :disabled="sendDisabled" color="error" @click="dialogConfirmSend = false">Cancel</v-btn>
+      </v-card-actions>
+      <v-progress-linear :indeterminate="sendWaiting" color="yellow darken-2"></v-progress-linear>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style>
@@ -120,7 +144,6 @@ async function send(event: any) {
 .qr {
   image-rendering: pixelated;
   width: 100%;
-  cursor: none;
 }
 
 </style>
