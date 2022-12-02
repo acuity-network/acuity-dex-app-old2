@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import ActiveAccount from '../components/ActiveAccount.vue'
+import Wallet from '../components/Wallet.vue'
 import Goto from '../components/Goto.vue'
 import Account from '../components/Account.vue'
 import Chains from '../components/Chains.vue'
@@ -15,6 +16,11 @@ const routes = [
     path: '/active-account',
     name: 'active-account',
     component: ActiveAccount,
+  },
+  {
+    path: '/wallet',
+    name: 'wallet',
+    component: Wallet,
   },
   {
     path: '/goto',

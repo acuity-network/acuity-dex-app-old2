@@ -32,6 +32,11 @@ const menu = ref([
     text: 'Account',
   },
   {
+    to: '/wallet',
+    icon: 'mdi-wallet',
+    text: 'Wallet',
+  },
+  {
     to: '/goto',
     icon: 'mdi-account-arrow-right',
     text: 'Goto',
