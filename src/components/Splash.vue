@@ -35,13 +35,15 @@ watch(() => store.activeAcu, async (newValue, oldValue) => {
   catch (e) {}
 
   balanceUnsub = $acuityClient.api.query.system.account(newValue, (result: any) => {
-    store.acuBalanceSet(newValue, $ethClient.formatWei(result.data.free));
+    let miscFrozen = BigInt(result.data.miscFrozen);
+    let feeFrozen = BigInt(result.data.feeFrozen);
+    let liquid = BigInt(result.data.free) - ((miscFrozen > feeFrozen) ? miscFrozen : feeFrozen);
+    store.acuBalanceSet(newValue, $ethClient.formatWei(liquid));
   });
 
   await $ethClient.loadAccounts();
   $ethClient.loadBalances();
 });
-
 
 onMounted(async () => {
   let results = await Promise.all([
