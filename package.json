@@ -11,17 +11,17 @@
   "dependencies": {
     "@mdi/font": "7.0.96",
     "@metamask/detect-provider": "^2.0.0",
-    "@polkadot/api": "^9.9.4",
+    "@polkadot/api": "^9.10.3",
     "@polkadot/extension-dapp": "^0.44.6",
-    "@polkadot/keyring": "^10.1.14",
-    "@polkadot/util": "^10.1.14",
-    "@polkadot/util-crypto": "^10.1.14",
-    "@polkadot/wasm-crypto": "^6.3.1",
-    "@polkadot/x-randomvalues": "^10.1.14",
+    "@polkadot/keyring": "^10.2.1",
+    "@polkadot/util": "^10.2.1",
+    "@polkadot/util-crypto": "^10.2.1",
+    "@polkadot/wasm-crypto": "^6.4.1",
+    "@polkadot/x-randomvalues": "^10.2.1",
     "buffer": "^6.0.3",
     "events": "^3.3.0",
     "level": "^8.0.0",
-    "pinia": "^2.0.27",
+    "pinia": "^2.0.28",
     "qrcode": "^1.5.1",
     "roboto-fontface": "^0.10.0",
     "stream-browserify": "^3.0.0",
@@ -36,8 +36,8 @@
     "@types/qrcode": "^1.5.0",
     "@vitejs/plugin-vue": "^3.2.0",
     "typescript": "4.9.3",
-    "vite": "^3.2.4",
+    "vite": "^3.2.5",
     "vite-plugin-vuetify": "1.0.0",
-    "vue-tsc": "^1.0.10"
+    "vue-tsc": "^1.0.14"
   }
 }
